@@ -62,7 +62,6 @@ abstract class BaseController
      * @param  array        $message  提示信息
      * @param  bool         $batch    是否批量验证
      * @return array|string|true
-     * @throws ValidateException
      */
     protected function validate(array $data, $validate, array $message = [], bool $batch = false)
     {

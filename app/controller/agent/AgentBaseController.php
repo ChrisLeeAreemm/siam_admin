@@ -1,15 +1,24 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Siam
- * Date: 2021/4/12
- * Time: 8:44
- */
 
 namespace app\controller\admin;
 
 
-class AgentBaseController
-{
+use app\BaseController;
 
+class AgentBaseController extends BaseController
+{
+    /**
+     * @param        $code
+     * @param array  $data
+     * @param string $msg
+     * @return \think\response\Json
+     */
+    public function json($code, $data = [], $msg = '')
+    {
+        return json([
+            'code' => $code,
+            'data' => (object) $data,
+            'msg'  => $msg
+        ]);
+    }
 }
