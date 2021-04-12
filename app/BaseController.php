@@ -90,4 +90,9 @@ abstract class BaseController
         return $v->failException(true)->check($data);
     }
 
+    abstract function get_list();
+    abstract function add();
+    abstract function edit();
+    abstract function delete();
+
 }
