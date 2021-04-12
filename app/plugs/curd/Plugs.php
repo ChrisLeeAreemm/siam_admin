@@ -35,7 +35,7 @@ class Plugs extends PlugsBase
     {
         // 在这里注入路由[api] 等事件
         Route::get('plugs/curd/index', function () {
-            return file_get_contents(__DIR__."/view/index.html");
+            return $this->pre_render_file(__DIR__."/view/index.html");
         });
     }
 }
