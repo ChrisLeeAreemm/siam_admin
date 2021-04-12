@@ -23,12 +23,12 @@ class Plugs extends PlugsBase
 
     public function install()
     {
-        // 把视图移到public/admin/page中
+
     }
 
     public function remove()
     {
-        // 移除视图 数据库等
+
     }
 
     public function init()
