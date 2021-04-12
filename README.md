@@ -35,3 +35,7 @@ Siam Admin 2.0
 - composer install
 - php think run (开发阶段)
 - 后台首页 http://127.0.0.1:8000/admin/index.html
+
+## 其他事项
+
+- 前端开发文档：http://layuimini.99php.cn/docs/
