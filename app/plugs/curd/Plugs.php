@@ -5,6 +5,7 @@ namespace app\plugs\curd;
 
 use app\plugs\PlugsBase;
 use app\plugs\PlugsConfig;
+use think\facade\Route;
 
 class Plugs extends PlugsBase
 {
@@ -22,14 +23,19 @@ class Plugs extends PlugsBase
 
     public function install()
     {
+        // 把视图移到public/admin/page中
     }
 
     public function remove()
     {
+        // 移除视图 数据库等
     }
 
     public function init()
     {
-        // 在这里注入路由 等事件
+        // 在这里注入路由[api] 等事件
+        Route::get('plugs/curd/index', function () {
+            return 'hello,curd plugs!';
+        });
     }
 }

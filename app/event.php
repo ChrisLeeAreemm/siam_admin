@@ -5,7 +5,7 @@ return [
     ],
 
     'listen'    => [
-        'AppInit'  => [],
+        'AppInit'  => ["app\plugs\PlugsInitEvent::app_init"],
         'HttpRun'  => [],
         'HttpEnd'  => [],
         'LogLevel' => [],
