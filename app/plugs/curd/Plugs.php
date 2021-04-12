@@ -38,7 +38,7 @@ class Plugs extends PlugsBase
             return $this->pre_render_file(__DIR__ . "/view/index.html");
         });
         Route::group(function () {
-            Route::post('plugs/curd/run', 'plugsCurdController@run');
+            Route::get('plugs/curd/run', 'plugsCurdController@run');
         })->prefix('\app\plugs\curd\controller\\');
         
     }
