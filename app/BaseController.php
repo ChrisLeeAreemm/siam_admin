@@ -57,14 +57,16 @@ abstract class BaseController
     /**
      * 验证数据
      * @access protected
-     * @param  array        $data     数据
-     * @param  string|array $validate 验证器名或者验证规则数组
+     * @param  string|array     $validate 验证器名或者验证规则数组
+     * @param  array|null       $data     数据
      * @param  array        $message  提示信息
      * @param  bool         $batch    是否批量验证
      * @return array|string|true
      */
-    protected function validate(array $data, $validate, array $message = [], bool $batch = false)
+    protected function validate($validate, $data = null, array $message = [], bool $batch = false)
     {
+        if ($data === null) $data = $this->request->input();
+
         if (is_array($validate)) {
             $v = new Validate();
             $v->rule($validate);
