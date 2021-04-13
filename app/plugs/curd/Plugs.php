@@ -40,6 +40,7 @@ class Plugs extends PlugsBase
         Route::group(function () {
             Route::get('plugs/curd/create_curd', 'PlugsCurdController@create_curd');
             Route::get('plugs/curd/update_notes', 'PlugsCurdController@update_notes');
+            Route::get('plugs/curd/create_html', 'PlugsCurdController@create_html');
         })->prefix('\app\plugs\curd\controller\\');
         
     }

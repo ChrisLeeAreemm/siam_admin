@@ -22,18 +22,29 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">数据表名</label>
                 <div class="layui-input-block">
-                    <input type="text" name="table_name" lay-verify="title" autocomplete="off" placeholder="请输入"
+                    <input type="text" name="table_name" lay-verify="title" autocomplete="off" placeholder="不用前缀"
                            class="layui-input">
                 </div>
             </div>
 
-            //textarea
-            //textarea
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">Index页面</label>
+                <div class="layui-input-block">
+                    <textarea placeholder="" class="layui-textarea" id="web_index"></textarea>
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">Action页面</label>
+                <div class="layui-input-block">
+                    <textarea placeholder="请输入内容" class="layui-textarea" id="web_action"></textarea>
+                </div>
+            </div>
 
             <div class="layui-form-item">
                 <div class="layui-input-block">
                     <button class="layui-btn" lay-submit lay-filter="create_curd">生成模型控制器</button>
-                    <button class="layui-btn" lay-submit lay-filter="update_notes">更新Model注释</button>
+                    <button class="layui-btn" lay-submit lay-filter="update_notes">更新Model字段属性</button>
                     <button class="layui-btn" lay-submit lay-filter="create_html">生成前端页面</button>
                 </div>
             </div>
@@ -67,6 +78,17 @@
         form.on('submit(update_notes)', function (data) {
             view.req({
                 url: "update_notes.html",
+                data: data.field,
+                type: "get",
+                success: function (res) {
+                    console.log(res);
+                }
+            });
+        });
+        //监听提交
+        form.on('submit(create_html)', function (data) {
+            view.req({
+                url: "create_html.html",
                 data: data.field,
                 type: "get",
                 success: function (res) {

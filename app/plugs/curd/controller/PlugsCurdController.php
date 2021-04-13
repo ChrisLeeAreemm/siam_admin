@@ -4,6 +4,8 @@ namespace app\plugs\curd\controller;
 
 use think\facade\Db;
 use think\helper\Str;
+use think\response\Json;
+use think\Route;
 
 class PlugsCurdController
 {
@@ -19,48 +21,69 @@ class PlugsCurdController
     public function __construct()
     {
         $this->prefix         = env('database.prefix', '');
-        $this->tableName      = request()->param('table_name');
-        $this->table          = $this->prefix . request()->param('table_name');
+        $this->tableName      = request()->param('table_name', '');
+        $this->table          = $this->prefix . $this->tableName;
         $this->modelPath      = app_path() . 'model\\';
         $this->controllerPath = app_path() . 'controller\admin\\';
     }
+    
     /**
      *  创建模型和控制器
-     * @return \think\response\Json
+     * @return Json
      */
-    public function create_curd()
+    public function create_curd(): Json
     {
-        $putModelFile         = $this->parseField()->putModelFile();
-        $putControllerFile    = $this->parseField()->putControllerFile();
+        // 写入模型文件
+        $putModelFile      = $this->parseField()->putModelFile();
+        // 写入控制器文件
+        $putControllerFile = $this->parseField()->putControllerFile();
         if ($putModelFile != true || $putControllerFile != true) {
             return json(['code' => '300', 'data' => '', 'msg' => '生成失败']);
         }
         return json(['code' => '200', 'data' => '', 'msg' => '生成成功']);
     }
     
+    /**
+     * 更新所有数据模型字段
+     */
     public function update_notes()
     {
-        
-        $file = $this->modelPath . Str::title($this->tableName) .'Model.php';
-        if (!is_file($file)){
-            return json(['code' => '300', 'data' => '', 'msg' => '文件不存在']);
+        //查询所有表
+        $tables = Db::query('SHOW TABLES');
+        foreach ($tables as $key => $value) {
+            //设置表名
+            $this->table = $value['Tables_in_siamadmin'];
+            //去掉前缀
+            $tableName = str_replace($this->prefix, '', $value['Tables_in_siamadmin']);
+            //获取文件
+            $file      = $this->modelPath . Str::title($tableName) . 'Model.php';
+            //不存在不执行
+            if (!is_file($file)) {
+                continue;
+            }
+            //获取文件
+            $content = file_get_contents($file);
+            //获取最新表详情
+            $this->parseField();
+            //更新文件
+            $content = preg_replace('/#start.*#end/sm', $this->tableNotes, $content);
+            file_put_contents($file, $content);
         }
-        $content = file_get_contents($file);
-        $this->parseField();
-        $content = preg_replace('/--.*--/',' ', $content);
-        dump($content);
-        dump($this->tableNotes);
-        // $content = file_put_contents($file,$content);
-        // if (!$content){
-        //     return json(['code' => '300', 'data' => '', 'msg' => '更新失败']);
-        // }
-        // return json(['code' => '200', 'data' => '', 'msg' => '更新成功']);
+        return true;
+        
+        
     }
+    
+    public function create_html()
+    {
+        // TODO 创建页面
+    }
+    
     /**
      * 解析字段，注释
      * @return $this
      */
-    private function parseField()
+    private function parseField(): PlugsCurdController
     {
         $fullTable = $this->table;
         // 获取数据表字段详细信息
@@ -74,6 +97,7 @@ class PlugsCurdController
         }
         
         $string = <<<t
+#start
 /**
  * {$fullTable}
 t;
@@ -86,15 +110,16 @@ s;
         }
         
         $string           .= "\n */";
+        $string           .= "\n #end";
         $this->tableNotes = $string;
         return $this;
     }
     
-    private function putModelFile()
+    private function putModelFile(): bool
     {
         $modelName = Str::studly($this->tableName);
         
-        $template = $this->modelFileTemplet();
+        $template = $this->modelFileTemplate();
         $template = str_replace("-modelName-", $modelName, $template);
         $template = str_replace("-notesString-", $this->tableNotes ?? '', $template);
         $template = str_replace("-tableName-", $this->tableName ?? '', $template);
@@ -108,12 +133,12 @@ s;
         return true;
     }
     
-    private function putControllerFile()
+    private function putControllerFile(): bool
     {
         $modelName = Str::studly($this->tableName);
         
         $template = $this->controllerFileTemplate();
-        $template = str_replace("-modelName-", $modelName.'Model', $template);
+        $template = str_replace("-modelName-", $modelName . 'Model', $template);
         $template = str_replace("-controllerName-", $modelName, $template);
         $template = str_replace("-pk-", $this->pk, $template);
         $template = str_replace("-conditionString-", '', $template);
@@ -126,7 +151,7 @@ s;
         return true;
     }
     
-    private function modelFileTemplet()
+    private function modelFileTemplate()
     {
         $path = dirname(__FILE__) . "\model_file";
         return file_get_contents($path);
@@ -138,8 +163,5 @@ s;
         return file_get_contents($path);
     }
     
-    public function create_html()
-    {
-        // TODO 创建页面
-    }
+    
 }
