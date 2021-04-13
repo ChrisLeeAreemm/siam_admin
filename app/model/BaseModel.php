@@ -1,4 +1,7 @@
 <?php
+namespace app\model;
+use think\Model;
+
 /**
  * Created by PhpStorm.
  * User: Chris
@@ -6,7 +9,7 @@
  * Time: 16:58
  */
 
-class BaseModel
+class BaseModel extends Model
 {
 
 }

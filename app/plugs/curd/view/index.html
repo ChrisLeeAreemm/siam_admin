@@ -18,7 +18,7 @@
             <legend>CURD</legend>
         </fieldset>
 
-        <form class="layui-form">
+        <div class="layui-form">
             <div class="layui-form-item">
                 <label class="layui-form-label">数据表名</label>
                 <div class="layui-input-block">
@@ -32,17 +32,17 @@
 
             <div class="layui-form-item">
                 <div class="layui-input-block">
-                    <button class="layui-btn" lay-submit lay-filter="run">立即提交</button>
+                    <button class="layui-btn" lay-submit lay-filter="create_curd">生成模型控制器</button>
                     <button class="layui-btn" lay-submit lay-filter="update_notes">更新Model注释</button>
                     <button class="layui-btn" lay-submit lay-filter="create_html">生成前端页面</button>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 
 <script src="__ADMIN__/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
-<script src="__ADMIN__/js/lay-config.js?v=2.0.2" charset="utf-8"></script>
+<script src="__ADMIN__/js/lay-config.js?v=2.0.4" charset="utf-8"></script>
 <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
 <script>
 
@@ -53,17 +53,26 @@
             , view = layui.view;
 
         //监听提交
-        form.on('submit(run)', function (data) {
+        form.on('submit(create_curd)', function (data) {
             view.req({
-                url: "run.html",
+                url: "create_curd.html",
                 data: data.field,
-                type: "post",
-                dataType: "json",
+                type: "get",
                 success: function (res) {
-                    console.log(res)
+                    console.log(res);
                 }
             });
-            return false;
+        });
+        //监听提交
+        form.on('submit(update_notes)', function (data) {
+            view.req({
+                url: "update_notes.html",
+                data: data.field,
+                type: "get",
+                success: function (res) {
+                    console.log(res);
+                }
+            });
         });
 
     });

@@ -1,0 +1,16 @@
+<?php
+/**
+ * Created by CurdPlugs
+ * User: Chris
+ */
+
+namespace app\model;
+
+use think\Model;
+
+-notesString-
+class -modelName-Model extends BaseModel
+{
+    protected $name = '-tableName-';
+    protected $pk   = '-pk-';
+}

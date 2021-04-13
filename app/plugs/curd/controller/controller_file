@@ -1,0 +1,78 @@
+<?php
+
+namespace app\controller\admin;
+
+use Siam\Api;
+use think\db\Query;
+use app\model\-modelName- as Model;
+use app\BaseController;
+
+class Admin-controllerName-Controller extends BaseController
+{
+    /**
+     * @return mixed
+     * @throws \think\Exception
+     */
+    public function get_list()
+    {
+
+        $page  = input('page', 1);
+        $limit = input('limit', 10);
+
+        $result = Model::paginate(['page' => $page, 'list_rows' => $limit,])->toArray();
+        $lists  = $result['data'];
+        $count  = $result['total'];
+        return Api::send('200', [
+               'lists' => $lists,
+               'count' => $count
+        ]);
+    }
+
+    public function get_one()
+    {
+
+    }
+
+    /**
+     * @return false|string
+     */
+    public function add()
+    {
+
+        $param = input();
+
+        $start = Model::create($param);
+
+        if (!$start) {
+             return Api::send('500', [], '新增失败');
+        }
+        return Api::send('200');
+    }
+
+    /**
+     * @return false|string
+     */
+    public function edit()
+    {
+        $param = input();
+        $start = Model::find($param['u_id']);
+        $res   = $start->save($param);
+
+        if (!$res){
+            return Api::send('500', [], '编辑失败');
+        }
+        return Api::send('200');
+    }
+
+    /**
+     * @return false|string
+     */
+    public function delete()
+    {
+        $id = input('-pk-');
+
+        $result = Model::destroy($id);
+
+        return Api::send('200',[],'ok');
+    }
+}
