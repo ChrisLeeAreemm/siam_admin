@@ -56,12 +56,15 @@
 
 /*左侧菜单更多下拉样式 leftMenuNavMore */
 .layuimini-menu-left .layui-nav .layui-nav-more, .layuimini-menu-left-zoom.layui-nav .layui-nav-more {
-    border-top-color: rgb(191, 187, 187);
+    border-top-color: #fff;
+}
+.layui-bg-siam, .layui-bg-siam  .layui-nav-child{
+    background-color: #fff !important;
 }
 
 /*左侧菜单更多下拉样式 leftMenuNavMore */
 .layuimini-menu-left .layui-nav .layui-nav-mored, .layuimini-menu-left .layui-nav-itemed > a .layui-nav-more, .layuimini-menu-left-zoom.layui-nav .layui-nav-mored, .layuimini-menu-left-zoom.layui-nav-itemed > a .layui-nav-more {
-    border-color: transparent transparent rgb(191, 187, 187) !important;
+    border-color: transparent transparent #fff !important;
 }
 
 /*左侧菜单背景 leftMenuBg */
@@ -87,6 +90,7 @@
 /*左侧菜单选中字体颜色 leftMenuColorThis */
 .layuimini-menu-left .layui-nav .layui-nav-item a:hover, .layuimini-menu-left .layui-nav .layui-this a, .layuimini-menu-left-zoom.layui-nav .layui-nav-item a:hover, .layuimini-menu-left-zoom.layui-nav .layui-this a {
     color: #1e9fff !important;
+    background-color: #fff;
 }
 
 /**tab选项卡选中颜色 tabActiveColor */
