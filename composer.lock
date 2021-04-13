@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "74a749574e0f40df27b0061a71e2b878",
+    "content-hash": "27fe85c0f3318f540d9027038c17197c",
     "packages": [
         {
             "name": "league/flysystem",
@@ -406,6 +406,54 @@
                 "simple-cache"
             ],
             "time": "2017-10-23T01:57:42+00:00"
+        },
+        {
+            "name": "siam/commom-helper",
+            "version": "1.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/xuanyanwow/CommomHelper.git",
+                "reference": "fc20af9819fa3f1c87026293b2c3caca6c62ad79"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/xuanyanwow/CommomHelper/zipball/fc20af9819fa3f1c87026293b2c3caca6c62ad79",
+                "reference": "fc20af9819fa3f1c87026293b2c3caca6c62ad79",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "ext-bcmath": "*",
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-libxml": "*",
+                "ext-openssl": "*",
+                "ext-simplexml": "*",
+                "ext-xml": "*"
+            },
+            "type": "project",
+            "autoload": {
+                "psr-4": {
+                    "Siam\\": "src/siam"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Siam",
+                    "email": "59419979@qq.com"
+                }
+            ],
+            "description": "Siam PHP",
+            "time": "2020-11-20T03:25:47+00:00"
         },
         {
             "name": "topthink/framework",
