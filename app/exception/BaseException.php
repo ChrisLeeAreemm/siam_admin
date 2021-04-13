@@ -18,4 +18,9 @@ class BaseException extends Exception
     {
         $this->return = [];
     }
+
+    public function get_return()
+    {
+        return $this->return;
+    }
 }
