@@ -47,12 +47,14 @@ class PlugsCurdController
         }
         $content = file_get_contents($file);
         $this->parseField();
-        $content = preg_replace('/####.*####/',$this->tableNotes, $content);
-        $content = file_put_contents($file,$content);
-        if (!$content){
-            return json(['code' => '300', 'data' => '', 'msg' => '更新失败']);
-        }
-        return json(['code' => '200', 'data' => '', 'msg' => '更新成功']);
+        $content = preg_replace('/--.*--/',' ', $content);
+        dump($content);
+        dump($this->tableNotes);
+        // $content = file_put_contents($file,$content);
+        // if (!$content){
+        //     return json(['code' => '300', 'data' => '', 'msg' => '更新失败']);
+        // }
+        // return json(['code' => '200', 'data' => '', 'msg' => '更新成功']);
     }
     /**
      * 解析字段，注释

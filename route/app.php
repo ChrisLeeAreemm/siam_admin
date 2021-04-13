@@ -15,3 +15,6 @@ Route::get('think', function () {
 });
 
 Route::get('hello/:name', 'index/hello');
+Route::group(function (){
+    Route::get('user/get_list', 'AdminUsersController/get_list');
+})->prefix('admin.');
