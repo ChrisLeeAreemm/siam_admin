@@ -18,8 +18,8 @@ class AdminUsersController extends BaseController
 
         $page  = input('page', 1);
         $limit = input('limit', 10);
-
-        $result = Model::paginate(['page' => $page, 'list_rows' => $limit,])->toArray();
+    
+        $result = Model::with(['roles'])->paginate(['page' => $page, 'list_rows' => $limit]);
         $lists  = $result['data'];
         $count  = $result['total'];
         return json(['code'=>'200','data'=>['lists'=>$lists,'count'=>$count],'msg'=>'']);
