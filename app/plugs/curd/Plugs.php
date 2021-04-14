@@ -23,7 +23,7 @@ class Plugs extends PlugsBase
     
     public function install()
     {
-    
+        file_put_contents(__DIR__.'\install.lock',date('Y-m-d H:i:s'));
     }
     
     public function remove()
@@ -33,6 +33,7 @@ class Plugs extends PlugsBase
     
     public function init()
     {
+        
         // 在这里注入路由[api] 等事件
         Route::get('plugs/curd/index', function () {
             return $this->pre_render_file(__DIR__ . "/view/index.html");
