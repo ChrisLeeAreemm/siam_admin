@@ -34,18 +34,19 @@
 <script src="../../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
 <script src="../../js/lay-config.js?v=2.0.4" charset="utf-8"></script>
 <script>
-  layui.use(['form', 'layer','view'], function () {
+  layui.use(['form', 'layer','view','setter'], function () {
     var form = layui.form;
     var layer = layui.layer;
     var $ = layui.jquery;
     var view = layui.view;
+    var setter = layui.setter;
     let submit_url = "--add_url--";
     let get_one_url = "--get_one_url--";
     let --pk-- = getQueryVariable('--pk--');
     if(--pk--){
       //获取信息
       view.req({
-        url: get_one_url,
+        url: setter.Api+'index.php/'+get_one_url,
         data: {--pk--:--pk--},
         type: "get",
         dataType: "json",
@@ -66,7 +67,7 @@
         shade: 0.5
       });
       view.req({
-        url: submit_url,
+        url: setter.Api+'index.php/'+submit_url,
         data: data.field,
         type: "post",
         dataType: "json",

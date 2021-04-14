@@ -54,7 +54,7 @@
 
         table.render({
             elem: '#lists'
-            , url: "admin/-table-/get_list'"
+            , url: setter.Api+"index.php/admin/-table-/get_list'"
             , where: {
                 access_token: layui.data(setter.tableName)[setter.request.tokenName]
             }
@@ -78,7 +78,7 @@
 
         //添加
         $('#add_btn').click(function (){
-            var url = "admin/page/-table-/action.html";
+            var url = setter.Api+"admin/page/-table-/action.html";
             layer.open({
                 type: 2,
                 title: "{:lang('add')}",
@@ -96,7 +96,7 @@
                 case 'del':
                     layer.confirm('确认删除?', {icon: 3, title: '提示'}, function (index) {
                         view.req({
-                            url: "admin/-table-/delete",
+                            url: setter.Api+"index.php/admin/-table-/delete",
                             data: {
                                 -pk-: data.-pk-
                             },
@@ -117,7 +117,7 @@
                     });
                     break;
                 case 'edit':
-                    var url = "admin/page/-table-/action.html?-pk-="+data.-pk-;
+                    var url = setter.Api+"admin/page/-table-/action.html?-pk-="+data.-pk-;
                     layer.open({
                         type: 2,
                         title: "{:lang('edit')}",
