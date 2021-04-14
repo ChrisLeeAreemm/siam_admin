@@ -29,7 +29,6 @@ layui.define(["jquery"], function (exports) {
             var _hmt = _hmt || [];
             (function () {
                 var hm = document.createElement("script");
-                hm.src = "https://hm.baidu.com/hm.js?d97abf6d61c21d773f97835defbdef4e";
                 var s = document.getElementsByTagName("script")[0];
                 s.parentNode.insertBefore(hm, s);
             })();

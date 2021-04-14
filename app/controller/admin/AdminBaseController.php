@@ -8,8 +8,9 @@
 
 namespace app\controller\admin;
 
+use app\BaseController;
 
-class AdminBaseController
+class AdminBaseController extends BaseController
 {
 
 }
