@@ -2,11 +2,10 @@
 
 namespace app\controller\admin;
 
-use app\plugs\PlugsConfig;
-use Siam\Api;
 use think\db\Query;
 use app\model\UsersModel as Model;
 use app\BaseController;
+use think\helper\Arr;
 use think\helper\Str;
 
 class AdminSystemController extends BaseController
@@ -18,16 +17,20 @@ class AdminSystemController extends BaseController
     public function get_list()
     {
         // TODO 注入路由 [1.获取插件列表(带安装状态) 2.启用插件 3.停用插件 ]
+        
+        $plug_arr = $this->get_plugs();
+        
         $arr = [
-            'homeInfo'    => [
+            'homeInfo' => [
                 "title" => "首页",
                 "href"  => "page/welcome-1.html?t=1"
             ],
-            "logoInfo"    => [
+            "logoInfo" => [
                 "title" => "LAYUI MINI",
                 "image" => "images/logo.png",
                 "href"  => ""
-            ], "menuInfo" => [
+            ],
+            "menuInfo" => [
                 [
                     "title"  => "常规管理",
                     "icon"   => "fa fa-address-book",
@@ -35,7 +38,7 @@ class AdminSystemController extends BaseController
                     "target" => "_self",
                     "child"  => [
                         [
-                            "title"  => "主页模板",
+                            "title"  => "管理列表",
                             "href"   => "",
                             "icon"   => "fa fa-home",
                             "target" => "_self",
@@ -63,36 +66,17 @@ class AdminSystemController extends BaseController
                     ]
                 ],
                 [
-                    "title"  => "管理",
+                    "title"  => "组件管理",
                     "icon"   => "fa fa-address-book",
                     "href"   => "",
                     "target" => "_self",
                     "child"  => [
                         [
-                            "title"  => "主页模板",
+                            "title"  => "组件管理",
                             "href"   => "",
                             "icon"   => "fa fa-home",
                             "target" => "_self",
-                            "child"  => [
-                                [
-                                    "title"  => "权限",
-                                    "href"   => "page/auths/lists.html",
-                                    "icon"   => "fa fa-tachometer",
-                                    "target" => "_self"
-                                ],
-                                [
-                                    "title"  => "角色",
-                                    "href"   => "page/roles/lists.html",
-                                    "icon"   => "fa fa-tachometer",
-                                    "target" => "_self"
-                                ],
-                                [
-                                    "title"  => "用户",
-                                    "href"   => "page/users/lists.html",
-                                    "icon"   => "fa fa-tachometer",
-                                    "target" => "_self"
-                                ]
-                            ]
+                            "child"  => $plug_arr
                         ],
                     ]
                 ]
@@ -100,6 +84,33 @@ class AdminSystemController extends BaseController
         ];
         return json($arr);
         
+    }
+    
+    public function get_plugs()
+    {
+        $dir = app_path() . 'plugs\\';
+        if (!is_dir($dir)) {
+            return false;
+        }
+        $domain = $this->request->domain();
+        $arr    = scandir($dir);
+        //检索插件
+        $namespace = '\app\plugs\\';
+        $child     = [];
+        foreach ($arr as $key => $dirName) {
+            if (Str::contains($dirName, '.') == false && is_dir($dir . $dirName)) {
+                $Plugs      = $namespace . $dirName . '\Plugs';
+                $PlugsModel = new $Plugs();
+                $name       = $PlugsModel->get_config()->getName();
+                $child[]    = [
+                    'title'  => $name,
+                    'href'   => $domain . '/index.php/' . $PlugsModel->get_config()->getHomeView(),
+                    'icon'   => "fa fa-tachometer",
+                    'target' => '_self'
+                ];
+            }
+        }
+        return $child;
     }
     
     public function get_one()
@@ -111,21 +122,7 @@ class AdminSystemController extends BaseController
         }
         return json(['code' => '200', 'data' => ['lists' => $result], 'msg' => '']);
     }
-    public function get_plugs()
-    {
-        $dir = app_path() . 'plugs\\';
-        if (!$dir){
-            return false;
-        }
-        $arr = scandir($dir);
-        //去除带. 和php后缀的
-        foreach ($arr as $value){
-            if (Str::contains($value, '.') == true  || Str::contains($value, 'php') == true){
-                continue;
-            }
-            dump(scandir($dir.$value));
-        }
-    }
+    
     
     /**
      * @return false|string
