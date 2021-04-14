@@ -185,17 +185,43 @@ s;
     private function putActionFile()
     {
         
-            $str = <<<EOF
-<div class="layui-form-item">
-                <label class="layui-form-label"></label>
+        $fullTable   = $this->table;
+        // 获取数据表字段详细信息
+        $this->tableInfo = Db::table($fullTable)->getFields($fullTable);
+        // 找出主键
+        foreach ($this->tableInfo as $key => $value) {
+            if ($value['primary'] === true) {
+                $this->pk = $key;
+                break;
+            }
+        }
+        $str = '';
+        $get_one_val = '';
+        // 赋值
+        foreach ($this->tableInfo as $value) {
+            $str .= <<<EOF
+            <div class="layui-form-item">
+                <label class="layui-form-label">{$value['name']}</label>
                 <div class="layui-input-block">
-                    <input type="text" name="" lay-verify="" autocomplete="off" placeholder="请输入标题" class="layui-input">
+                    <input type="text" name="{$value['name']}" lay-verify="" autocomplete="off" placeholder="请输入标题" class="layui-input">
                 </div>
             </div>
+\n
 EOF;
+            $get_one_val .= <<<EOF
+                "{$value['name']}" :res.data.lists.{$value['name']},\n
+EOF;
+
+        }
+        
     
         $template = $this->actionFileTemplet();
-        $template = str_replace("-demo-", $str, $template);
+        $template = str_replace("--demo--", $str, $template);
+        $template = str_replace("--pk--", $this->pk, $template);
+        $template = str_replace("--add_url--", "admin/$this->tableName/add", $template);
+        $template = str_replace("--edit_url--", "admin/$this->tableName/edit", $template);
+        $template = str_replace("--get_one_url--", "admin/$this->tableName/get_one", $template);
+        $template = str_replace("--get_one_val--", $get_one_val, $template);
         return $template;
     }
     
