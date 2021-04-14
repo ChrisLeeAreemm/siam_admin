@@ -39,3 +39,4 @@ Route::any('admin/auths/delete', 'admin.AdminAuthsController/delete');
 
 
 Route::any('admin/system/get_list', 'admin.AdminSystemController/get_list');
+Route::any('admin/system/get_plugs', 'admin.AdminSystemController/get_plugs');
