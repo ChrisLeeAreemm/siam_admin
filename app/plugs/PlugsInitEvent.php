@@ -3,7 +3,7 @@
 namespace app\plugs;
 
 
-use app\plugs\curd\Plugs;
+use app\plugs\errorCode\Plugs;
 
 class PlugsInitEvent
 {
