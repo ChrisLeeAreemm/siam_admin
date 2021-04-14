@@ -4,7 +4,8 @@
 
 layui.define(['layer'], function (exports) {
     exports('setter', {
-        name: 'Siam_Admin'
+        Api : "http://www.siamadmin.local/"
+        ,name: 'Siam_Admin'
         , tableName: 'Siam_Admin' //本地存储表名
         //自定义请求字段
         , request: {

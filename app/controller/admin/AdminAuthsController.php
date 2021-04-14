@@ -4,10 +4,10 @@ namespace app\controller\admin;
 
 use Siam\Api;
 use think\db\Query;
-use app\model\-modelName- as Model;
+use app\model\AuthsModel as Model;
 use app\BaseController;
 
-class Admin-controllerName-Controller extends BaseController
+class AdminAuthsController extends BaseController
 {
     /**
      * @return mixed
@@ -28,7 +28,7 @@ class Admin-controllerName-Controller extends BaseController
 
     public function get_one()
     {
-        $id = input('-pk-');
+        $id = input('auth_id');
         $result = Model::find($id);
         if (!$result){
             return json(['code'=>'500','data'=>'','msg'=>'获取失败']);
@@ -58,7 +58,7 @@ class Admin-controllerName-Controller extends BaseController
     public function edit()
     {
         $param = input();
-        $start = Model::find($param['-pk-']);
+        $start = Model::find($param['auth_id']);
         $res   = $start->save($param);
 
         if (!$res){
@@ -72,7 +72,7 @@ class Admin-controllerName-Controller extends BaseController
      */
     public function delete()
     {
-        $id = input('-pk-');
+        $id = input('auth_id');
 
         $result = Model::destroy($id);
 

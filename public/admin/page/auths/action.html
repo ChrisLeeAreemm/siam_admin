@@ -13,7 +13,49 @@
 <body>
 
 <div class="layui-form" lay-filter="user">
-  --demo--
+  <div class="layui-form-item">
+    <label class="layui-form-label">auth_id</label>
+    <div class="layui-input-block">
+      <input type="text" name="auth_id" lay-verify="" autocomplete="off" placeholder="请输入标题" class="layui-input">
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">auth_name</label>
+    <div class="layui-input-block">
+      <input type="text" name="auth_name" lay-verify="" autocomplete="off" placeholder="请输入标题" class="layui-input">
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">auth_rules</label>
+    <div class="layui-input-block">
+      <input type="text" name="auth_rules" lay-verify="" autocomplete="off" placeholder="请输入标题" class="layui-input">
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">auth_type</label>
+    <div class="layui-input-block">
+      <input type="text" name="auth_type" lay-verify="" autocomplete="off" placeholder="请输入标题" class="layui-input">
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">create_time</label>
+    <div class="layui-input-block">
+      <input type="text" name="create_time" lay-verify="" autocomplete="off" placeholder="请输入标题" class="layui-input">
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">update_time</label>
+    <div class="layui-input-block">
+      <input type="text" name="update_time" lay-verify="" autocomplete="off" placeholder="请输入标题" class="layui-input">
+    </div>
+  </div>
+
+
   <div class="layui-form-item" style="display: none;">
     <label class="layui-form-label">token</label>
     <div class="layui-input-inline">
@@ -40,27 +82,33 @@
     var $ = layui.jquery;
     var view = layui.view;
     var setter = layui.setter;
-    let submit_url = "--add_url--";
-    let get_one_url = "--get_one_url--";
-    let --pk-- = getQueryVariable('--pk--');
-    if(--pk--){
+    let submit_url = "admin/auths/add";
+    let get_one_url = "admin/auths/get_one";
+    let auth_id = getQueryVariable('auth_id');
+    if(auth_id){
       //获取信息
       view.req({
         url: setter.Api+'index.php/'+get_one_url,
-        data: {--pk--:--pk--},
+        data: {auth_id:auth_id},
         type: "get",
         dataType: "json",
         success:function (res){
           if (res.code === "200"){
             // 初始化赋值
             form.val("user", {
-              --get_one_val--
+              "auth_id" :res.data.lists.auth_id,
+              "auth_name" :res.data.lists.auth_name,
+              "auth_rules" :res.data.lists.auth_rules,
+              "auth_type" :res.data.lists.auth_type,
+              "create_time" :res.data.lists.create_time,
+              "update_time" :res.data.lists.update_time,
+
             });
             layui.form.render();
           }
         }
       })
-      submit_url = "--edit_url--";
+      submit_url = "admin/auths/edit";
     }
     form.on('submit(submit)', function (data) {
       var load = layer.load(0, {
@@ -74,10 +122,10 @@
         success: function (res) {
           layer.close(load);
           if (res.code === '200') {
-              layer.msg("成功",{time: 2000},function () {
-                window.location.reload();
-              });
-            } else {
+            layer.msg("成功",{time: 2000},function () {
+              window.location.reload();
+            });
+          } else {
             layer.msg(res.msg,{time: 2000},function () {
               window.location.reload();
             });
