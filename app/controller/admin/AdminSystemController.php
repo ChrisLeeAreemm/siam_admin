@@ -16,10 +16,10 @@ class AdminSystemController extends BaseController
      */
     public function get_list()
     {
-        // TODO 注入路由 [1.获取插件列表(带安装状态) 2.启用插件 3.停用插件 ]
+        //TODO 2.启用插件 3.停用插件
         
+        // 获取插件列表(带安装状态)
         $plug_arr = $this->get_plugs();
-        
         $arr = [
             'homeInfo' => [
                 "title" => "首页",
