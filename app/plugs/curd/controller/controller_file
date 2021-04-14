@@ -58,7 +58,7 @@ class Admin-controllerName-Controller extends BaseController
     public function edit()
     {
         $param = input();
-        $start = Model::find($param['u_id']);
+        $start = Model::find($param['-pk-']);
         $res   = $start->save($param);
 
         if (!$res){
