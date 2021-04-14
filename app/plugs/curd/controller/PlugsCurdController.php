@@ -34,7 +34,7 @@ class PlugsCurdController
     public function create_curd(): Json
     {
         // 写入模型文件
-        $putModelFile      = $this->parseField()->putModelFile();
+        $putModelFile = $this->parseField()->putModelFile();
         // 写入控制器文件
         $putControllerFile = $this->parseField()->putControllerFile();
         if ($putModelFile != true || $putControllerFile != true) {
@@ -56,7 +56,7 @@ class PlugsCurdController
             //去掉前缀
             $tableName = str_replace($this->prefix, '', $value['Tables_in_siamadmin']);
             //获取文件
-            $file      = $this->modelPath . Str::title($tableName) . 'Model.php';
+            $file = $this->modelPath . Str::title($tableName) . 'Model.php';
             //不存在不执行
             if (!is_file($file)) {
                 continue;
@@ -76,7 +76,9 @@ class PlugsCurdController
     
     public function create_html()
     {
-        // TODO 创建页面
+        $ListsHtml = $this->putListsFile();
+        return json(['code' => '200', 'data' => $ListsHtml, 'msg' => '生成成功']);
+        
     }
     
     /**
@@ -137,18 +139,47 @@ s;
     {
         $modelName = Str::studly($this->tableName);
         
-        $template = $this->controllerFileTemplate();
-        $template = str_replace("-modelName-", $modelName . 'Model', $template);
-        $template = str_replace("-controllerName-", $modelName, $template);
-        $template = str_replace("-pk-", $this->pk, $template);
-        $template = str_replace("-conditionString-", '', $template);
-        
-        $fullPath = $this->controllerPath . "Admin$modelName" . "Controller.php";
+        $template  = $this->controllerFileTemplate();
+        $template  = str_replace("-modelName-", $modelName . 'Model', $template);
+        $template  = str_replace("-controllerName-", $modelName, $template);
+        $template  = str_replace("-pk-", $this->pk, $template);
+        $template  = str_replace("-conditionString-", '', $template);
+        $file_name = "Admin$modelName" . "Controller.php";
+        $fullPath  = $this->controllerPath . $file_name;
         if (file_exists($fullPath)) {
             return false;
         }
         file_put_contents($fullPath, $template);
         return true;
+    }
+    
+    private function putListsFile()
+    {
+        $fieldString = [];
+        $fullTable   = $this->table;
+        // 获取数据表字段详细信息
+        $this->tableInfo = Db::table($fullTable)->getFields($fullTable);
+        // 找出主键
+        foreach ($this->tableInfo as $key => $value) {
+            if ($value['primary'] === true) {
+                $this->pk = $key;
+                break;
+            }
+        }
+        // 表格赋值
+        foreach ($this->tableInfo as $value) {
+            $field         = $value['name'];
+            $title         = !empty($value['comment']) ? $value['comment'] : $field;
+            $fieldString[] = " {field: '{$field}', title: '{$title}'}";
+        }
+        
+        $fieldString = implode($fieldString, ',');
+        
+        $template = $this->listsFileTemplet();
+        $template = str_replace("-table-", $this->tableName, $template);
+        $template = str_replace("-pk-", $this->pk, $template);
+        $template = str_replace("-fieldString-", $fieldString, $template);
+        return $template;
     }
     
     private function modelFileTemplate()
@@ -160,6 +191,12 @@ s;
     private function controllerFileTemplate()
     {
         $path = dirname(__FILE__) . "\controller_file";
+        return file_get_contents($path);
+    }
+    
+    private function listsFileTemplet()
+    {
+        $path = dirname(__FILE__) . "\lists.html";
         return file_get_contents($path);
     }
     

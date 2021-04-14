@@ -22,10 +22,8 @@ class Admin-controllerName-Controller extends BaseController
         $result = Model::paginate(['page' => $page, 'list_rows' => $limit,])->toArray();
         $lists  = $result['data'];
         $count  = $result['total'];
-        return Api::send('200', [
-               'lists' => $lists,
-               'count' => $count
-        ]);
+        return json(['code'=>'200','data'=>['lists'=>$lists,'count'=>$count],'msg'=>'']);
+
     }
 
     public function get_one()
@@ -44,9 +42,9 @@ class Admin-controllerName-Controller extends BaseController
         $start = Model::create($param);
 
         if (!$start) {
-             return Api::send('500', [], '新增失败');
+             return json(['code'=>'500','data'=>'','msg'=>'新增失败']);
         }
-        return Api::send('200');
+            return json(['code'=>'200']);
     }
 
     /**
@@ -59,9 +57,9 @@ class Admin-controllerName-Controller extends BaseController
         $res   = $start->save($param);
 
         if (!$res){
-            return Api::send('500', [], '编辑失败');
+          return json(['code'=>'500','data'=>'','msg'=>'编辑失败']);
         }
-        return Api::send('200');
+        return json(['code'=>'200']);
     }
 
     /**
@@ -73,6 +71,6 @@ class Admin-controllerName-Controller extends BaseController
 
         $result = Model::destroy($id);
 
-        return Api::send('200',[],'ok');
+        return json(['code'=>'200','msg'=>'ok']);
     }
 }

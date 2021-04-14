@@ -28,16 +28,16 @@
             </div>
 
             <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">Index页面</label>
+                <label class="layui-form-label">Lists页面</label>
                 <div class="layui-input-block">
-                    <textarea placeholder="" class="layui-textarea" id="web_index"></textarea>
+                    <textarea placeholder="" class="layui-textarea" id="lists"></textarea>
                 </div>
             </div>
 
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">Action页面</label>
                 <div class="layui-input-block">
-                    <textarea placeholder="请输入内容" class="layui-textarea" id="web_action"></textarea>
+                    <textarea placeholder="请输入内容" class="layui-textarea" id="action"></textarea>
                 </div>
             </div>
 
@@ -61,7 +61,8 @@
     layui.use(['form', 'view'], function () {
         var form = layui.form
             , layer = layui.layer
-            , view = layui.view;
+            , view = layui.view
+            , $ = layui.jquery
 
         //监听提交
         form.on('submit(create_curd)', function (data) {
@@ -92,7 +93,9 @@
                 data: data.field,
                 type: "get",
                 success: function (res) {
-                    console.log(res);
+                    if (res.code == '200'){
+                        $('#lists').text(res.data);
+                    }
                 }
             });
         });

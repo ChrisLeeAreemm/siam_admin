@@ -37,6 +37,10 @@ class Plugs extends PlugsBase
         Route::get('plugs/curd/index', function () {
             return $this->pre_render_file(__DIR__ . "/view/index.html");
         });
+        Route::get('plugs/curd/lists', function (){
+            return $this->pre_render_file(__DIR__ . "/view/lists.html");
+        });
+    
         Route::group(function () {
             Route::get('plugs/curd/create_curd', 'PlugsCurdController@create_curd');
             Route::get('plugs/curd/update_notes', 'PlugsCurdController@update_notes');

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>-table-列表</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="__ADMIN__/lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="__ADMIN__/css/public.css" media="all">
+    <style>
+        .wechat_cross_btn_group {
+            margin-left: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">-table-列表</div>
+                <div class="layui-btn-group wechat_cross_btn_group">
+                    <button class="layui-btn layui-btn-sm" id="add_btn" lay-href="{:url('-table-/add')}" lay-text="{:lang('add')}">
+                        <i class="layui-icon">&#xe654;</i>{:lang('add')}
+                    </button>
+                </div>
+                <div class="layui-card-body">
+                    <table class="layui-hide" id="lists" lay-filter="lists"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--({{ d.u_child_count }})-->
+<script type="text/html" id="do">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">{:lang('edi')}</a>
+    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">{:lang('delete')}</a>
+</script>
+
+<script src="__ADMIN__/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+<script src="__ADMIN__/js/lay-config.js?v=2.0.4" charset="utf-8"></script>
+<script>
+    layui.use([ 'table', 'jquery','setter','view'], function () {
+        var table = layui.table;
+        var $ = layui.jquery;
+        var setter = layui.setter;
+        var view = layui.view;
+
+        table.render({
+            elem: '#lists'
+            , url: "admin/-table-/get_list'"
+            , where: {
+                access_token: layui.data(setter.tableName)[setter.request.tokenName]
+            }
+            , cols: [[
+                -fieldString-
+                , {toolbar: '#do', width: 300}
+            ]]
+            , page: true
+            , response: {
+                statusCode: 200
+            }
+            , parseData: function(res){
+                return {
+                    "code": res.code,
+                    "msg": res.msg,
+                    "count": res.data.count,
+                    "data": res.data.lists
+                };
+            }
+        });
+
+
+        // 监听工具条
+        table.on('tool(lists)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event; //获得 lay-event 对应的值
+
+            switch (layEvent) {
+                case 'del':
+                    layer.confirm('确认删除?', {icon: 3, title: '提示'}, function (index) {
+                        view.req({
+                            url: "admin/-table-/delete",
+                            data: {
+                                -pk-: data.-pk-
+                            },
+                            type: "post",
+                            dataType: "json",
+                            success: function (res) {
+                                if (res.code === '200') {
+                                    window.location.reload();
+                                } else {
+                                    layer.msg(res.msg, {
+                                        icon: 2
+                                    })
+                                }
+                            }
+                        });
+
+                        layer.close(index);
+                    });
+                    break;
+                case 'edit':
+                    var url = "'admin/-table-/edit', ['-pk-' => '__PK__'])}";
+                    url =  url.replace("__PK__", data.-pk-);
+                    // var text = data.u_name + '用户';
+                    // //执行跳转
+                    // var topLayui = parent === self ? layui : top.layui;
+                    // topLayui.index.openTabsPage(url, text);
+                    layer.open({
+                        type: 2,
+                        title: "{:lang('edi')}",
+                        content: url,
+                        area:['70%','90%']
+                    });
+                    break;
+                default:
+                    // layer.msg('未知操作');
+                    break;
+            }
+        });
+        // 监听工具条结束
+    });
+</script>
+</body>
+
+</html>
