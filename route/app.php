@@ -36,3 +36,6 @@ Route::any('admin/auths/edit', 'admin.AdminAuthsController/edit');
 Route::any('admin/auths/add', 'admin.AdminAuthsController/add');
 Route::any('admin/auths/get_one', 'admin.AdminAuthsController/get_one');
 Route::any('admin/auths/delete', 'admin.AdminAuthsController/delete');
+
+
+Route::any('admin/system/get_list', 'admin.AdminSystemController/get_list');

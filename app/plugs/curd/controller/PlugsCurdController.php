@@ -34,12 +34,10 @@ class PlugsCurdController
     public function create_curd(): Json
     {
         // 写入模型文件
-        $putModelFile = $this->parseField()->putModelFile();
+        $this->parseField()->putModelFile();
         // 写入控制器文件
-        $putControllerFile = $this->parseField()->putControllerFile();
-        if ($putModelFile != true || $putControllerFile != true) {
-            return json(['code' => '300', 'data' => '', 'msg' => '生成失败']);
-        }
+        $this->parseField()->putControllerFile();
+        
         return json(['code' => '200', 'data' => '', 'msg' => '生成成功']);
     }
     
