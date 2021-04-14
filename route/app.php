@@ -15,3 +15,5 @@ Route::get('think', function () {
 });
 
 Route::get('hello/:name', 'index/hello');
+Route::get('admin/users/get_list', 'admin.AdminUsersController/get_list');
+

@@ -94,7 +94,8 @@
                 type: "get",
                 success: function (res) {
                     if (res.code == '200'){
-                        $('#lists').text(res.data);
+                        $('#lists').text(res.data.lists);
+                        $('#action').text(res.data.action);
                     }
                 }
             });

@@ -77,7 +77,8 @@ class PlugsCurdController
     public function create_html()
     {
         $ListsHtml = $this->putListsFile();
-        return json(['code' => '200', 'data' => $ListsHtml, 'msg' => '生成成功']);
+        $ActionHtml = $this->putActionFile();
+        return json(['code' => '200', 'data' => ['lists'=>$ListsHtml,'action'=>$ActionHtml], 'msg' => '生成成功']);
         
     }
     
@@ -181,6 +182,22 @@ s;
         $template = str_replace("-fieldString-", $fieldString, $template);
         return $template;
     }
+    private function putActionFile()
+    {
+        
+            $str = <<<EOF
+<div class="layui-form-item">
+                <label class="layui-form-label"></label>
+                <div class="layui-input-block">
+                    <input type="text" name="" lay-verify="" autocomplete="off" placeholder="请输入标题" class="layui-input">
+                </div>
+            </div>
+EOF;
+    
+        $template = $this->actionFileTemplet();
+        $template = str_replace("-demo-", $str, $template);
+        return $template;
+    }
     
     private function modelFileTemplate()
     {
@@ -197,6 +214,11 @@ s;
     private function listsFileTemplet()
     {
         $path = dirname(__FILE__) . "\lists.html";
+        return file_get_contents($path);
+    }
+    private function actionFileTemplet()
+    {
+        $path = dirname(__FILE__) . "\action.html";
         return file_get_contents($path);
     }
     
