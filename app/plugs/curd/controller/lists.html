@@ -9,8 +9,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <link rel="stylesheet" href="__ADMIN__/lib/layui-v2.6.3/css/layui.css" media="all">
-    <link rel="stylesheet" href="__ADMIN__/css/public.css" media="all">
+    <link rel="stylesheet" href="../../lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../css/public.css" media="all">
     <style>
         .wechat_cross_btn_group {
             margin-left: 15px;
@@ -26,8 +26,8 @@
             <div class="layui-card">
                 <div class="layui-card-header">-table-列表</div>
                 <div class="layui-btn-group wechat_cross_btn_group">
-                    <button class="layui-btn layui-btn-sm" id="add_btn" lay-href="{:url('-table-/add')}" lay-text="{:lang('add')}">
-                        <i class="layui-icon">&#xe654;</i>{:lang('add')}
+                    <button class="layui-btn layui-btn-sm" id="add_btn" lay-text="添加">
+                        <i class="layui-icon">&#xe654;</i>添加
                     </button>
                 </div>
                 <div class="layui-card-body">
@@ -39,12 +39,12 @@
 </div>
 <!--({{ d.u_child_count }})-->
 <script type="text/html" id="do">
-    <a class="layui-btn layui-btn-xs" lay-event="edit">{:lang('edi')}</a>
-    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">{:lang('delete')}</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
 </script>
 
-<script src="__ADMIN__/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
-<script src="__ADMIN__/js/lay-config.js?v=2.0.4" charset="utf-8"></script>
+<script src="../../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+<script src="../../js/lay-config.js?v=2.0.4" charset="utf-8"></script>
 <script>
     layui.use([ 'table', 'jquery','setter','view'], function () {
         var table = layui.table;
@@ -76,6 +76,16 @@
             }
         });
 
+        //添加
+        $('#add_btn').click(function (){
+            var url = "admin/page/-table-/action.html";
+            layer.open({
+                type: 2,
+                title: "{:lang('add')}",
+                content: url,
+                area: ['70%', '90%']
+            });
+        });
 
         // 监听工具条
         table.on('tool(lists)', function (obj) {
@@ -107,21 +117,15 @@
                     });
                     break;
                 case 'edit':
-                    var url = "'admin/-table-/edit', ['-pk-' => '__PK__'])}";
-                    url =  url.replace("__PK__", data.-pk-);
-                    // var text = data.u_name + '用户';
-                    // //执行跳转
-                    // var topLayui = parent === self ? layui : top.layui;
-                    // topLayui.index.openTabsPage(url, text);
+                    var url = "admin/page/-table-/action.html?-pk-="+data.-pk-;
                     layer.open({
                         type: 2,
-                        title: "{:lang('edi')}",
+                        title: "{:lang('edit')}",
                         content: url,
                         area:['70%','90%']
                     });
                     break;
                 default:
-                    // layer.msg('未知操作');
                     break;
             }
         });
