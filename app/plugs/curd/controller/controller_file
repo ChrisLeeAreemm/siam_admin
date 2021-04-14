@@ -28,7 +28,12 @@ class Admin-controllerName-Controller extends BaseController
 
     public function get_one()
     {
-
+        $id = input('-pk-');
+        $result = Model::find($id);
+        if (!$result){
+            return json(['code'=>'500','data'=>'','msg'=>'获取失败']);
+        }
+        return json(['code'=>'200','data'=>['lists'=>$result],'msg'=>'']);
     }
 
     /**
