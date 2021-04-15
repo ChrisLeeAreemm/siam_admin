@@ -24,9 +24,10 @@ class CronDocController
             /** @var \app\cron\CronBase $class */
             $class = new $class_namespace;
             $return[] = [
-                'name'       => $class->rule(),
-                'run_period' => $class->run_period(),
-                'class_name' => $class_name,
+                'name'           => $class->rule(),
+                'run_expression' => $class->run_period()->getExpression(),
+                'next_run_time'  => $class->run_period()->getNextRunDate()->format("Y-m-d H:i:s"),
+                'class_name'     => $class_name,
             ];
         }
 

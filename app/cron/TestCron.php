@@ -4,6 +4,8 @@
 namespace app\cron;
 
 
+use Cron\CronExpression;
+
 class TestCron extends CronBase
 {
 
@@ -18,11 +20,12 @@ class TestCron extends CronBase
 
     /**
      * 写明监控的运行周期(仅用于展示)
-     * @return string
+     * @return CronExpression
      */
-    function run_period(): string
+    function run_period(): CronExpression
     {
-        return "每天10点";
+        // 每天十点
+        return new CronExpression('* * * * *');
     }
 
     /**

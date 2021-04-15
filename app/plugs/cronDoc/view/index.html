@@ -33,6 +33,7 @@
         <tr>
             <th>任务名</th>
             <th>任务周期</th>
+            <th>下次执行</th>
             <th>类名</th>
         </tr>
         </thead>
@@ -40,7 +41,8 @@
             {{#  layui.each(d, function(index, item){ }}
             <tr>
                 <td>{{ item.name }}</td>
-                <td>{{ item.run_period }}</td>
+                <td>{{ item.run_expression }}</td>
+                <td>{{ item.next_run_time }}</td>
                 <td>{{ item.class_name }}</td>
             </tr>
             {{#  }); }}

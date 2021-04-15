@@ -4,14 +4,16 @@
 namespace app\cron;
 
 
+use Cron\CronExpression;
+
 abstract class CronBase extends \Siam\AbstractInterface\CronBase
 {
 
     /**
      * 写明监控的运行周期(仅用于展示)
-     * @return string
+     * @return CronExpression
      */
-    abstract function run_period(): string;
+    abstract function run_period(): CronExpression;
 
     /**
      * 执行逻辑
