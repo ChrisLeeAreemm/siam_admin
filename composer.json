@@ -21,9 +21,10 @@
     ],
     "require": {
         "php": ">=7.1.0",
-        "topthink/framework": "^6.0.0",
-        "topthink/think-orm": "^2.0",
-        "siam/commom-helper": "^1.1"
+        "topthink/framework": "6.0.7",
+        "topthink/think-orm": "v2.0.39",
+        "siam/commom-helper": "1.1.4",
+        "ext-json": "*"
     },
     "require-dev": {
         "symfony/var-dumper": "^4.2",

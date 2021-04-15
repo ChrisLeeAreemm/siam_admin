@@ -1,0 +1,39 @@
+<?php
+
+namespace app\plugs\cronDoc\controller;
+
+
+use app\exception\ErrorCode;
+use think\helper\Str;
+
+class CronDocController
+{
+    public function get_list()
+    {
+        $file_path = app_path().DIRECTORY_SEPARATOR."cron";
+        $list = scandir($file_path);
+        unset($list[0]);
+        unset($list[1]);
+        $list = array_values($list);
+        $return = [];
+        $namespace = 'app\\cron\\';
+        foreach ($list as $file_name){
+            $class_name = rtrim($file_name, '.php');
+            if ($class_name === 'CronBase') continue;
+            $class_namespace = $namespace.$class_name;
+            /** @var \app\cron\CronBase $class */
+            $class = new $class_namespace;
+            $return[] = [
+                'name'       => $class->rule(),
+                'run_period' => $class->run_period(),
+                'class_name' => $class_name,
+            ];
+        }
+
+        return json([
+            'code' => ErrorCode::SUCCESS,
+            'data' => (object) ['list'=>$return],
+            'msg'  => "SUCCESS"
+        ]);
+    }
+}
