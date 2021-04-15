@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SiamAdmin安装向导</title>
+    <link rel="stylesheet" href="./install/css/install.css">
+
+    <link rel="stylesheet" href="./admin/lib/layui-v2.6.3/css/layui.css">
+    <script src="./admin/lib/jquery-3.4.1/jquery-3.4.1.min.js"></script>
+    <script>
+        console.log($);
+        $(function(){
+        });
+        function testClick(){
+            if($('.no').length>0){
+                alert('您的配置或权限不符合要求');
+            }else{
+                location.href='./install.php?c=create';
+            }
+        }
+    </script>
+</head>
+<body>
+<div id="nav">
+    <div class="inside">
+        <p class="name"><span>SiamAdmin安装向导</span></p>
+        <ul class="schedule">
+            <li class="number">1</li>
+            <li class="word">使用协议</li>
+        </ul>
+        <ul class="schedule active">
+            <li class="number">2</li>
+            <li class="word">环境检测</li>
+        </ul>
+        <ul class="schedule">
+            <li class="number">3</li>
+            <li class="word">创建数据</li>
+        </ul>
+        <ul class="schedule">
+            <li class="number">4</li>
+            <li class="word">安装完成</li>
+        </ul>
+    </div>
+</div>
+<div id="out">
+    <div class="inside">
+        <div class="box test">
+            <h2>环境监测</h2>
+            <table class="layui-table">
+                <colgroup>
+                    <col width="150">
+                    <col width="200">
+                    <col>
+                    <col>
+                </colgroup>
+                <thead>
+                <tr>
+                    <th width="25%">坏境</th>
+                    <th width="25%">最低配置</th>
+                    <th width="25%">当前配置</th>
+                    <th width="25%">是否符合</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>操作系统</td>
+                        <td>不限</td>
+                        <td><?php echo php_uname('s'); ?></td>
+                        <td class="yes">√</td>
+                    </tr>
+                    <tr>
+                        <td>php版本</td>
+                        <td>&gt;=7.1</td>
+                        <td><?php echo PHP_VERSION ?></td>
+                        <?php $php_version=explode('.', PHP_VERSION); ?>
+                        <td>
+                            <?php if (($php_version['0']>=7)): ?>
+                            √
+                            <?php else: ?>
+                            <div class="no">×</div>
+                            <?php endif ?>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>目录权限</h2>
+            <table class="layui-table">
+                <tr>
+                    <th width="25%">坏境</th>
+                    <th width="25%">最低配置</th>
+                    <th width="25%">当前配置</th>
+                    <th width="25%">是否符合</th>
+                </tr>
+                    <?php
+                    $file = [
+                        '/public',
+                        '/runtime',
+                        '/config',
+                    ];
+                    foreach($file as $one){
+                        $can = is_writable("../".$one);
+                    ?>
+                        <tr>
+                            <td><?php echo $one;?></td>
+                            <td>可写</td>
+                            <td><?php echo $can ? "可写" : "不可写" ?></td>
+                            <td><?php echo $can ? "√" : "<div class='no'>×<\/div>" ?></td>
+                        </tr>
+                    <?php } ?>
+            </table>
+            <p class="agree">
+                <a class="layui-btn layui-btn-danger layui-btn-sm" href="./install.php?c=agreement">上一步</a>
+                <a class="layui-btn layui-btn-sm" href="javascript:;" onclick="testClick()">下一步</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

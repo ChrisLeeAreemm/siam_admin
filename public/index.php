@@ -13,6 +13,12 @@
 namespace think;
 
 require __DIR__ . '/../vendor/autoload.php';
+// 你先看看是否安装了哦 Siam
+$lock_file = __DIR__. "/install.lock";
+if (!is_file($lock_file)){
+    Header("Location:./install.php");
+    die;
+}
 
 // 执行HTTP应用并响应
 $http = (new App())->http;

@@ -6,5 +6,6 @@ return [
     // 指令定义
     'commands' => [
         'cron' => 'app\command\CronRunnerCommand',
+        'plugs' => 'app\command\PlugsMakerCommand',
     ],
 ];
