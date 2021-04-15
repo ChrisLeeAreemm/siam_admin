@@ -46,6 +46,7 @@ Siam Admin 2.0
 
 - composer install
 - php think run (开发阶段)
+- 安装数据库 http://127.0.0.1:8000/index.php 运行向导
 - 后台首页 http://127.0.0.1:8000/admin/index.html
 
 ## 其他事项
