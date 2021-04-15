@@ -9,13 +9,6 @@
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 use think\facade\Route;
-
-Route::get('think', function () {
-    return 'hello,ThinkPHP6!';
-});
-
-Route::get('hello/:name', 'index/hello');
-
 //User
 Route::any('admin/users/get_list', 'admin.AdminUsersController/get_list');
 Route::any('admin/users/edit', 'admin.AdminUsersController/edit');
