@@ -17,10 +17,11 @@ class PlugsCurdController
     private $pk;
     private $tableNotes;
     private $prefix;
+    private $relevance;
     
     public function __construct()
     {
-        $this->prefix         = env('database.prefix', '');
+        $this->prefix         = config('database.connections.mysql.prefix');
         $this->tableName      = request()->param('table_name', '');
         $this->table          = $this->prefix . $this->tableName;
         $this->modelPath      = app_path() . 'model\\';
@@ -48,27 +49,70 @@ class PlugsCurdController
     {
         //查询所有表
         $tables = Db::query('SHOW TABLES');
-        foreach ($tables as $key => $value) {
+        foreach ($tables as $value) {
+            $database = config('database.connections.mysql.database');
+    
             //设置表名
-            $this->table = $value['Tables_in_siamadmin'];
+            $this->table = $value["Tables_in_$database"];
             //去掉前缀
-            $tableName = str_replace($this->prefix, '', $value['Tables_in_siamadmin']);
+            $tableName = str_replace($this->prefix, '', $value["Tables_in_$database"]);
             //获取文件
             $file = $this->modelPath . Str::title($tableName) . 'Model.php';
-            //不存在不执行
-            if (!is_file($file)) {
+            if (!is_file($file)){
                 continue;
             }
+            
+            //解析类
+            $class = 'app\model\\'.Str::title($tableName). 'Model';
+            $Model = new $class();
+            $ref = new \ReflectionClass($Model);
+            $methods = $ref->getMethods();
+            $relevance =[];
+    
+            foreach ($methods as $val){
+                if ($val->class !== $class){
+                    continue;
+                }
+                //判断是否关联方法
+                if (Str::contains($val->getDocComment(),'@relevance') != true){
+                    continue;
+                }
+                //获取方法代码
+                $method_info = \ReflectionMethod::export($Model, $val->getName(), true);
+                $str = strstr($method_info,Str::title($tableName) . 'Model.php');
+                $str = preg_replace("/[a-zA-Z\/.]/",'',$str);
+                $str = preg_replace('# #', '', $str);
+                $line_arr = explode("-",$str);
+                //打开文件
+                $modelFile = file_get_contents($file);
+                //转换数组
+                $code_arr = explode("\r\n",$modelFile);
+                //关联方法名
+                $methodName = $val->getName();
+                //获取方法内代码中的关联类
+                for ($i=$line_arr[0];$i<$line_arr[1];$i++){
+                    $preg= '/\([\s\S]*?:/i';
+                    preg_match($preg,$code_arr[$i],$res);
+                    $res = str_replace('(','',$res);
+                    $res = str_replace(':','',$res);
+                   if (!empty($res)){
+                       //关联类名
+                       $relevance[$methodName] = $res[0];
+                   }
+                }
+            }
+            $this->relevance = $relevance;
+            
             //获取文件
             $content = file_get_contents($file);
             //获取最新表详情
             $this->parseField();
             //更新文件
             $content = preg_replace('/#start.*#end/sm', $this->tableNotes, $content);
+            
             file_put_contents($file, $content);
         }
-        return true;
-        
+        return json(['code' => '200', 'data' => '', 'msg' => '更新成功']);
         
     }
     
@@ -108,6 +152,12 @@ t;
             $string  .= <<<s
 \n * @property mixed {$value['name']}\t{$comment}
 s;
+        }
+        foreach ($this->relevance as $key =>$value){
+            $string .= <<<EOF
+\n * @property $value $key\t
+EOF;
+
         }
         
         $string           .= "\n */";
