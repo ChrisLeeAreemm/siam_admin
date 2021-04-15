@@ -89,13 +89,13 @@
     let $ = layui.jquery;
     let view = layui.view;
     let setter = layui.setter;
-    let submit_url = "admin/roles/add";
-    let get_one_url = "admin/roles/get_one";
+    let submit_url = "/admin/roles/add";
+    let get_one_url = "/admin/roles/get_one";
     let role_id = getQueryletiable('role_id');
     if(role_id){
       //获取信息
       view.req({
-        url: setter.Api+'index.php/'+get_one_url,
+        url: '/index.php/'+get_one_url,
         data: {role_id:role_id},
         type: "get",
         dataType: "json",
@@ -116,14 +116,14 @@
           }
         }
       })
-      submit_url = "admin/roles/edit";
+      submit_url = "/admin/roles/edit";
     }
     form.on('submit(submit)', function (data) {
       let load = layer.load(0, {
         shade: 0.5
       });
       view.req({
-        url: setter.Api+'index.php/'+submit_url,
+        url: '/index.php/'+submit_url,
         data: data.field,
         type: "post",
         dataType: "json",

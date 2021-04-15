@@ -44,7 +44,7 @@
 </script>
 
 <script src="../../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
-<script src="../../js/lay-config.js?v=2.0.4" charset="utf-8"></script>
+<script src="../../js/lay-config.js?v=2.0.5" charset="utf-8"></script>
 <script>
   layui.use([ 'table', 'jquery','setter','view'], function () {
     let table = layui.table;
@@ -54,7 +54,7 @@
 
     table.render({
       elem: '#lists'
-      , url: setter.Api+"index.php/admin/auths/get_list"
+      , url: "/index.php/admin/auths/get_list"
       , where: {
         access_token: layui.data(setter.tableName)[setter.request.tokenName]
       }
@@ -78,7 +78,7 @@
 
     //添加
     $('#add_btn').click(function (){
-      let url = setter.Api+"admin/page/auths/action.html";
+      let url = "/admin/page/auths/action.html";
       layer.open({
         type: 2,
         title: "{:lang('add')}",
@@ -96,7 +96,7 @@
         case 'del':
           layer.confirm('确认删除?', {icon: 3, title: '提示'}, function (index) {
             view.req({
-              url: setter.Api+"index.php/admin/auths/delete",
+              url: "/index.php/admin/auths/delete",
               data: {
                 auth_id: data.auth_id
               },
@@ -117,7 +117,7 @@
           });
           break;
         case 'edit':
-          let url = setter.Api+"admin/page/auths/action.html?auth_id="+data.auth_id;
+          let url = "/admin/page/auths/action.html?auth_id="+data.auth_id;
           layer.open({
             type: 2,
             title: "{:lang('edit')}",
