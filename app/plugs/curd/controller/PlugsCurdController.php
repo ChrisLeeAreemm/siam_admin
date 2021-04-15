@@ -41,7 +41,7 @@ class PlugsCurdController
         }catch (\Exception $exception){
             return json(['code' => '300', 'data' => $exception->getLine(), 'msg' => $exception->getMessage()]);
         }
-       
+        
         return json(['code' => '200', 'data' => '', 'msg' => '生成成功']);
     }
     
