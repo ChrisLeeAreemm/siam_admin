@@ -132,8 +132,13 @@ class PlugsCurdController
     
     public function create_html()
     {
-        $ListsHtml = $this->putListsFile();
-        $ActionHtml = $this->putActionFile();
+        try {
+            $ListsHtml = $this->putListsFile();
+            $ActionHtml = $this->putActionFile();
+        }catch (\Exception $exception){
+            return json(['code' => '300', 'data' =>'', 'msg' => $exception->getMessage()]);
+        }
+        
         return json(['code' => '200', 'data' => ['lists'=>$ListsHtml,'action'=>$ActionHtml], 'msg' => '生成成功']);
         
     }
@@ -224,8 +229,9 @@ EOF;
     {
         $fieldString = [];
         $fullTable   = $this->table;
-        // 获取数据表字段详细信息
+        // 获取数据表字段详细信息】
         $this->tableInfo = Db::table($fullTable)->getFields($fullTable);
+   
         // 找出主键
         foreach ($this->tableInfo as $key => $value) {
             if ($value['primary'] === true) {
