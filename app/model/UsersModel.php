@@ -5,9 +5,6 @@
  */
 
 namespace app\model;
-
-use think\Model;
-
 #start
 /**
  * bar_users
@@ -23,14 +20,19 @@ use think\Model;
  * @property mixed last_login_time	最后登录时间
  * @property mixed create_time	创建时间
  * @property mixed update_time	更新时间
- * @property mixed u_auth
- * @property RolesModel roles
+ * @property mixed u_auth	
+ * @property RolesModel roles	
  */
  #end
 class UsersModel extends BaseModel
 {
     protected $name = 'users';
     protected $pk   = 'u_id';
+    
+    /**
+     * @relevance 关联方法标识
+     * @return mixed
+     */
     public function roles()
     {
         return $this->hasOne(RolesModel::class,'role_id','role_id');
