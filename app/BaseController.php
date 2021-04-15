@@ -36,6 +36,12 @@ abstract class BaseController
      */
     protected $middleware = [];
 
+
+    abstract function get_list();
+    abstract function add();
+    abstract function edit();
+    abstract function delete();
+
     /**
      * 构造方法
      * @access public
@@ -92,9 +98,19 @@ abstract class BaseController
         return $v->failException(true)->check($data);
     }
 
-    abstract function get_list();
-    abstract function add();
-    abstract function edit();
-    abstract function delete();
-
+    /**
+     * 响应输出
+     * @param        $code
+     * @param array  $data
+     * @param string $msg
+     * @return \think\response\Json
+     */
+    public function send($code, $data = [], $msg = ''): \think\response\Json
+    {
+        return json([
+            'code' => (int) $code,
+            'data' => (object) $data,
+            'msg'  => $msg
+        ]);
+    }
 }
