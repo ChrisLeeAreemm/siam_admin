@@ -20,7 +20,7 @@ class AdminSystemController extends BaseController
         
         // 获取插件列表(带安装状态)
         $plug_arr = $this->get_plugs();
-        $arr = [
+        $arr      = [
             'homeInfo' => [
                 "title" => "首页",
                 "href"  => "page/welcome-1.html?t=1"
@@ -70,15 +70,7 @@ class AdminSystemController extends BaseController
                     "icon"   => "fa fa-address-book",
                     "href"   => "",
                     "target" => "_self",
-                    "child"  => [
-                        [
-                            "title"  => "组件管理",
-                            "href"   => "",
-                            "icon"   => "fa fa-home",
-                            "target" => "_self",
-                            "child"  => $plug_arr
-                        ],
-                    ]
+                    "child"  => $plug_arr
                 ]
             ]
         ];
@@ -92,8 +84,8 @@ class AdminSystemController extends BaseController
         if (!is_dir($dir)) {
             return false;
         }
-        $domain = $this->request->domain();
-        $arr    = scandir($dir);
+        
+        $arr = scandir($dir);
         //检索插件
         $namespace = '\app\plugs\\';
         $child     = [];
@@ -102,19 +94,44 @@ class AdminSystemController extends BaseController
                 $Plugs      = $namespace . $dirName . '\Plugs';
                 $PlugsModel = new $Plugs();
                 $name       = $PlugsModel->get_config()->getName();
-                $HomeView = $PlugsModel->get_config()->getHomeView();
-                $href = '';
-                if( strpos($HomeView, 'http') != false || strpos($HomeView, '#')){
-                    $href = $HomeView;
+                //过滤base,不需要显示
+                if ($name == 'base') {
+                    continue;
                 }
-                if( strpos($HomeView, '/') != false){
-                    $href = '/index.php/'.$HomeView;
+                //解析插件首页的链接 , 带全链接或者 #的前端页面链接,默认直接使用
+                $href = $PlugsModel->get_config()->getHomeView();
+    
+                //如果是后端接口，添加入口地址
+                if (Str::startsWith($href,'/') == true) {
+                    $href = '/index.php' . $href;
                 }
-                $child[]    = [
+                
+                //组装菜单
+                $child[] = [
                     'title'  => $name,
-                    'href'   => $href,
+                    'href'   => '',
                     'icon'   => "fa fa-tachometer",
-                    'target' => '_self'
+                    'target' => '_self',
+                    'child'  => [
+                        [
+                            'title'  => '首页',
+                            'href'   => $href,
+                            'icon'   => "fa fa-tachometer",
+                            'target' => '_self',
+                        ],
+                        [
+                            'title'  => '安装',
+                            'href'   => '',
+                            'icon'   => "fa fa-tachometer",
+                            'target' => '_self',
+                        ],
+                        [
+                            'title'  => '启用/停用',
+                            'href'   => '',
+                            'icon'   => "fa fa-tachometer",
+                            'target' => '_self',
+                        ],
+                    ]
                 ];
             }
         }
