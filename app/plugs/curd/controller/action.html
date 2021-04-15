@@ -46,7 +46,7 @@
     if(--pk--){
       //获取信息
       view.req({
-        url: setter.Api+'index.php/'+get_one_url,
+        url: '/index.php/'+get_one_url,
         data: {--pk--:--pk--},
         type: "get",
         dataType: "json",
@@ -67,7 +67,7 @@
         shade: 0.5
       });
       view.req({
-        url: setter.Api+'index.php/'+submit_url,
+        url: '/index.php/'+submit_url,
         data: data.field,
         type: "post",
         dataType: "json",

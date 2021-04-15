@@ -216,9 +216,9 @@ EOF;
         $template = $this->actionFileTemplet();
         $template = str_replace("--demo--", $str, $template);
         $template = str_replace("--pk--", $this->pk, $template);
-        $template = str_replace("--add_url--", "admin/$this->tableName/add", $template);
-        $template = str_replace("--edit_url--", "admin/$this->tableName/edit", $template);
-        $template = str_replace("--get_one_url--", "admin/$this->tableName/get_one", $template);
+        $template = str_replace("--add_url--", "/admin/$this->tableName/add", $template);
+        $template = str_replace("--edit_url--", "/admin/$this->tableName/edit", $template);
+        $template = str_replace("--get_one_url--", "/admin/$this->tableName/get_one", $template);
         $template = str_replace("--get_one_val--", $get_one_val, $template);
         return $template;
     }
