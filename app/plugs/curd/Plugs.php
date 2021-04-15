@@ -23,7 +23,7 @@ class Plugs extends PlugsBase
     
     public function install()
     {
-        file_put_contents(__DIR__.'\install.lock',date('Y-m-d H:i:s'));
+        return true;
     }
     
     public function remove()
