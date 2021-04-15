@@ -58,3 +58,4 @@ Siam Admin 2.0
 2. 第一次启用插件的时候，判断[插件目录下是否有install.lock]文件，无则为第一次安装，执行插件的install事件。然后往[start.plugs]文件插入该插件名
 3. 插件没有卸载功能，可以反复停用、启用，不丢失历史数据
 4. 插件里的数据表命名格式`表前缀_插件名_表名` 如，`siam_cms_articles`
+5. 创建新插件`php think plugs --name="TesSiam"`  
