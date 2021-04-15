@@ -64,6 +64,14 @@
             , view = layui.view
             , $ = layui.jquery
 
+        form.verify({
+            title: function (value) {
+                if (value.length < 1) {
+                    return '必须输入表名';
+                }
+            }
+        });
+
         //监听提交
         form.on('submit(create_curd)', function (data) {
             view.req({
@@ -86,6 +94,7 @@
                 }
             });
         });
+
         //监听提交
         form.on('submit(create_html)', function (data) {
             view.req({
