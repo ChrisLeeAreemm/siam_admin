@@ -20,7 +20,8 @@ class PlugsInitEvent
         
         //检查是否在start文件，是否有安装记录
         $startArr = json_decode(file_get_contents($startPlugs), true);
-        
+        $path_info = request()->pathinfo();
+        $path_info = explode('/',$path_info);
         foreach ($arr as $dirName) {
             //插件根目录
             $path = __DIR__ . '\\' . $dirName;
@@ -39,11 +40,15 @@ class PlugsInitEvent
                 
                 //获取插件名检索 start.plugs 文件
                 $name       = $plugs->get_config()->getName();
-                
                 if (!in_array($name, $startArr)) {
                     continue;
                 }
                 
+                //对应模块启动
+                $module = $plugs->get_config()->getHandleModule();
+                if (!in_array($path_info[0],$module)){
+                    continue;
+                }
                 //执行init
                 $plugs->init();
             }

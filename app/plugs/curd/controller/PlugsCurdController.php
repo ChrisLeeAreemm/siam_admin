@@ -5,7 +5,6 @@ namespace app\plugs\curd\controller;
 use think\facade\Db;
 use think\helper\Str;
 use think\response\Json;
-use think\Route;
 
 class PlugsCurdController
 {
@@ -34,10 +33,14 @@ class PlugsCurdController
      */
     public function create_curd(): Json
     {
-        // 写入模型文件
-        $this->parseField()->putModelFile();
-        // 写入控制器文件
-        $this->parseField()->putControllerFile();
+        try {
+            // 写入模型文件
+            $this->parseField()->putModelFile();
+            // 写入控制器文件
+            $this->parseField()->putControllerFile();
+        }catch (\Exception $exception){
+            return json(['code' => '300', 'data' => $exception->getLine(), 'msg' => $exception->getMessage()]);
+        }
         
         return json(['code' => '200', 'data' => '', 'msg' => '生成成功']);
     }
@@ -48,7 +51,11 @@ class PlugsCurdController
     public function update_notes()
     {
         //查询所有表
-        $tables = Db::query('SHOW TABLES');
+        try {
+            $tables = Db::query('SHOW TABLES');
+        }catch (\Exception $exception){
+            return json(['code' => '300', 'data' => $exception->getLine(), 'msg' => $exception->getMessage()]);
+        }
         foreach ($tables as $value) {
             $database = config('database.connections.mysql.database');
     
@@ -65,10 +72,13 @@ class PlugsCurdController
             //解析类
             $class = 'app\model\\'.Str::title($tableName). 'Model';
             $Model = new $class();
+            if (!$Model){
+                return json(['code' => '400', 'data' => '', 'msg' => '类不存在']);
+            }
             $ref = new \ReflectionClass($Model);
             $methods = $ref->getMethods();
             $relevance =[];
-    
+            $up_file = [];
             foreach ($methods as $val){
                 if ($val->class !== $class){
                     continue;
@@ -86,7 +96,7 @@ class PlugsCurdController
                 //打开文件
                 $modelFile = file_get_contents($file);
                 //转换数组
-                $code_arr = explode("\r\n",$modelFile);
+                $code_arr = explode("\n",$modelFile);
                 //关联方法名
                 $methodName = $val->getName();
                 //获取方法内代码中的关联类
@@ -98,6 +108,7 @@ class PlugsCurdController
                    if (!empty($res)){
                        //关联类名
                        $relevance[$methodName] = $res[0];
+                       $up_file[] = Str::title($tableName). 'Model';
                    }
                 }
             }
@@ -110,16 +121,24 @@ class PlugsCurdController
             //更新文件
             $content = preg_replace('/#start.*#end/sm', $this->tableNotes, $content);
             
-            file_put_contents($file, $content);
+            $res = file_put_contents($file, $content);
         }
-        return json(['code' => '200', 'data' => '', 'msg' => '更新成功']);
+        if (!$up_file){
+            return json(['code' => '200', 'data' => $up_file, 'msg' => '更新失败']);
+        }
+        return json(['code' => '200', 'data' => $up_file, 'msg' => '更新成功']);
         
     }
     
     public function create_html()
     {
-        $ListsHtml = $this->putListsFile();
-        $ActionHtml = $this->putActionFile();
+        try {
+            $ListsHtml = $this->putListsFile();
+            $ActionHtml = $this->putActionFile();
+        }catch (\Exception $exception){
+            return json(['code' => '300', 'data' =>'', 'msg' => $exception->getMessage()]);
+        }
+        
         return json(['code' => '200', 'data' => ['lists'=>$ListsHtml,'action'=>$ActionHtml], 'msg' => '生成成功']);
         
     }
@@ -133,6 +152,7 @@ class PlugsCurdController
         $fullTable = $this->table;
         // 获取数据表字段详细信息
         $this->tableInfo = Db::table($fullTable)->getFields($fullTable);
+
         // 找出主键
         foreach ($this->tableInfo as $key => $value) {
             if ($value['primary'] === true) {
@@ -153,12 +173,15 @@ t;
 \n * @property mixed {$value['name']}\t{$comment}
 s;
         }
-        foreach ($this->relevance as $key =>$value){
-            $string .= <<<EOF
+        if (!empty($this->relevance)){
+            foreach ($this->relevance as $key =>$value){
+                $string .= <<<EOF
 \n * @property $value $key\t
 EOF;
-
+        
+            }
         }
+
         
         $string           .= "\n */";
         $string           .= "\n #end";
@@ -206,8 +229,9 @@ EOF;
     {
         $fieldString = [];
         $fullTable   = $this->table;
-        // 获取数据表字段详细信息
+        // 获取数据表字段详细信息】
         $this->tableInfo = Db::table($fullTable)->getFields($fullTable);
+   
         // 找出主键
         foreach ($this->tableInfo as $key => $value) {
             if ($value['primary'] === true) {
