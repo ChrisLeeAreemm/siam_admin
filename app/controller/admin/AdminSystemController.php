@@ -102,9 +102,17 @@ class AdminSystemController extends BaseController
                 $Plugs      = $namespace . $dirName . '\Plugs';
                 $PlugsModel = new $Plugs();
                 $name       = $PlugsModel->get_config()->getName();
+                $HomeView = $PlugsModel->get_config()->getHomeView();
+                $href = '';
+                if( strpos($HomeView, 'http') != false || strpos($HomeView, '#')){
+                    $href = $HomeView;
+                }
+                if( strpos($HomeView, '/') != false){
+                    $href = '/index.php/'.$HomeView;
+                }
                 $child[]    = [
                     'title'  => $name,
-                    'href'   => $domain . '/index.php/' . $PlugsModel->get_config()->getHomeView(),
+                    'href'   => $href,
                     'icon'   => "fa fa-tachometer",
                     'target' => '_self'
                 ];
