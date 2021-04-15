@@ -26,8 +26,8 @@ class ErrorCode
 
     // 30x系列为逻辑转移 如刷卡提交成功 需要接着请求查询接口（需要在data中带上next_node）
     // eg: {"code":"301", "data":{"next_node":"api/index.order/query","msg":"success"}}
-    const TRANSFER_NEXT_API_SUCCESS = '300';// api正常，请求下一api
-    const TRANSFER_NEXT_API_FAIL = '301';// api正常，请求下一api
+    const TRANSFER_NEXT_API_SUCCESS = '300';// api正常，需要请求下一api
+    const TRANSFER_NEXT_API_FAIL = '301';// api失败，需要请求下一api
     const TRANSFER_NEW_API = '302';// api失效 请求新api
     const TRANSFER_TEMP = '303';// api临时转移，也就是暂不可用
     const TRANSFER_IP_INVALID = '304';// api需使用指定IP通过 如每个用户的应用白名单
