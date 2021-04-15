@@ -4,9 +4,10 @@ namespace app\plugs\errorCode\controller;
 
 
 use app\exception\ErrorCode;
+use app\plugs\PlugsBaseController;
 use think\helper\Str;
 
-class ErrorCodeController
+class ErrorCodeController extends PlugsBaseController
 {
     public function get_list()
     {

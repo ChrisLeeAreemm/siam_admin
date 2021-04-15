@@ -4,9 +4,10 @@ namespace app\plugs\cronDoc\controller;
 
 
 use app\exception\ErrorCode;
+use app\plugs\PlugsBaseController;
 use think\helper\Str;
 
-class CronDocController
+class CronDocController extends PlugsBaseController
 {
     public function get_list()
     {
