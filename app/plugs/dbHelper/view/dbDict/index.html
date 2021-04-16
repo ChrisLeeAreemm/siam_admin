@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>dbDict</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="__ADMIN__/lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="__ADMIN__/css/public.css" media="all">
+
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+            <legend>dbDict</legend>
+        </fieldset>
+
+        <div class="layui-form" id="table">
+            <div class="layui-form-item">
+                <label class="layui-form-label">选择数据表</label>
+                <div class="layui-input-block">
+                    <select name="table_name" lay-filter="table_name" id="tables">
+                        <option value=""></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="get_dict">获取表字典</button>
+        </div>
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <table class="layui-hide" id="lists" lay-filter="lists"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="__ADMIN__/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+<script src="__ADMIN__/js/lay-config.js?v=2.0.4" charset="utf-8"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+
+
+    layui.use(['form', 'view', 'laytpl'], function () {
+        let form = layui.form
+            , layer = layui.layer
+            , view = layui.view
+            , $ = layui.jquery
+            , laytpl = layui.laytpl
+            , table = layui.table;
+        let get_tables_url = '/index.php/plugs/db_helper/db_dict/api/get_tables';
+        let get_dict_url = '/index.php/plugs/db_helper/db_dict/api/get_list';
+        view.req({
+            url: get_tables_url,
+            type: "get",
+            success: function (res) {
+                //获取返回的数据
+                let value = res.data.list;
+                let opt = '<option value=""></option>';
+                //循环遍历
+                for (var i in value) {
+                    opt += '<option value = "' + value[i].name + '">' + value[i].name + '</option>'
+                }
+                $("#tables").html(opt);
+                layui.form.render();
+            }
+        });
+        //监听提交
+        form.on('submit(get_dict)', function (data) {
+            let table_name =  $("#tables option:selected").val();
+            table.render({
+                elem: '#lists',
+                url: get_dict_url,
+                where: {table_name: table_name},
+                cols: [[
+                    {field: 'name',  title: '字段名', sort: true},
+                    {field: 'type', title: '类型'},
+                    {field: 'primary', title: '主键',templet:function (item) {
+                            if (item.primary == 1){
+                                return '主键'
+                            }else {
+                                return '';
+                            }
+                        }},
+                    {field: 'comment', title: '注释'},
+                ]],
+                skin: 'line'
+                , response: {
+                    statusCode: 200
+                }
+                , parseData: function (res) {
+                    return {
+                        "code": res.code,
+                        "msg": res.msg,
+                        "count": res.data.count,
+                        "data": res.data.list
+                    };
+                }
+            });
+        });
+
+    });
+</script>
+
+</body>
+</html>
