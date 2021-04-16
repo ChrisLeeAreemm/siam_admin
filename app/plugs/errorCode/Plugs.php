@@ -18,7 +18,14 @@ class Plugs extends PlugsBase
         $config->setName("errorCode");
         $config->setIcon("");
         $config->setHandleModule(["admin","plugs"]);// 只有admin,plugs模块才会执行初始化
-        $config->setHomeView("/plugs/error-code/index");
+        $config->setMenu([
+            [
+                'title'  => "errorCode",
+                'href'   => "/plugs/error-code/index",
+                'icon'   => "fa fa-tachometer",
+                'target' => '_self',
+            ],
+        ]);
         return $config;
     }
 

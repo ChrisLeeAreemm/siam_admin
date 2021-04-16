@@ -97,14 +97,6 @@ class AdminSystemController extends AdminBaseController
                 if ($name == 'base') {
                     continue;
                 }
-                //解析插件首页的链接 , 带全链接或者 page 开头的前端页面链接,默认直接使用
-                $href = $plugs->get_config()->getHomeView();
-
-                //如果是后端接口，添加入口地址
-                if (Str::startsWith($href,'/') == true) {
-                    $href = '/index.php' . $href;
-                }
-
 
                 //组装菜单  读取插件的状态，显示对应的按钮和名称
                 $plugsObj = PlugsStatusModel::find($name);
@@ -142,6 +134,10 @@ class AdminSystemController extends AdminBaseController
                 $plugs_menu = [];
                 if (!empty($plugs->get_config()->getMenu())){
                     foreach ($plugs->get_config()->getMenu() as $one){
+                        if (!Str::startsWith('/page',$one['href']) && !Str::startsWith('page', $one['href'])){
+                            $one['href'] = "/index.php/".$one['href'];
+                            $one['href'] = str_replace("//", "/", $one['href']);
+                        }
                         array_push($plugs_menu, $one);
                     }
                 }

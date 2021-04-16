@@ -18,7 +18,14 @@ class Plugs extends PlugsBase
         $config->setName("cronDoc");
         $config->setIcon("");
         $config->setHandleModule(["admin", "plugs"]);// 只有admin模块才会执行初始化
-        $config->setHomeView("/plugs/cron-doc/index");
+        $config->setMenu([
+            [
+                'title'  => "cronDoc",
+                'href'   => "/plugs/cron-doc/index",
+                'icon'   => "fa fa-tachometer",
+                'target' => '_self',
+            ],
+        ]);
         return $config;
     }
 
