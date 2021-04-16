@@ -1,6 +1,7 @@
 <?php
 namespace app;
 
+use app\exception\BaseException;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\ModelNotFoundException;
 use think\exception\Handle;
@@ -51,6 +52,23 @@ class ExceptionHandle extends Handle
     public function render($request, Throwable $e): Response
     {
         // 添加自定义异常处理机制
+        // TODO 是否安装异常记录插件，是则插入
+
+        
+        if ($e instanceof BaseException){
+            return json([
+                'code' => $e->getCode(),
+                'data' => $e->get_return(),
+                'msg'  => $e->getMessage(),
+            ]);
+        }
+        if ($e instanceof ValidateException){
+            return json([
+                'code' => $e->getCode(),
+                'data' => [],
+                'msg'  => $e->getMessage(),
+            ]);
+        }
 
         // 其他错误交给系统处理
         return parent::render($request, $e);
