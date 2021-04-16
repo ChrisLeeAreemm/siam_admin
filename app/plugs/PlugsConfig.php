@@ -7,7 +7,6 @@ class PlugsConfig
 {
     protected $name;
     protected $icon;
-    protected $home_view;
     protected $handle_module;
     protected $menu = [];
 
@@ -41,22 +40,6 @@ class PlugsConfig
     public function setIcon($icon): void
     {
         $this->icon = $icon;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getHomeView()
-    {
-        return $this->home_view;
-    }
-
-    /**
-     * @param mixed $home_view
-     */
-    public function setHomeView($home_view): void
-    {
-        $this->home_view = $home_view;
     }
 
     /**

@@ -139,14 +139,7 @@ class AdminSystemController extends AdminBaseController
                     }
                 }
 
-                $plugs_menu = [
-                    [
-                        'title'  => $name,
-                        'href'   => $href,
-                        'icon'   => "fa fa-tachometer",
-                        'target' => '_self',
-                    ],
-                ];
+                $plugs_menu = [];
                 if (!empty($plugs->get_config()->getMenu())){
                     foreach ($plugs->get_config()->getMenu() as $one){
                         array_push($plugs_menu, $one);
