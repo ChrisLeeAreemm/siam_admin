@@ -17,7 +17,7 @@ class Plugs extends PlugsBase
         $config = new PlugsConfig();
         $config->setName("errorCode");
         $config->setIcon("");
-        $config->setHandleModule(["admin","plugs"]);// 只有admin,plugs模块才会执行初始化
+        $config->setHandleModule(["plugs"]);// 只有plugs模块才会执行初始化
         $config->setMenu([
             [
                 'title'  => "errorCode",
