@@ -11,6 +11,7 @@ namespace app\handle;
 
 use app\exception\BaseException;
 use think\exception\Handle;
+use think\exception\ValidateException;
 use think\Response;
 use Throwable;
 
@@ -25,6 +26,13 @@ class ExceptionHandle extends Handle
             return json([
                 'code' => $e->getCode(),
                 'data' => $e->get_return(),
+                'msg'  => $e->getMessage(),
+            ]);
+        }
+        if ($e instanceof ValidateException){
+            return json([
+                'code' => $e->getCode(),
+                'data' => [],
                 'msg'  => $e->getMessage(),
             ]);
         }
