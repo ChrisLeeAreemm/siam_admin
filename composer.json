@@ -26,7 +26,8 @@
         "siam/commom-helper": "1.1.4",
         "ext-json": "*",
         "dragonmantank/cron-expression": "3.1.0",
-        "easyswoole/utility": "^1.2"
+        "easyswoole/utility": "^1.2",
+        "ext-mysqli": "*"
     },
     "require-dev": {
         "symfony/var-dumper": "^4.2",

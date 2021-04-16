@@ -26,23 +26,23 @@ if(@$_GET['c']=='success'){
     if($_SERVER['REQUEST_METHOD']=='POST'){
         $data=$_POST;
         // 连接数据库
-//        $link=new mysqli("{$data['DB_HOST']}:{$data['DB_PORT']}",$data['DB_USER'],$data['DB_PWD']);
-//        // 获取错误信息
-//        $error=$link->connect_error;
-//        if (!is_null($error)) {
-//            // 转义防止和alert中的引号冲突
-//            $error=addslashes($error);
-//            die("<script>alert('数据库链接失败:$error');history.go(-1)</script>");
-//        }
-//        // 设置字符集
-//        $link->query("SET NAMES 'utf8'");
-//        $link->server_info>5.0 or die("<script>alert('请将您的mysql升级到5.0以上');history.go(-1)</script>");
-//        // 创建数据库并选中
-//        if(!$link->select_db($data['DB_NAME'])){
-//            $create_sql='CREATE DATABASE IF NOT EXISTS '.$data['DB_NAME'].' DEFAULT CHARACTER SET utf8;';
-//            $link->query($create_sql) or die('创建数据库失败');
-//            $link->select_db($data['DB_NAME']);
-//        }
+       $link=new mysqli("{$data['DB_HOST']}:{$data['DB_PORT']}",$data['DB_USER'],$data['DB_PWD']);
+       // 获取错误信息
+       $error=$link->connect_error;
+       if (!is_null($error)) {
+           // 转义防止和alert中的引号冲突
+           $error=addslashes($error);
+           die("<script>alert('数据库链接失败:$error');history.go(-1)</script>");
+       }
+       // 设置字符集
+       $link->query("SET NAMES 'utf8'");
+       $link->server_info>5.0 or die("<script>alert('请将您的mysql升级到5.0以上');history.go(-1)</script>");
+       // 创建数据库并选中
+       if(!$link->select_db($data['DB_NAME'])){
+           $create_sql='CREATE DATABASE IF NOT EXISTS '.$data['DB_NAME'].' DEFAULT CHARACTER SET utf8;';
+           $link->query($create_sql) or die('创建数据库失败');
+           $link->select_db($data['DB_NAME']);
+       }
         // TODO 导入sql数据并创建表
 //        $sql_file = file_get_contents('./install/siam_admin.sql');
 //        $sql_array=preg_split("/;[\r\n]+/", str_replace('siam_',$data['DB_PREFIX'],$sql_file));
@@ -53,6 +53,40 @@ if(@$_GET['c']=='success'){
 //        }
 //        $link->close();
         // TODO 写入.env
+        $app_name = $data['APP_NAME'];
+        $api      = $data['API'];
+
+        $env = <<<env
+APP_DEBUG = true
+
+[APP]
+DEFAULT_TIMEZONE = Asia/Shanghai
+APP_NAME = {$app_name}
+
+[DATABASE]
+TYPE = mysql
+HOSTNAME = {$data['DB_HOST']}
+DATABASE = {$data['DB_NAME']}
+USERNAME = {$data['DB_USER']}
+PASSWORD = {$data['DB_PWD']}
+HOSTPORT = {$data['DB_PORT']}
+CHARSET = utf8
+DEBUG = true
+prefix = {$data['DB_PREFIX']}
+
+[LANG]
+default_lang = zh-cn
+env;
+        file_put_contents("../.env", $env);
+        // 替换前端index文件和config
+        $index_tpl = file_get_contents("./admin/index.html");
+        $index_tpl = str_replace("__项目名__", $app_name, $index_tpl);
+        file_put_contents("./admin/index.html", $index_tpl);
+
+        $setter_tpl = file_get_contents("./admin/js/lay-module/setter.js");
+        $setter_tpl = str_replace("__项目名__", $app_name, $setter_tpl);
+        $setter_tpl = str_replace("__API__", $api, $setter_tpl);
+        file_put_contents("./admin/js/lay-module/setter.js", $setter_tpl);
 
         touch('./install.lock');
         require './install/success.html';

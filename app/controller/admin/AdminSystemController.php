@@ -5,6 +5,7 @@ namespace app\controller\admin;
 use think\db\Query;
 use app\model\UsersModel as Model;
 use app\BaseController;
+use think\Env;
 use think\helper\Arr;
 use think\helper\Str;
 
@@ -26,7 +27,7 @@ class AdminSystemController extends BaseController
                 "href"  => "page/welcome-1.html?t=1"
             ],
             "logoInfo" => [
-                "title" => "LAYUI MINI",
+                "title" => env('app.app_name'),
                 "image" => "images/logo.png",
                 "href"  => ""
             ],
