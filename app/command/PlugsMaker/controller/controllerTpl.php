@@ -4,16 +4,13 @@ namespace app\plugs\—PLUGS—\controller;
 
 
 use app\exception\ErrorCode;
+use app\plugs\PlugsBaseController;
 
-class —PLUGS—STUDLY—Controller
+class —PLUGS—STUDLY—Controller extends PlugsBaseController
 {
     public function get_list()
     {
 
-        return json([
-            'code' => ErrorCode::SUCCESS,
-            'data' => (object) ['list'=>[]],
-            'msg'  => "SUCCESS"
-        ]);
+        return $this->send(ErrorCode::SUCCESS,['list'=>[]],'SUCCESS');
     }
 }

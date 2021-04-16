@@ -28,11 +28,7 @@ class ErrorCodeController extends PlugsBaseController
                 ];
             }
         }
-        return json([
-            'code' => ErrorCode::SUCCESS,
-            'data' => (object) ['list'=>$return],
-            'msg'  => "SUCCESS"
-        ]);
+        return $this->send(ErrorCode::SUCCESS,['list'=>$return],'SUCCESS');
     }
 
     function auth()
