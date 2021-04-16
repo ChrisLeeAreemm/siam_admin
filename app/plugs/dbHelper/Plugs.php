@@ -16,7 +16,6 @@ class Plugs extends PlugsBase
     {
         $config = new PlugsConfig();
         $config->setName("dbHelper");
-        $config->setIcon("");
         $config->setHandleModule(["admin", "plugs"]);// 只有admin模块才会执行初始化
         $config->setMenu([
             [

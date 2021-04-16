@@ -124,7 +124,7 @@ class AdminSystemController extends AdminBaseController
                     if ($plugsObj['plugs_status'] == PlugsStatusModel::PLUGS_STATUS_OFF){
                         $arr = [
                             'title'  => '启用',
-                            'href'   => 'page/plugs/base/status.html?plugs_name='.$name.'&status=on',
+                            'href'   => 'page/plugs/base/status.html?plugs_name='.$name.'&status=on',// TODO 这几个页面要放到base插件中，并且处理完成后需要跳转到index.html首页 不访问页面（不然刷新完 仍然停留在安装按钮页面）
                             'icon'   => "fa fa-tachometer",
                             'target' => '_self',
                         ];
@@ -132,7 +132,7 @@ class AdminSystemController extends AdminBaseController
                 }
 
                 $plugs_menu = [];
-                if (!empty($plugs->get_config()->getMenu()) && $arr['title'] !== '启用'){
+                if (!empty($plugs->get_config()->getMenu()) && $arr['title'] !== '启用' && $arr['title'] !== '安装'){
                     foreach ($plugs->get_config()->getMenu() as $one){
                         if (!Str::startsWith($one['href'],'/page') && !Str::startsWith($one['href'],'page') && !Str::startsWith($one['href'],'http')){
                             $one['href'] = "/index.php/".$one['href'];

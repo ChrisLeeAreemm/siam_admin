@@ -52,7 +52,7 @@ use think\db\BaseQuery as BaseQueryMapper;
  * @method static int update(array $data = [])
  * @method static int delete($data = '')
  * @method static CollectionMapper select($data = '')
- * @method static BaseQueryMapper find($data = '')
+ * @method static static find($data = '')
  * @method static array parseOptions()
  * @method static bool parseUpdateData($data)
  * @method static void parsePkWhere($data)

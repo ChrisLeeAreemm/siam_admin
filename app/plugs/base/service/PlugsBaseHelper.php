@@ -30,10 +30,12 @@ class PlugsBaseHelper
 
     /**
      * 获取插件状态
+     * @param $plugs_name
+     * @return array|null|\think\Model
      * @throws \Throwable
      * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
      */
     public static function getPlugsStatus($plugs_name)
     {

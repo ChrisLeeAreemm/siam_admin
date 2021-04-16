@@ -27,7 +27,8 @@
         "ext-json": "*",
         "dragonmantank/cron-expression": "3.1.0",
         "easyswoole/utility": "^1.2",
-        "ext-mysqli": "*"
+        "ext-mysqli": "*",
+        "easyswoole/ddl": "^1.0"
     },
     "require-dev": {
         "symfony/var-dumper": "^4.2",

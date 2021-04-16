@@ -2,7 +2,9 @@
 
 namespace app\plugs;
 
+use app\facade\SiamApp;
 use app\model\PlugsStatusModel;
+use Siam\Component\Di;
 use think\Exception;
 use think\facade\Db;
 use think\helper\Str;
@@ -17,6 +19,7 @@ class PlugsInitEvent
         //检查是否在start文件，是否有安装记录
         $path_info = request()->pathinfo();
         $path_info = explode('/', $path_info);
+        SiamApp::getInstance()->setModule($path_info[0]);
         foreach ($arr as $dirName) {
 
             //插件根目录

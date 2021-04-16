@@ -1,11 +1,12 @@
 <?php
 
-namespace app\controller\admin;
+namespace app\plugs\httpMonitor\controller;
 
 use app\exception\ErrorCode;
-use app\model\-modelName- as Model;
+use app\plugs\httpMonitor\model\PlugsHttpMonitorModel as Model;
+use app\plugs\PlugsBaseController;
 
-class Admin-controllerName-Controller extends AdminBaseController
+class PlugsHttpMonitorController extends PlugsBaseController
 {
     /**
      * @return mixed
@@ -26,7 +27,7 @@ class Admin-controllerName-Controller extends AdminBaseController
 
     public function get_one()
     {
-        $id = input('-pk-');
+        $id = input('id');
         $result = Model::find($id);
         if (!$result){
             return $this->send(ErrorCode::THIRD_PART_ERROR,[],'获取失败');
@@ -56,7 +57,7 @@ class Admin-controllerName-Controller extends AdminBaseController
     public function edit()
     {
         $param = input();
-        $start = Model::find($param['-pk-']);
+        $start = Model::find($param['id']);
         $res   = $start->save($param);
 
         if (!$res){
@@ -70,7 +71,7 @@ class Admin-controllerName-Controller extends AdminBaseController
     */
     public function delete()
     {
-        $id = input('-pk-');
+        $id = input('id');
 
         $result = Model::destroy($id);
 

@@ -10,12 +10,11 @@ use think\facade\Route;
 class Plugs extends PlugsBase
 {
     
-    
+    // TODO curd前端 操作完成没有提示
     public function get_config(): PlugsConfig
     {
         $config = new PlugsConfig();
         $config->setName("curd");
-        $config->setIcon("");
         $config->setHandleModule(["admin","plugs"]);// 只有admin,plugs模块才会执行初始化
         $config->setMenu([
             [
