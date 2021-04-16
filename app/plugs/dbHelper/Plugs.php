@@ -31,6 +31,12 @@ class Plugs extends PlugsBase
                 'icon'   => "fa fa-tachometer",
                 'target' => '_self',
             ],
+            [
+                'title'  => "DbOptimize", //数据表字典
+                'href'   => "/plugs/db_helper/db_optimize/index",
+                'icon'   => "fa fa-tachometer",
+                'target' => '_self',
+            ],
         ]);
         return $config;
     }
@@ -55,6 +61,11 @@ class Plugs extends PlugsBase
             return $this->pre_render_file(__DIR__ . "/view/dbDict/index.html");
         });
 
+        // 表优化index页面
+        Route::get('plugs/db_helper/db_optimize/index', function () {
+            return $this->pre_render_file(__DIR__ . "/view/db_optimize/index.html");
+        });
+
         Route::any('plugs/db_helper/api/get_list', 'app\plugs\dbHelper\controller\DbHelperController@get_list');
 
         // 数据表控制器路由
@@ -65,6 +76,10 @@ class Plugs extends PlugsBase
         Route::any('plugs/db_helper/db_dict/api/get_list', 'app\plugs\dbHelper\controller\DbDictController@get_list');
         Route::any('plugs/db_helper/db_dict/api/get_tables', 'app\plugs\dbHelper\controller\DbDictController@get_tables');
         // 字典控制器路由
+
+        // 表优化控制器路由
+        Route::any('plugs/db_helper/db_optimize/api/get_list', 'app\plugs\dbHelper\controller\DbOptimizeController@get_list');
+        // 表优化控制器路由
 
     }
 }
