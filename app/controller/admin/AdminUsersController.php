@@ -60,7 +60,7 @@ class AdminUsersController extends AdminBaseController
         $start = Model::find($param['u_id']);
         $res   = $start->save($param);
 
-        if (!$start) {
+        if (!$res) {
             return $this->send(ErrorCode::THIRD_PART_ERROR,[],'编辑失败');
         }
         return $this->send(ErrorCode::SUCCESS);
