@@ -51,7 +51,7 @@
                     if (res.code == '200'){
                         //关闭
                         layer.close(index);
-                        layer.msg(res.msg, function(){
+                        layer.msg(res.msg, {icon: 1,time:1500},function(){
                             window.parent.location.reload();
                         });
                     }
