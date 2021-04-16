@@ -2,6 +2,7 @@
 
 namespace app\controller\admin;
 
+use app\exception\ErrorCode;
 use app\model\PlugsStatusModel;
 use app\model\UsersModel as Model;
 use think\helper\Str;
@@ -161,15 +162,15 @@ class AdminSystemController extends AdminBaseController
     {
         $id     = input('u_id');
         $result = Model::find($id);
-        if (!$result) {
-            return json(['code' => '500', 'data' => '', 'msg' => '获取失败']);
+        if (!$result){
+            return $this->send(ErrorCode::THIRD_PART_ERROR,[],'获取失败');
         }
-        return json(['code' => '200', 'data' => ['lists' => $result], 'msg' => '']);
+        return $this->send(ErrorCode::SUCCESS,['lists'=>$result]);
     }
     
     
     /**
-     * @return false|string
+     * @return \think\response\Json
      */
     public function add()
     {
@@ -177,37 +178,39 @@ class AdminSystemController extends AdminBaseController
         $param = input();
         
         $start = Model::create($param);
-        
+
         if (!$start) {
-            return json(['code' => '500', 'data' => '', 'msg' => '新增失败']);
+            return $this->send(ErrorCode::THIRD_PART_ERROR,[],'新增失败');
         }
-        return json(['code' => '200']);
+        return $this->send(ErrorCode::SUCCESS);
     }
     
     /**
-     * @return false|string
+     * @return \think\response\Json
      */
     public function edit()
     {
         $param = input();
         $start = Model::find($param['u_id']);
         $res   = $start->save($param);
-        
-        if (!$res) {
-            return json(['code' => '500', 'data' => '', 'msg' => '编辑失败']);
+
+        if (!$res){
+            return $this->send(ErrorCode::THIRD_PART_ERROR,[],'编辑失败');
+
         }
-        return json(['code' => '200']);
+        return $this->send(ErrorCode::SUCCESS);
     }
     
     /**
-     * @return false|string
+     * @return \think\response\Json
      */
     public function delete()
     {
         $id = input('u_id');
         
         $result = Model::destroy($id);
-        
-        return json(['code' => '200', 'msg' => 'ok']);
+
+        return $this->send(ErrorCode::SUCCESS,[],'ok');
+
     }
 }

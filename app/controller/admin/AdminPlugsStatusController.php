@@ -2,6 +2,7 @@
 
 namespace app\controller\admin;
 
+use app\exception\ErrorCode;
 use app\model\PlugsStatusModel as Model;
 
 class AdminPlugsStatusController extends AdminBaseController
@@ -19,7 +20,8 @@ class AdminPlugsStatusController extends AdminBaseController
         $result = Model::paginate(['page' => $page, 'list_rows' => $limit,])->toArray();
         $lists  = $result['data'];
         $count  = $result['total'];
-        return json(['code'=>'200','data'=>['lists'=>$lists,'count'=>$count],'msg'=>'']);
+        return $this->send(ErrorCode::SUCCESS,['lists'=>$lists,'count'=>$count]);
+
 
     }
 
@@ -28,13 +30,13 @@ class AdminPlugsStatusController extends AdminBaseController
         $id = input('plugs_name');
         $result = Model::find($id);
         if (!$result){
-            return json(['code'=>'500','data'=>'','msg'=>'获取失败']);
+            return $this->send(ErrorCode::THIRD_PART_ERROR,[],'获取失败');
         }
-        return json(['code'=>'200','data'=>['lists'=>$result],'msg'=>'']);
+        return $this->send(ErrorCode::SUCCESS,['lists'=>$result]);
     }
 
     /**
-     * @return false|string
+     * @return \think\response\Json
      */
     public function add()
     {
@@ -44,13 +46,13 @@ class AdminPlugsStatusController extends AdminBaseController
         $start = Model::create($param);
 
         if (!$start) {
-             return json(['code'=>'500','data'=>'','msg'=>'新增失败']);
+            return $this->send(ErrorCode::THIRD_PART_ERROR,[],'新增失败');
         }
-            return json(['code'=>'200']);
+        return $this->send(ErrorCode::SUCCESS);
     }
 
     /**
-     * @return false|string
+     * @return \think\response\Json
      */
     public function edit()
     {
@@ -59,13 +61,14 @@ class AdminPlugsStatusController extends AdminBaseController
         $res   = $start->save($param);
 
         if (!$res){
-          return json(['code'=>'500','data'=>'','msg'=>'编辑失败']);
+            return $this->send(ErrorCode::THIRD_PART_ERROR,[],'编辑失败');
+
         }
-        return json(['code'=>'200']);
+        return $this->send(ErrorCode::SUCCESS);
     }
 
     /**
-     * @return false|string
+     * @return \think\response\Json
      */
     public function delete()
     {
@@ -73,6 +76,7 @@ class AdminPlugsStatusController extends AdminBaseController
 
         $result = Model::destroy($id);
 
-        return json(['code'=>'200','msg'=>'ok']);
+        return $this->send(ErrorCode::SUCCESS,[],'ok');
+
     }
 }
