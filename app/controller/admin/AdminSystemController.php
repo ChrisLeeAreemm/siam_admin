@@ -95,7 +95,7 @@ class AdminSystemController extends AdminBaseController
                 if ($name == 'base') {
                     continue;
                 }
-                //解析插件首页的链接 , 带全链接或者 #的前端页面链接,默认直接使用
+                //解析插件首页的链接 , 带全链接或者 page 开头的前端页面链接,默认直接使用
                 $href = $PlugsModel->get_config()->getHomeView();
 
                 //如果是后端接口，添加入口地址
@@ -111,7 +111,7 @@ class AdminSystemController extends AdminBaseController
                 if (!$plugsObj){
                     $arr = [
                         'title'  => '安装',
-                        'href'   => '#page/base/install?plugs_name='.$name,
+                        'href'   => 'page/plugs/base/install.html?plugs_name='.$name,
                         'icon'   => "fa fa-tachometer",
                         'target' => '_self',
                     ];
@@ -120,7 +120,7 @@ class AdminSystemController extends AdminBaseController
                     if ($plugsObj['plugs_status'] == PlugsStatusModel::PLUGS_STATUS_ON){
                         $arr = [
                             'title'  => '停用',
-                            'href'   => '#page/base/status?plugs_name='.$name.'&status=off',
+                            'href'   => 'page/plugs/base/status.html?plugs_name='.$name.'&status=off',
                             'icon'   => "fa fa-tachometer",
                             'target' => '_self',
                         ];
@@ -130,7 +130,7 @@ class AdminSystemController extends AdminBaseController
                     if ($plugsObj['plugs_status'] == PlugsStatusModel::PLUGS_STATUS_OFF){
                         $arr = [
                             'title'  => '启用',
-                            'href'   => '#page/base/status?plugs_name='.$name.'&status=on',
+                            'href'   => 'page/plugs/base/status.html?plugs_name='.$name.'&status=on',
                             'icon'   => "fa fa-tachometer",
                             'target' => '_self',
                         ];
