@@ -2,8 +2,8 @@
 
 namespace app\plugs;
 
-use app\model\PlugsStatusModel;
 use think\Exception;
+use think\facade\Db;
 use think\helper\Str;
 
 class PlugsInitEvent
@@ -30,13 +30,13 @@ class PlugsInitEvent
 
                 //获取插件数据
                 $name     = $plugs->get_config()->getName();
-                $plugsObj = PlugsStatusModel::find($name);
+                $plugsObj = Db::name('plugs_status')->find($name);
                 //检查安装状态
                 if (!$plugsObj) {
                     continue;
                 }
                 //检查启动状态
-                if ($plugsObj->plugs_status != $plugsObj::PLUGS_STATUS_ON) {
+                if ($plugsObj['plugs_status'] != $plugsObj::PLUGS_STATUS_ON) {
                     continue;
                 }
 
