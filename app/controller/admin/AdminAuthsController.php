@@ -2,12 +2,9 @@
 
 namespace app\controller\admin;
 
-use Siam\Api;
-use think\db\Query;
 use app\model\AuthsModel as Model;
-use app\BaseController;
 
-class AdminAuthsController extends BaseController
+class AdminAuthsController extends AdminBaseController
 {
     /**
      * @return mixed

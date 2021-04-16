@@ -5,20 +5,14 @@ namespace app\controller\admin;
 
 use app\BaseController;
 
-class AgentBaseController extends BaseController
+abstract class AgentBaseController extends BaseController
 {
-    /**
-     * @param        $code
-     * @param array  $data
-     * @param string $msg
-     * @return \think\response\Json
-     */
-    public function json($code, $data = [], $msg = '')
+    /** @var \app\model\UsersModel */
+    public $who;
+
+    /** 鉴权 */
+    public function auth()
     {
-        return json([
-            'code' => $code,
-            'data' => (object) $data,
-            'msg'  => $msg
-        ]);
+
     }
 }

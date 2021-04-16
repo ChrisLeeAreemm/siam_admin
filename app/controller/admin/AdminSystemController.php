@@ -2,14 +2,10 @@
 
 namespace app\controller\admin;
 
-use think\db\Query;
 use app\model\UsersModel as Model;
-use app\BaseController;
-use think\Env;
-use think\helper\Arr;
 use think\helper\Str;
 
-class AdminSystemController extends BaseController
+class AdminSystemController extends AdminBaseController
 {
     /**
      * @return mixed

@@ -41,6 +41,7 @@ abstract class BaseController
     abstract function add();
     abstract function edit();
     abstract function delete();
+    abstract function auth();
 
     /**
      * 构造方法

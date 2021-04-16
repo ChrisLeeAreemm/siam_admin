@@ -10,7 +10,14 @@ namespace app\controller\admin;
 
 use app\BaseController;
 
-class AdminBaseController extends BaseController
+abstract class AdminBaseController extends BaseController
 {
+    /** @var \app\model\UsersModel */
+    public $who;
 
+    /** 鉴权 */
+    public function auth()
+    {
+
+    }
 }

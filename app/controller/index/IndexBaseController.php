@@ -9,7 +9,14 @@
 namespace app\controller\admin;
 
 
-class IndexBaseController
+use app\BaseController;
+
+abstract class IndexBaseController extends BaseController
 {
 
+    /** 鉴权 */
+    public function auth()
+    {
+
+    }
 }
