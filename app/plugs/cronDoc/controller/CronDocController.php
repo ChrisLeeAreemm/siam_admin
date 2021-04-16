@@ -31,12 +31,7 @@ class CronDocController extends PlugsBaseController
                 'class_name'     => $class_name,
             ];
         }
-
-        return json([
-            'code' => ErrorCode::SUCCESS,
-            'data' => (object) ['list'=>$return],
-            'msg'  => "SUCCESS"
-        ]);
+        return $this->send(ErrorCode::SUCCESS,['list'=>$return],'SUCCESS');
     }
 
     function auth()
