@@ -38,4 +38,9 @@ class CronDocController extends PlugsBaseController
             'msg'  => "SUCCESS"
         ]);
     }
+
+    function auth()
+    {
+
+    }
 }
