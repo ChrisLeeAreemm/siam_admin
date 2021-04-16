@@ -106,7 +106,7 @@ class AdminSystemController extends BaseController
                     $href = '/index.php' . $href;
                 }
                 
-                //组装菜单 TODO 读取插件的状态，显示对应的按钮和名称
+                //组装菜单 TODO 读取插件的状态，显示对应的按钮和名称 [先从目录里读取所有插件列表，再all从插件状态表读取 然后遍历匹配是否安装]
                 // 未安装状态 ： 只显示 名称 + 安装项
                 // 安装未启动状态： 只显示 名称 + 启动项
                 // 安装并启动状态： 只显示 名称 + 停用项
