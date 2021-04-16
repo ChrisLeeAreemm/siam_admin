@@ -46,7 +46,7 @@ class ErrorCode
     const THIRD_PART_ERROR = '504';// 第三方服务出错
     const THIRD_PART_FAIL = '505';// 第三方服务失败
     const DB_DATA_DOES_NOT_EXIST = '530';// 数据库数据不存在
-    const DB_EXCEPTION = '531';// 数据库异常(最基础的值 try起来的db所有异常都可以用该值)
+    const DB_EXCEPTION = '531';// 数据库异常(最基础的值try起来的db所有异常都可以用该值)
 
     // 60x系列 其他针对单个api的错误码 根据具体逻辑定义
 }
