@@ -9,6 +9,7 @@ class PlugsConfig
     protected $icon;
     protected $home_view;
     protected $handle_module;
+    protected $menu = [];
 
     /**
      * @return mixed
@@ -73,6 +74,24 @@ class PlugsConfig
     {
         $this->handle_module = $handle_module;
     }
+
+    /**
+     * @return array
+     */
+    public function getMenu(): array
+    {
+        return $this->menu;
+    }
+
+    /**
+     * @param array $menu
+     */
+    public function setMenu(array $menu): void
+    {
+        $this->menu = $menu;
+    }
+
+
 
 
 }

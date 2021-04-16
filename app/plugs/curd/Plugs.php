@@ -18,6 +18,14 @@ class Plugs extends PlugsBase
         $config->setIcon("");
         $config->setHandleModule(["admin","plugs"]);// 只有admin,plugs模块才会执行初始化
         $config->setHomeView("/plugs/curd/index");
+        $config->setMenu([
+            [
+                'title'  => "测试",
+                'href'   => "https://www.baidu.com",
+                'icon'   => "fa fa-tachometer",
+                'target' => '_self',
+            ],
+        ]);
         return $config;
     }
     

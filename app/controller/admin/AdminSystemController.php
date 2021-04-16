@@ -90,14 +90,15 @@ class AdminSystemController extends AdminBaseController
         foreach ($arr as $key => $dirName) {
             if (Str::contains($dirName, '.') == false && is_dir($dir . $dirName)) {
                 $Plugs      = $namespace . $dirName . '\Plugs';
-                $PlugsModel = new $Plugs();
-                $name       = $PlugsModel->get_config()->getName();
+                /** @var \app\plugs\PlugsBase $plugs */
+                $plugs = new $Plugs();
+                $name       = $plugs->get_config()->getName();
                 //过滤base,不需要显示
                 if ($name == 'base') {
                     continue;
                 }
                 //解析插件首页的链接 , 带全链接或者 page 开头的前端页面链接,默认直接使用
-                $href = $PlugsModel->get_config()->getHomeView();
+                $href = $plugs->get_config()->getHomeView();
 
                 //如果是后端接口，添加入口地址
                 if (Str::startsWith($href,'/') == true) {
@@ -138,20 +139,27 @@ class AdminSystemController extends AdminBaseController
                     }
                 }
 
+                $plugs_menu = [
+                    [
+                        'title'  => $name,
+                        'href'   => $href,
+                        'icon'   => "fa fa-tachometer",
+                        'target' => '_self',
+                    ],
+                ];
+                if (!empty($plugs->get_config()->getMenu())){
+                    foreach ($plugs->get_config()->getMenu() as $one){
+                        array_push($plugs_menu, $one);
+                    }
+                }
+                array_push($plugs_menu,$arr);
+
                 $child[] = [
                     'title'  => $name,
                     'href'   => '',
                     'icon'   => "fa fa-tachometer",
                     'target' => '_self',
-                    'child'  => [
-                        [
-                            'title'  => $name,
-                            'href'   => $href,
-                            'icon'   => "fa fa-tachometer",
-                            'target' => '_self',
-                        ],
-                        $arr
-                    ]
+                    'child'  => $plugs_menu
                 ];
             }
         }
