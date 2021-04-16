@@ -132,7 +132,7 @@ class AdminSystemController extends AdminBaseController
                 }
 
                 $plugs_menu = [];
-                if (!empty($plugs->get_config()->getMenu())){
+                if (!empty($plugs->get_config()->getMenu()) && $arr['title'] !== '启用'){
                     foreach ($plugs->get_config()->getMenu() as $one){
                         if (!Str::startsWith($one['href'],'/page') && !Str::startsWith($one['href'],'page') && !Str::startsWith($one['href'],'http')){
                             $one['href'] = "/index.php/".$one['href'];
