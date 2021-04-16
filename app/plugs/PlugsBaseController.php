@@ -25,5 +25,9 @@ abstract class PlugsBaseController extends BaseController
     {
     
     }
+
+    function auth(){
+
+    }
     
 }
