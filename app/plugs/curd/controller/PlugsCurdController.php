@@ -4,6 +4,7 @@ namespace app\plugs\curd\controller;
 
 use app\exception\ErrorCode;
 use app\plugs\PlugsBaseController;
+use think\db\BaseQuery;
 use think\facade\Db;
 use think\helper\Str;
 use think\response\Json;
@@ -142,6 +143,90 @@ class PlugsCurdController extends PlugsBaseController
         }
         return $this->send(ErrorCode::SUCCESS, ['lists'=>$ListsHtml,'action'=>$ActionHtml], '生成成功');
         
+    }
+
+    public function update_thinkphp_note()
+    {
+
+        $ref = new \ReflectionClass(BaseQuery::class);
+        $method_list = [];
+        $namespace_map = [];
+        foreach ($ref->getMethods() as $method)
+        {
+            // 过滤一些无用的
+            $black = [
+                '__construct',
+                '__call',
+                'newQuery',
+            ];
+            if (in_array($method->getName(), $black)) continue;
+
+            if ($method->getModifiers() == \ReflectionMethod::IS_PUBLIC){
+                $param_array = [];
+                foreach ($method->getParameters() as $param){
+                    try {
+                        $default_value = $param->getDefaultValue();
+                    } catch (\ReflectionException $e) {
+                        $default_value = 'NONE---';
+                    }
+                    $param_array[] = [
+                        'name'     => $param->getName(),
+                        'position' => $param->getPosition(),
+                        'default'  => $default_value,
+                        'typeHint' => (string) $param->getType(),
+                    ];
+                }
+
+                $method_list[] = [
+                    'name'        => $method->getName(),
+                    'param'       => $param_array,
+                    'return_type' => $method->getReturnType(),
+                ];
+            }
+        }
+        // 解析成注释
+        $str = '';
+        foreach ($method_list as $method){
+            $param_temp_array = [];
+            foreach ($method['param'] as $param){
+                $temp_one_param = [];
+                if (!!$param['typeHint']) {
+                    $temp_one_param[] = $param['typeHint'];
+                }
+                $temp_one_param[] = "$".$param['name'];
+                if ($param['default'] !== "NONE---") {
+                    if ($param['default'] == '') $param['default'] = "''";
+                    if (is_string($param['default']) && !!$param['default'] && $param['default'] !== "''") {
+                        $param['default'] = "'{$param['default']}'";
+                    }
+                    if ($param['default'] === []) $param['default'] = "[]";
+
+                    $temp_one_param[] = "=";
+                    $temp_one_param[] = $param['default'];
+                }
+                $param_temp_array[] = implode(' ', $temp_one_param);
+
+            }
+            $param_str = implode(',', $param_temp_array);
+
+            $return_type_str = (string)$method['return_type'];
+            if (!$return_type_str) {
+                $return_type_str = BaseQuery::class;
+            }
+            // 如果return_type是命名空间，则需要先use 然后这里只显示类名
+            if (class_exists($return_type_str)){
+                if (!isset($namespace_map[$return_type_str])) {
+                    $namespace_map[$return_type_str] = class_basename($return_type_str). "Mapper";
+                }
+                $return_type_str = $namespace_map[$return_type_str];
+            }
+
+            $str.= " * @method static {$return_type_str} {$method['name']}({$param_str}) \r\n";
+        }
+        echo $str;
+        // TODO 还需要把命名空间map 生成一个use的
+        dump($namespace_map);
+        die;
     }
     
     /**
