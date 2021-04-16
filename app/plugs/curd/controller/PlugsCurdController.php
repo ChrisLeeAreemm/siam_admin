@@ -2,6 +2,7 @@
 
 namespace app\plugs\curd\controller;
 
+use app\exception\ErrorCode;
 use app\plugs\PlugsBaseController;
 use think\facade\Db;
 use think\helper\Str;
@@ -40,10 +41,9 @@ class PlugsCurdController extends PlugsBaseController
             // 写入控制器文件
             $this->parseField()->putControllerFile();
         }catch (\Exception $exception){
-            return json(['code' => '300', 'data' => $exception->getLine(), 'msg' => $exception->getMessage()]);
+            return $this->send(ErrorCode::THIRD_PART_ERROR, [$exception->getLine()], $exception->getMessage());
         }
-        
-        return json(['code' => '200', 'data' => '', 'msg' => '生成成功']);
+        return $this->send(ErrorCode::SUCCESS, [], '生成成功');
     }
     
     /**
@@ -55,7 +55,7 @@ class PlugsCurdController extends PlugsBaseController
         try {
             $tables = Db::query('SHOW TABLES');
         }catch (\Exception $exception){
-            return json(['code' => '300', 'data' => $exception->getLine(), 'msg' => $exception->getMessage()]);
+            return $this->send(ErrorCode::THIRD_PART_ERROR, [$exception->getLine()], $exception->getMessage());
         }
         foreach ($tables as $value) {
             $database = config('database.connections.mysql.database');
@@ -74,7 +74,7 @@ class PlugsCurdController extends PlugsBaseController
             $class = 'app\model\\'.Str::title($tableName). 'Model';
             $Model = new $class();
             if (!$Model){
-                return json(['code' => '400', 'data' => '', 'msg' => '类不存在']);
+                return $this->send(ErrorCode::THIRD_PART_ERROR, [], '类不存在');
             }
             $ref = new \ReflectionClass($Model);
             $methods = $ref->getMethods();
@@ -125,9 +125,10 @@ class PlugsCurdController extends PlugsBaseController
             $res = file_put_contents($file, $content);
         }
         if (!$up_file){
-            return json(['code' => '200', 'data' => $up_file, 'msg' => '更新失败']);
+            return $this->send(ErrorCode::THIRD_PART_ERROR, [], '更新失败');
+
         }
-        return json(['code' => '200', 'data' => $up_file, 'msg' => '更新成功']);
+        return $this->send(ErrorCode::SUCCESS, [], '更新成功');
         
     }
     
@@ -139,8 +140,7 @@ class PlugsCurdController extends PlugsBaseController
         }catch (\Exception $exception){
             return json(['code' => '300', 'data' =>'', 'msg' => $exception->getMessage()]);
         }
-        
-        return json(['code' => '200', 'data' => ['lists'=>$ListsHtml,'action'=>$ActionHtml], 'msg' => '生成成功']);
+        return $this->send(ErrorCode::SUCCESS, ['lists'=>$ListsHtml,'action'=>$ActionHtml], '生成成功');
         
     }
     
@@ -276,7 +276,7 @@ EOF;
             <div class="layui-form-item">
                 <label class="layui-form-label">{$value['name']}</label>
                 <div class="layui-input-block">
-                    <input type="text" name="{$value['name']}" lay-verify="" autocomplete="off" placeholder="请输入标题" class="layui-input">
+                    <input type="text" name="{$value['name']}" lay-verify="" autocomplete="off" placeholder="请输入" class="layui-input">
                 </div>
             </div>
 \n
