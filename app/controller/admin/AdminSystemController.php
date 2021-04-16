@@ -106,7 +106,10 @@ class AdminSystemController extends BaseController
                     $href = '/index.php' . $href;
                 }
                 
-                //组装菜单
+                //组装菜单 TODO 读取插件的状态，显示对应的按钮和名称
+                // 未安装状态 ： 只显示 名称 + 安装项
+                // 安装未启动状态： 只显示 名称 + 启动项
+                // 安装并启动状态： 只显示 名称 + 停用项
                 $child[] = [
                     'title'  => $name,
                     'href'   => '',
@@ -114,7 +117,7 @@ class AdminSystemController extends BaseController
                     'target' => '_self',
                     'child'  => [
                         [
-                            'title'  => '首页',
+                            'title'  => $name,
                             'href'   => $href,
                             'icon'   => "fa fa-tachometer",
                             'target' => '_self',
