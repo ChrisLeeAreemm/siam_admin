@@ -2,6 +2,7 @@
 
 namespace app\controller\admin;
 
+use app\model\PlugsStatusModel;
 use app\model\UsersModel as Model;
 use think\helper\Str;
 
@@ -13,7 +14,6 @@ class AdminSystemController extends AdminBaseController
      */
     public function get_list()
     {
-        //TODO 2.启用插件 3.停用插件
         
         // 获取插件列表(带安装状态)
         $plug_arr = $this->get_plugs();
@@ -72,16 +72,16 @@ class AdminSystemController extends AdminBaseController
             ]
         ];
         return json($arr);
-        
+
     }
-    
+
     public function get_plugs()
     {
         $dir = app_path() . 'plugs\\';
         if (!is_dir($dir)) {
             return false;
         }
-        
+
         $arr = scandir($dir);
         //检索插件
         $namespace = '\app\plugs\\';
@@ -95,18 +95,48 @@ class AdminSystemController extends AdminBaseController
                 if ($name == 'base') {
                     continue;
                 }
-                //解析插件首页的链接 , 带全链接或者 #的前端页面链接,默认直接使用
+                //解析插件首页的链接 , 带全链接或者 page 开头的前端页面链接,默认直接使用
                 $href = $PlugsModel->get_config()->getHomeView();
-    
+
                 //如果是后端接口，添加入口地址
                 if (Str::startsWith($href,'/') == true) {
                     $href = '/index.php' . $href;
                 }
-                
-                //组装菜单 TODO 读取插件的状态，显示对应的按钮和名称 [先从目录里读取所有插件列表，再all从插件状态表读取 然后遍历匹配是否安装]
+
+
+                //组装菜单  读取插件的状态，显示对应的按钮和名称
+                $plugsObj = PlugsStatusModel::find($name);
+
                 // 未安装状态 ： 只显示 名称 + 安装项
-                // 安装未启动状态： 只显示 名称 + 启动项
-                // 安装并启动状态： 只显示 名称 + 停用项
+                if (!$plugsObj){
+                    $arr = [
+                        'title'  => '安装',
+                        'href'   => 'page/plugs/base/install.html?plugs_name='.$name,
+                        'icon'   => "fa fa-tachometer",
+                        'target' => '_self',
+                    ];
+                }else{
+                    // 安装并启动状态： 只显示 名称 + 停用项
+                    if ($plugsObj['plugs_status'] == PlugsStatusModel::PLUGS_STATUS_ON){
+                        $arr = [
+                            'title'  => '停用',
+                            'href'   => 'page/plugs/base/status.html?plugs_name='.$name.'&status=off',
+                            'icon'   => "fa fa-tachometer",
+                            'target' => '_self',
+                        ];
+                    }
+
+                    // 安装未启动状态： 只显示 名称 + 启动项
+                    if ($plugsObj['plugs_status'] == PlugsStatusModel::PLUGS_STATUS_OFF){
+                        $arr = [
+                            'title'  => '启用',
+                            'href'   => 'page/plugs/base/status.html?plugs_name='.$name.'&status=on',
+                            'icon'   => "fa fa-tachometer",
+                            'target' => '_self',
+                        ];
+                    }
+                }
+
                 $child[] = [
                     'title'  => $name,
                     'href'   => '',
@@ -119,18 +149,7 @@ class AdminSystemController extends AdminBaseController
                             'icon'   => "fa fa-tachometer",
                             'target' => '_self',
                         ],
-                        [
-                            'title'  => '安装',
-                            'href'   => '',
-                            'icon'   => "fa fa-tachometer",
-                            'target' => '_self',
-                        ],
-                        [
-                            'title'  => '启用/停用',
-                            'href'   => '',
-                            'icon'   => "fa fa-tachometer",
-                            'target' => '_self',
-                        ],
+                        $arr
                     ]
                 ];
             }

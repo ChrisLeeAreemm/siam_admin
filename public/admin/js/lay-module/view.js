@@ -24,6 +24,19 @@ layui.define(['laytpl', 'layer', 'jquery', 'setter'], function (exports) {
             });
         },
 
+        //获取参数
+        getQueryletiable: function(letiable) {
+        let query = window.location.search.substring(1);
+        let lets = query.split("&");
+        for (let i = 0; i < lets.length; i++) {
+            let pair = lets[i].split("=");
+            if (pair[0] == letiable) {
+                return pair[1];
+            }
+        }
+        return (false);
+    },
+
         //Ajax请求
         req: function (options) {
             var that = this

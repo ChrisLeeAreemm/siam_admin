@@ -34,4 +34,9 @@ class ErrorCodeController extends PlugsBaseController
             'msg'  => "SUCCESS"
         ]);
     }
+
+    function auth()
+    {
+
+    }
 }

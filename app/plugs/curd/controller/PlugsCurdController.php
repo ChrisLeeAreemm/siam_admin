@@ -320,6 +320,10 @@ EOF;
         $path = dirname(__FILE__) . "\action.html";
         return file_get_contents($path);
     }
-    
-    
+
+
+    function auth()
+    {
+
+    }
 }
