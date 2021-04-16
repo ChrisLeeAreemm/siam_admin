@@ -2,6 +2,7 @@
 
 namespace app\plugs;
 
+use app\model\PlugsStatusModel;
 use think\Exception;
 use think\facade\Db;
 use think\helper\Str;
@@ -36,7 +37,7 @@ class PlugsInitEvent
                     continue;
                 }
                 //检查启动状态
-                if ($plugsObj['plugs_status'] != $plugsObj::PLUGS_STATUS_ON) {
+                if ($plugsObj['plugs_status'] != PlugsStatusModel::PLUGS_STATUS_ON) {
                     continue;
                 }
 

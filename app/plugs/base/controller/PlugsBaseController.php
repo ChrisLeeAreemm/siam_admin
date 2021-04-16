@@ -97,8 +97,8 @@ class PlugsBaseController extends BaseController
 
         //执行开启操作
         if ($status == 'on') {
-            if ($plugsObj->plugs_status != $plugsObj::PLUGS_STATUS_ON) {
-                $save = PlugsStatusModel::update(['plugs_status'=>$plugsObj::PLUGS_STATUS_ON],['plugs_name'=>$plugsName]);
+            if ($plugsObj->plugs_status != PlugsStatusModel::PLUGS_STATUS_ON) {
+                $save = PlugsStatusModel::update(['plugs_status'=>PlugsStatusModel::PLUGS_STATUS_ON],['plugs_name'=>$plugsName]);
                 if (!$save) {
                     return $this->send(ErrorCode::THIRD_PART_ERROR, [], '开启失败');
                 }
@@ -108,8 +108,8 @@ class PlugsBaseController extends BaseController
 
         //执行关闭操作
         if ($status == 'off') {
-            if ($plugsObj->plugs_status != $plugsObj::PLUGS_STATUS_OFF) {
-                $save = PlugsStatusModel::update(['plugs_status'=>$plugsObj::PLUGS_STATUS_OFF],['plugs_name'=>$plugsName]);
+            if ($plugsObj->plugs_status != PlugsStatusModel::PLUGS_STATUS_OFF) {
+                $save = PlugsStatusModel::update(['plugs_status'=>PlugsStatusModel::PLUGS_STATUS_OFF],['plugs_name'=>$plugsName]);
                 if (!$save) {
                     return $this->send(ErrorCode::THIRD_PART_ERROR, [], '开启失败');
                 }
