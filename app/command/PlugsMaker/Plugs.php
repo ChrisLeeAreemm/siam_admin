@@ -18,7 +18,14 @@ class Plugs extends PlugsBase
         $config->setName("—PLUGS—");
         $config->setIcon("");
         $config->setHandleModule(["admin", "plugs"]);// 只有admin模块才会执行初始化
-        $config->setHomeView("/plugs/—PLUGS—SNAKE—/index");
+        $config->setMenu([
+            [
+                'title'  => "—PLUGS—",
+                'href'   => "/plugs/—PLUGS—SNAKE—/index",
+                'icon'   => "fa fa-tachometer",
+                'target' => '_self',
+            ],
+        ]);
         return $config;
     }
 
