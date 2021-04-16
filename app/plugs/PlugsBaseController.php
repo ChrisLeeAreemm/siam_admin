@@ -23,5 +23,7 @@ abstract class PlugsBaseController extends BaseController
 
     function delete()
     {
+    
     }
+    
 }

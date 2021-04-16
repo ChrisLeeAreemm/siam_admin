@@ -2,11 +2,12 @@
 
 namespace app\plugs\curd\controller;
 
+use app\plugs\PlugsBaseController;
 use think\facade\Db;
 use think\helper\Str;
 use think\response\Json;
 
-class PlugsCurdController
+class PlugsCurdController extends PlugsBaseController
 {
     private $modelPath;
     private $controllerPath;
