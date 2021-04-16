@@ -35,9 +35,6 @@ class Plugs extends PlugsBase
     {
         
         // 在这里注入路由[api] 等事件
-        // Route::get('plugs/base/index', function () {
-        //     return $this->pre_render_file(__DIR__ . "/view/index.html");
-        // });
     
         Route::group(function () {
             Route::get('plugs/base/install', 'PlugsBaseController@install');

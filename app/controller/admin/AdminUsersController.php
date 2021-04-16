@@ -2,6 +2,7 @@
 
 namespace app\controller\admin;
 
+use app\exception\ErrorCode;
 use app\model\UsersModel as Model;
 
 class AdminUsersController extends AdminBaseController
@@ -19,7 +20,8 @@ class AdminUsersController extends AdminBaseController
         $result = Model::with(['roles'])->paginate(['page' => $page, 'list_rows' => $limit])->toArray();
         $lists  = $result['data'];
         $count  = $result['total'];
-        return json(['code'=>'200','data'=>['lists'=>$lists,'count'=>$count],'msg'=>'']);
+        return $this->send(ErrorCode::SUCCESS,['lists'=>$lists,'count'=>$count]);
+
 
     }
 
@@ -28,13 +30,13 @@ class AdminUsersController extends AdminBaseController
         $id = input('u_id');
         $result = Model::find($id);
         if (!$result){
-            return json(['code'=>'500','data'=>'','msg'=>'获取失败']);
+            return $this->send(ErrorCode::THIRD_PART_ERROR,[],'获取失败');
         }
-        return json(['code'=>'200','data'=>['lists'=>$result],'msg'=>'']);
+        return $this->send(ErrorCode::SUCCESS,['lists'=>$result]);
     }
 
     /**
-     * @return false|string
+     * @return \think\response\Json
      */
     public function add()
     {
@@ -44,13 +46,13 @@ class AdminUsersController extends AdminBaseController
         $start = Model::create($param);
 
         if (!$start) {
-             return json(['code'=>'500','data'=>'','msg'=>'新增失败']);
+            return $this->send(ErrorCode::THIRD_PART_ERROR,[],'新增失败');
         }
-            return json(['code'=>'200']);
+        return $this->send(ErrorCode::SUCCESS);
     }
 
     /**
-     * @return false|string
+     * @return \think\response\Json
      */
     public function edit()
     {
@@ -58,14 +60,14 @@ class AdminUsersController extends AdminBaseController
         $start = Model::find($param['u_id']);
         $res   = $start->save($param);
 
-        if (!$res){
-          return json(['code'=>'500','data'=>'','msg'=>'编辑失败']);
+        if (!$start) {
+            return $this->send(ErrorCode::THIRD_PART_ERROR,[],'编辑失败');
         }
-        return json(['code'=>'200']);
+        return $this->send(ErrorCode::SUCCESS);
     }
 
     /**
-     * @return false|string
+     * @return \think\response\Json
      */
     public function delete()
     {
@@ -73,6 +75,6 @@ class AdminUsersController extends AdminBaseController
 
         $result = Model::destroy($id);
 
-        return json(['code'=>'200','msg'=>'ok']);
+        return $this->send(ErrorCode::SUCCESS,[],'ok');
     }
 }
