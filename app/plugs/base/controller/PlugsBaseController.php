@@ -85,13 +85,13 @@ class PlugsBaseController extends BaseController
 
         //base无法控制
         if ($plugsName === 'base') {
-            return $this->send(ErrorCode::THIRD_PART_ERROR, [], '参数无效');
+            return $this->send(ErrorCode::PARAM_FORMAT_ERROR, [], '参数无效');
         }
 
         //判断状态
         $plugsObj = PlugsStatusModel::find($plugsName);
         if (!$plugsObj){
-            return $this->send(ErrorCode::THIRD_PART_ERROR, [], '插件不存在');
+            return $this->send(ErrorCode::DB_DATA_DOES_NOT_EXIST, [], '插件不存在');
         }
 
 
