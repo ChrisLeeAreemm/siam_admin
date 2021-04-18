@@ -25,8 +25,14 @@ class Plugs extends PlugsBase
                 'target' => '_self',
             ],
             [
-                'title'  => "dbDict", //数据表字典
+                'title'  => "数据表字典", //数据表字典
                 'href'   => "/plugs/db_helper/db_dict/index",
+                'icon'   => "fa fa-tachometer",
+                'target' => '_self',
+            ],
+            [
+                'title'  => "数据表优化", //数据表优化
+                'href'   => "/plugs/db_helper/db_optimize/index",
                 'icon'   => "fa fa-tachometer",
                 'target' => '_self',
             ],
@@ -53,6 +59,11 @@ class Plugs extends PlugsBase
         Route::get('plugs/db_helper/db_dict/index', function () {
             return $this->pre_render_file(__DIR__ . "/view/dbDict/index.html");
         });
+        // 数据表优化index
+        Route::get('plugs/db_helper/db_optimize/index', function () {
+            return $this->pre_render_file(__DIR__ . "/view/dbOptimize/index.html");
+        });
+        // 数据表优化index
 
         Route::any('plugs/db_helper/api/get_list', 'app\plugs\dbHelper\controller\DbHelperController@get_list');
 
@@ -64,6 +75,11 @@ class Plugs extends PlugsBase
         Route::any('plugs/db_helper/db_dict/api/get_list', 'app\plugs\dbHelper\controller\DbDictController@get_list');
         Route::any('plugs/db_helper/db_dict/api/get_tables', 'app\plugs\dbHelper\controller\DbDictController@get_tables');
         // 字典控制器路由
+        
+        // 数据表优化
+        Route::any('plugs/db_helper/db_optimize/api/get_list', 'app\plugs\dbHelper\controller\DbOptimizeController@get_list');
+        Route::post('plugs/db_helper/db_optimize/api/perform_optimize', 'app\plugs\dbHelper\controller\DbOptimizeController@perform_optimize');
+        // 数据表优化
 
     }
 }
