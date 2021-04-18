@@ -5,6 +5,10 @@ namespace app\plugs\httpMonitor\controller;
 use app\exception\ErrorCode;
 use app\plugs\httpMonitor\model\PlugsHttpMonitorModel as Model;
 use app\plugs\PlugsBaseController;
+use think\App;
+use think\facade\Db;
+use think\Request;
+use think\Response;
 
 class PlugsHttpMonitorController extends PlugsBaseController
 {
@@ -18,10 +22,10 @@ class PlugsHttpMonitorController extends PlugsBaseController
         $page  = input('page', 1);
         $limit = input('limit', 10);
 
-        $result = Model::paginate(['page' => $page, 'list_rows' => $limit,])->toArray();
-        $lists  = $result['data'];
-        $count  = $result['total'];
-        return $this->send(ErrorCode::SUCCESS,['lists'=>$lists,'count'=>$count]);
+        $result = Model::page($page, $limit)->order("id", "DESC")->select();
+        $count  = Model::count();
+
+        return $this->send(ErrorCode::SUCCESS,['lists'=>$result,'count'=>$count]);
 
     }
 
@@ -76,5 +80,40 @@ class PlugsHttpMonitorController extends PlugsBaseController
         $result = Model::destroy($id);
 
         return $this->send(ErrorCode::SUCCESS,[],'ok');
+    }
+
+    public function view_response()
+    {
+        $id = input('id');
+        $model = Model::find($id);
+        /** @var Response $response */
+        $response = unserialize($model->response_content);
+        return $response->getContent();
+    }
+
+    public function resend()
+    {
+        $id = input('id');
+        $model = Model::find($id);
+        /** @var Request $request */
+        $request = unserialize($model->request_content);
+        ob_start();
+        $app = new App();
+        $http = $app->http;
+        $response = $http->run($request);
+        $response->send();
+        $http->end($response);
+        $content =ob_get_contents();
+        ob_clean();;
+
+        return $this->send('200', ['result' => $content]);
+    }
+
+    public function clear()
+    {
+        $dump = (new Model)->getName();
+        Db::name($dump)->delete(true);
+        return $this->send('200');
+
     }
 }

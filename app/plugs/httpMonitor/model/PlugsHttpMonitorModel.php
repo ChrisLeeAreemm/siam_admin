@@ -24,7 +24,4 @@ class PlugsHttpMonitorModel extends BaseModel
 {
     protected $name = 'plugs_http_monitor';
     protected $pk   = 'id';
-
-    protected $autoWriteTimestamp='datetime';
-    protected $updateTime = false;
 }

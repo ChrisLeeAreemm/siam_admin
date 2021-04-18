@@ -27,7 +27,7 @@
                 <div class="layui-card-header">plugs_http_monitor列表</div>
                 <div class="layui-btn-group wechat_cross_btn_group">
                     <button class="layui-btn layui-btn-sm" id="clear" lay-text="清空">
-                        <i class="layui-icon">&#xe654;</i>一键清空// TODO
+                        <i class="layui-icon">&#xe654;</i>一键清空
                     </button>
                 </div>
                 <div class="layui-card-body">
@@ -39,7 +39,8 @@
 </div>
 <!--({{ d.u_child_count }})-->
 <script type="text/html" id="do">
-    <a class="layui-btn layui-btn-xs" lay-event="edit">复发</a>
+    <a class="layui-btn layui-btn-xs" lay-event="view_response">查看响应</a>
+    <a class="layui-btn layui-btn-xs" lay-event="resend">复发</a>
 </script>
 
 <script src="__ADMIN__/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
@@ -60,7 +61,7 @@
             , cols: [[
                 {field: 'id', title: '自增ID'},
                 {field: 'path', title: '请求地址'},
-                {field: 'run_time', title: '执行耗时'},
+                {field: 'run_time', title: '执行耗时 ms'},
                 {field: 'create_time', title: '请求时间'}
                 , {toolbar: '#do', width: 300}
             ]]
@@ -88,6 +89,16 @@
                 area: ['70%', '90%']
             });
         });
+        $("#clear").on("click", function(){
+            view.req({
+                url:"/index.php/plugs/http_monitor/clear",
+                data:{
+                },
+                success(res){
+                    $(".layui-laypage-btn").click();
+                },
+            });
+        });
 
         // 监听工具条
         table.on('tool(lists)', function (obj) {
@@ -95,36 +106,23 @@
             let layEvent = obj.event; //获得 lay-event 对应的值
 
             switch (layEvent) {
-                case 'del':
-                    layer.confirm('确认删除?', {icon: 3, title: '提示'}, function (index) {
-                        view.req({
-                            url: "/index.php/admin/plugs_http_monitor/delete",
-                            data: {
-                                id: data.id
-                            },
-                            type: "post",
-                            dataType: "json",
-                            success: function (res) {
-                                if (res.code === '200') {
-                                    window.location.reload();
-                                } else {
-                                    layer.msg(res.msg, {
-                                        icon: 2
-                                    })
-                                }
-                            }
-                        });
-
-                        layer.close(index);
-                    });
-                    break;
-                case 'edit':
-                    let url = "/admin/page/plugs_http_monitor/action.html?id="+data.id;
+                case 'view_response':
                     layer.open({
                         type: 2,
-                        title: "{:lang('edit')}",
-                        content: url,
+                        title: "查看响应",
+                        content: '/index.php/plugs/http_monitor/view_response?id='+data.id,
                         area:['70%','90%']
+                    });
+                    break;
+                case 'resend':
+                    view.req({
+                        url:"/index.php/plugs/http_monitor/resend",
+                        data:{
+                            id:data.id
+                        },
+                        success(res){
+                            $(".layui-laypage-btn").click();
+                        },
                     });
                     break;
                 default:

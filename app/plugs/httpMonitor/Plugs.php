@@ -44,11 +44,11 @@ class Plugs extends PlugsBase
             $table->setTableCharset(Character::UTF8MB4_GENERAL_CI);     //设置表字符集
             $table->setTableEngine(Engine::INNODB);                     //设置表引擎
             $table->int('id')->setIsUnsigned()->setIsAutoIncrement()->setIsPrimaryKey()->setColumnComment('自增ID');
-            $table->varchar('path')->setColumnComment("请求地址");
+            $table->varchar('path', 255)->setColumnComment("请求地址");
             $table->text('request_content')->setColumnComment("请求内容序列化");
             $table->text('response_content')->setColumnComment("响应内容序列化")->setIsNotNull(false);
-            $table->decimal('run_time')->setColumnComment("执行耗时")->setIsNotNull(false);
-            $table->datetime("create_time")->setColumnComment("请求时间");
+            $table->int('run_time')->setColumnComment("执行耗时 毫秒")->setDefaultValue(0);
+            $table->varchar("create_time",30)->setColumnComment("请求时间 毫秒");
         }));
     }
 
@@ -63,6 +63,9 @@ class Plugs extends PlugsBase
             return $this->pre_render_file(__DIR__ . "/view/index.html");
         });
         Route::any('plugs/http_monitor/api/get_list', 'app\plugs\httpMonitor\controller\PlugsHttpMonitorController@get_list');
+        Route::any('plugs/http_monitor/view_response', 'app\plugs\httpMonitor\controller\PlugsHttpMonitorController@view_response');
+        Route::any('plugs/http_monitor/resend', 'app\plugs\httpMonitor\controller\PlugsHttpMonitorController@resend');
+        Route::any('plugs/http_monitor/clear', 'app\plugs\httpMonitor\controller\PlugsHttpMonitorController@clear');
 
         $id = RequestMonitor::run(request());
         Event::listen('HttpEnd', function($response) use($id) {

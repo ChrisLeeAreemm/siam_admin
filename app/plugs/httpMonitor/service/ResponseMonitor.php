@@ -9,6 +9,7 @@
 namespace app\plugs\httpMonitor\service;
 
 
+use app\facade\TimeHelper;
 use app\plugs\httpMonitor\model\PlugsHttpMonitorModel;
 use think\Response;
 
@@ -18,8 +19,8 @@ class ResponseMonitor
     {
         $model = PlugsHttpMonitorModel::find($id);
         $model->save([
-            'response' => serialize($response),
-            'run_time' => time() - strtotime($model->create_time)
+            'response_content' =>serialize($response),
+            'run_time' => TimeHelper::get_now_ms()  - $model->create_time
         ]);
     }
 }

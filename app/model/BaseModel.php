@@ -129,5 +129,5 @@ use think\db\BaseQuery as BaseQueryMapper;
  */
 class BaseModel extends Model
 {
-
+    protected $autoWriteTimestamp = false;
 }

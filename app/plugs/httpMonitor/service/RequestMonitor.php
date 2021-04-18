@@ -10,6 +10,7 @@ namespace app\plugs\httpMonitor\service;
 
 
 use app\facade\SiamApp;
+use app\facade\TimeHelper;
 use app\model\PlugsStatusModel;
 use app\plugs\httpMonitor\model\PlugsHttpMonitorModel;
 use think\facade\Db;
@@ -26,6 +27,7 @@ class RequestMonitor
         $model->path = $request->pathinfo();
         $model->request_content = serialize($request);
         $model->response_content = null;
+        $model->create_time      = TimeHelper::get_now_ms();
         $model->save();
         return $model->id;
 
