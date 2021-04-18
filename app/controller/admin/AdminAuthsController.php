@@ -3,6 +3,7 @@
 namespace app\controller\admin;
 
 use app\exception\ErrorCode;
+use app\model\AuthsModel;
 use app\model\AuthsModel as Model;
 
 class AdminAuthsController extends AdminBaseController
@@ -17,10 +18,9 @@ class AdminAuthsController extends AdminBaseController
         $page  = input('page', 1);
         $limit = input('limit', 10);
 
-        $result = Model::paginate(['page' => $page, 'list_rows' => $limit,])->toArray();
-        $lists  = $result['data'];
-        $count  = $result['total'];
-        return $this->send(ErrorCode::SUCCESS,['lists'=>$lists,'count'=>$count]);
+        $result = Model::page($page, $limit)->order('auth_id','DESC')->select();
+        $count  = Model::count();
+        return $this->send(ErrorCode::SUCCESS,['lists'=>$result,'count'=>$count]);
 
     }
 
