@@ -82,9 +82,13 @@
                  success: function (res) {
                      if (res.code == '200'){
                          //关闭
-                         layer.msg(res.msg, {icon: 1,time:1500});
+                         layer.msg(res.msg, {icon: 1,time:1500},function (){
+                             window.location.reload();
+                         });
                      }else{
-                         layer.msg(res.msg, {icon: 0,time:1500});
+                         layer.msg(res.msg, {icon: 0,time:1500},function (){
+                             window.location.reload();
+                         });
                      }
                  }
              });
