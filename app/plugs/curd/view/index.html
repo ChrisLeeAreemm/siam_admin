@@ -79,7 +79,9 @@
                 data: data.field,
                 type: "get",
                 success: function (res) {
-                    console.log(res);
+                    if (res.code === 200){
+                        layer.msg(res.msg,{icon: 1,time:1500});
+                    }
                 }
             });
         });
@@ -90,7 +92,9 @@
                 data: data.field,
                 type: "get",
                 success: function (res) {
-                    console.log(res);
+                    if (res.code === 200){
+                        layer.msg(res.msg,{icon: 1,time:1500});
+                    }
                 }
             });
         });
@@ -102,7 +106,7 @@
                 data: data.field,
                 type: "get",
                 success: function (res) {
-                    if (res.code == '200'){
+                    if (res.code === 200){
                         $('#lists').text(res.data.lists);
                         $('#action').text(res.data.action);
                     }
