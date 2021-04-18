@@ -23,6 +23,24 @@ class Plugs extends PlugsBase
                 'icon'   => "fa fa-tachometer",
                 'target' => '_self',
             ],
+            [
+                'title'  => '安装',
+                'href'   => 'page/plugs/base/install.html',
+                'icon'   => "fa fa-tachometer",
+                'target' => '_self',
+            ],
+            [
+                'title'  => '停用',
+                'href'   => 'page/plugs/base/status.html',
+                'icon'   => "fa fa-tachometer",
+                'target' => '_self',
+            ],
+            [
+                'title'  => '启用',
+                'href'   => 'page/plugs/base/status.html',
+                'icon'   => "fa fa-tachometer",
+                'target' => '_self',
+            ],
         ]);
         return $config;
     }

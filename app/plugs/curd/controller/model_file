@@ -1,7 +1,6 @@
 <?php
 /**
  * Created by CurdPlugs
- * User: Chris
  */
 
 namespace app\model;
