@@ -16,11 +16,10 @@ class AdminRolesController extends AdminBaseController
 
         $page  = input('page', 1);
         $limit = input('limit', 10);
-
-        $result = Model::paginate(['page' => $page, 'list_rows' => $limit,])->toArray();
-        $lists  = $result['data'];
-        $count  = $result['total'];
-        return $this->send(ErrorCode::SUCCESS,['lists'=>$lists,'count'=>$count]);
+    
+        $result = Model::page($page, $limit)->order('role_id','DESC')->select();
+        $count  = Model::count();
+        return $this->send(ErrorCode::SUCCESS,['lists'=>$result,'count'=>$count]);
 
 
     }
