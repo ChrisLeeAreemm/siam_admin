@@ -48,7 +48,7 @@ class ErrorCode
     const DB_DATA_DOES_NOT_EXIST = '530';// 数据库数据不存在
     const DB_EXCEPTION = '531';// 数据库异常(最基础的值try起来的db所有异常都可以用该值)
     const FILE_EXIST = '540';// 文件已存在
-    const FILE_NOT_EXIST = '541'; // 文件不存在
+    const FILE_NOT_EXIST = '541';// 文件不存在
     const FILE_WRITE_FAIL = '542';// 文件写入失败
     const FILE_READ_FAIL = '543';// 文件读取失败
 
