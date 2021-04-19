@@ -40,7 +40,10 @@
 <!--({{ d.u_child_count }})-->
 <script type="text/html" id="do">
     <a class="layui-btn layui-btn-xs" lay-event="view_response">查看响应</a>
+    {{# if(d.request_sn) { }}
+    {{# } else { }}
     <a class="layui-btn layui-btn-xs" lay-event="resend">复发</a>
+    {{# } }}
 </script>
 
 <script src="__ADMIN__/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>

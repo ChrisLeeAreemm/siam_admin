@@ -14,6 +14,7 @@ use think\Model;
  * bar_plugs_http_monitor
  * @property mixed id	自增ID
  * @property mixed path	请求地址
+ * @property mixed request_sn	用于API记录查询
  * @property mixed request_content	请求内容序列化
  * @property mixed response_content	响应内容序列化
  * @property mixed run_time	执行耗时
