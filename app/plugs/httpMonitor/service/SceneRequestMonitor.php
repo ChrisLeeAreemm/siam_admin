@@ -17,12 +17,12 @@ use think\Request;
 
 class SceneRequestMonitor
 {
-    public static function run($request_sn,$request = null)
+    public static function run($request_sn)
     {
         // 不监听plugs的请求
         if (SiamApp::getInstance()->getModule() === 'plugs') return null;
         $model = new PlugsHttpMonitorModel;
-        $model->path = $request->pathinfo()??'';
+        $model->path = null;
         $model->request_sn = $request_sn;
         $model->request_content = serialize(input());
         $model->response_content = null;
