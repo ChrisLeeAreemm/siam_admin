@@ -27,7 +27,7 @@ class Plugs extends PlugsBase
             [
                 'title'  => "数据表字典", //数据表字典
                 'href'   => "/plugs/db_helper/db_dict/index",
-                'icon'   => "fa fa-tachometer",
+                'icon'   => "fa fa-book",
                 'target' => '_self',
             ],
             [

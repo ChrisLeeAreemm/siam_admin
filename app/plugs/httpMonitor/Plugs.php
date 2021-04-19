@@ -30,7 +30,7 @@ class Plugs extends PlugsBase
             [
                 'title'  => "httpMonitor",
                 'href'   => "/plugs/http_monitor/index",
-                'icon'   => "fa fa-tachometer",
+                'icon'   => "fa fa-calendar",
                 'target' => '_self',
             ],
         ]);
