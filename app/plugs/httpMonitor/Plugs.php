@@ -45,7 +45,7 @@ class Plugs extends PlugsBase
             $table->setTableEngine(Engine::INNODB);                               //设置表引擎
             $table->int('id')->setIsUnsigned()->setIsAutoIncrement()->setIsPrimaryKey()->setColumnComment('自增ID');
             $table->varchar('path', 255)->setColumnComment("请求地址");
-            $table->varchar('request_sn', 255)->setColumnComment("用于API记录查询");
+            $table->varchar('request_sn', 255)->setColumnComment("用于API记录查询")->setIsNotNull(false);
             $table->text('request_content')->setColumnComment("请求内容序列化");
             $table->text('response_content')->setColumnComment("响应内容序列化")->setIsNotNull(false);
             $table->int('run_time')->setColumnComment("执行耗时 毫秒")->setDefaultValue(0);
