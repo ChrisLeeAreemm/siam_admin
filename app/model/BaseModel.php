@@ -49,10 +49,10 @@ use think\db\BaseQuery as BaseQueryMapper;
  * @method static BaseQueryMapper insertGetId(array $data)
  * @method static int insertAll(array $dataSet = [],int $limit = '')
  * @method static int selectInsert(array $fields,string $table)
- * @method static int update(array $data = [])
+ * @method static int update(array $data = [],$where = [], array $allowField = [], string $suffix = '')
  * @method static int delete($data = '')
  * @method static CollectionMapper select($data = '')
- * @method static BaseQueryMapper find($data = '')
+ * @method static static find($data = '')
  * @method static array parseOptions()
  * @method static bool parseUpdateData($data)
  * @method static void parsePkWhere($data)
@@ -129,5 +129,5 @@ use think\db\BaseQuery as BaseQueryMapper;
  */
 class BaseModel extends Model
 {
-
+    protected $autoWriteTimestamp = false;
 }

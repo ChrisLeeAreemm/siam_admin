@@ -26,11 +26,12 @@
 <script>
 
 
-    layui.use(['form', 'view'], function () {
+    layui.use(['form', 'view','miniTab'], function () {
         var form = layui.form
             , layer = layui.layer
             , view = layui.view
             , $ = layui.jquery
+            ,miniTab = layui.miniTab
 
         let plugs_name = view.getQueryletiable('plugs_name');
         let status = view.getQueryletiable('status');
@@ -47,12 +48,10 @@
                 data: {"plugs_name":plugs_name,"status":status},
                 type: "get",
                 success: function (res) {
-                    let index = layer.load(1);
                     if (res.code == '200'){
                         //关闭
-                        layer.close(index);
                         layer.msg(res.msg, {icon: 1,time:1500},function(){
-                            window.parent.location.reload();
+                            window.parent.location.href = '/admin/index.html';
                         });
                     }
                 }

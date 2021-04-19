@@ -6,7 +6,6 @@ namespace app\plugs;
 class PlugsConfig
 {
     protected $name;
-    protected $icon;
     protected $handle_module;
     protected $menu = [];
 
@@ -24,22 +23,6 @@ class PlugsConfig
     public function setName($name): void
     {
         $this->name = $name;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getIcon()
-    {
-        return $this->icon;
-    }
-
-    /**
-     * @param mixed $icon
-     */
-    public function setIcon($icon): void
-    {
-        $this->icon = $icon;
     }
 
     /**

@@ -1,11 +1,16 @@
 <?php
 
-namespace app\controller\admin;
+namespace app\plugs\httpMonitor\controller;
 
 use app\exception\ErrorCode;
-use app\model\-modelName- as Model;
+use app\plugs\httpMonitor\model\PlugsHttpMonitorModel as Model;
+use app\plugs\PlugsBaseController;
+use think\App;
+use think\facade\Db;
+use think\Request;
+use think\Response;
 
-class Admin-controllerName-Controller extends AdminBaseController
+class PlugsHttpMonitorController extends PlugsBaseController
 {
     /**
      * @return mixed
@@ -17,15 +22,16 @@ class Admin-controllerName-Controller extends AdminBaseController
         $page  = input('page', 1);
         $limit = input('limit', 10);
 
-        $result = Model::page($page, $limit)->order('-pk-','DESC')->select();
+        $result = Model::page($page, $limit)->order("id", "DESC")->select();
         $count  = Model::count();
+
         return $this->send(ErrorCode::SUCCESS,['lists'=>$result,'count'=>$count]);
 
     }
 
     public function get_one()
     {
-        $id = input('-pk-');
+        $id = input('id');
         $result = Model::find($id);
         if (!$result){
             return $this->send(ErrorCode::THIRD_PART_ERROR,[],'获取失败');
@@ -55,7 +61,7 @@ class Admin-controllerName-Controller extends AdminBaseController
     public function edit()
     {
         $param = input();
-        $start = Model::find($param['-pk-']);
+        $start = Model::find($param['id']);
         $res   = $start->save($param);
 
         if (!$res){
@@ -69,10 +75,45 @@ class Admin-controllerName-Controller extends AdminBaseController
     */
     public function delete()
     {
-        $id = input('-pk-');
+        $id = input('id');
 
         $result = Model::destroy($id);
 
         return $this->send(ErrorCode::SUCCESS,[],'ok');
+    }
+
+    public function view_response()
+    {
+        $id = input('id');
+        $model = Model::find($id);
+        /** @var Response $response */
+        $response = unserialize($model->response_content);
+        return $response->getContent();
+    }
+
+    public function resend()
+    {
+        $id = input('id');
+        $model = Model::find($id);
+        /** @var Request $request */
+        $request = unserialize($model->request_content);
+        ob_start();
+        $app = new App();
+        $http = $app->http;
+        $response = $http->run($request);
+        $response->send();
+        $http->end($response);
+        $content =ob_get_contents();
+        ob_clean();;
+
+        return $this->send('200', ['result' => $content]);
+    }
+
+    public function clear()
+    {
+        $dump = (new Model)->getName();
+        Db::name($dump)->delete(true);
+        return $this->send('200');
+
     }
 }

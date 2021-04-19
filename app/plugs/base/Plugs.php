@@ -15,12 +15,29 @@ class Plugs extends PlugsBase
     {
         $config = new PlugsConfig();
         $config->setName("base");
-        $config->setIcon("");
         $config->setHandleModule(["admin","plugs"]);// 只有admin,plugs模块才会执行初始化
         $config->setMenu([
             [
                 'title'  => "base",
                 'href'   => "/plugs/base/index",
+                'icon'   => "fa fa-tachometer",
+                'target' => '_self',
+            ],
+            [
+                'title'  => '安装',
+                'href'   => 'page/plugs/base/install.html',
+                'icon'   => "fa fa-tachometer",
+                'target' => '_self',
+            ],
+            [
+                'title'  => '停用',
+                'href'   => 'page/plugs/base/status.html',
+                'icon'   => "fa fa-tachometer",
+                'target' => '_self',
+            ],
+            [
+                'title'  => '启用',
+                'href'   => 'page/plugs/base/status.html',
                 'icon'   => "fa fa-tachometer",
                 'target' => '_self',
             ],

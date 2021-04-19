@@ -5,8 +5,8 @@ return [
     ],
 
     'listen'    => [
-        'AppInit'  => ["app\plugs\PlugsInitEvent::app_init"],
-        'HttpRun'  => [],
+        'AppInit'  => [],
+        'HttpRun'  => ["app\plugs\PlugsInitEvent::app_init"],
         'HttpEnd'  => [],
         'LogLevel' => [],
         'LogWrite' => [],

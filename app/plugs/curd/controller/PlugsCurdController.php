@@ -5,6 +5,7 @@ namespace app\plugs\curd\controller;
 use app\exception\ErrorCode;
 use app\plugs\PlugsBaseController;
 use think\db\BaseQuery;
+use think\Exception;
 use think\facade\Db;
 use think\helper\Str;
 use think\response\Json;
@@ -24,7 +25,7 @@ class PlugsCurdController extends PlugsBaseController
     public function __construct()
     {
         $this->prefix         = config('database.connections.mysql.prefix');
-        $this->tableName      = request()->param('table_name', '');
+        $this->tableName      = Str::lower(request()->param('table_name', ''));
         $this->table          = $this->prefix . $this->tableName;
         $this->modelPath      = app_path() . 'model\\';
         $this->controllerPath = app_path() . 'controller\admin\\';
@@ -42,7 +43,7 @@ class PlugsCurdController extends PlugsBaseController
             // 写入控制器文件
             $this->parseField()->putControllerFile();
         }catch (\Exception $exception){
-            return $this->send(ErrorCode::THIRD_PART_ERROR, [$exception->getLine()], $exception->getMessage());
+            return $this->send($exception->getCode(), [], $exception->getMessage());
         }
         return $this->send(ErrorCode::SUCCESS, [], '生成成功');
     }
@@ -56,7 +57,7 @@ class PlugsCurdController extends PlugsBaseController
         try {
             $tables = Db::query('SHOW TABLES');
         }catch (\Exception $exception){
-            return $this->send(ErrorCode::THIRD_PART_ERROR, [$exception->getLine()], $exception->getMessage());
+            return $this->send(ErrorCode::DB_EXCEPTION, [$exception->getLine()], $exception->getMessage());
         }
         foreach ($tables as $value) {
             $database = config('database.connections.mysql.database');
@@ -75,7 +76,7 @@ class PlugsCurdController extends PlugsBaseController
             $class = 'app\model\\'.Str::title($tableName). 'Model';
             $Model = new $class();
             if (!$Model){
-                return $this->send(ErrorCode::THIRD_PART_ERROR, [], '类不存在');
+                return $this->send(ErrorCode::FILE_NOT_EXIST, [], '类不存在');
             }
             $ref = new \ReflectionClass($Model);
             $methods = $ref->getMethods();
@@ -287,9 +288,12 @@ EOF;
         
         $fullPath = $this->modelPath . "$modelName" . "Model.php";
         if (file_exists($fullPath)) {
-            return false;
+            throw new Exception('模型已存在',ErrorCode::FILE_EXIST);
         }
-        file_put_contents($fullPath, $template);
+        $create = file_put_contents($fullPath, $template);
+        if ($create == false){
+            throw new Exception('模型写入失败,请检查文件写入问题',ErrorCode::FILE_WRITE_FAIL);
+        }
         return true;
     }
     
@@ -305,9 +309,12 @@ EOF;
         $file_name = "Admin$modelName" . "Controller.php";
         $fullPath  = $this->controllerPath . $file_name;
         if (file_exists($fullPath)) {
-            return false;
+            throw new Exception('控制器已存在',ErrorCode::FILE_EXIST);
         }
-        file_put_contents($fullPath, $template);
+        $create = file_put_contents($fullPath, $template);
+        if ($create == false){
+            throw new Exception('控制器写入失败,请检查文件写入问题',ErrorCode::FILE_WRITE_FAIL);
+        }
         return true;
     }
     

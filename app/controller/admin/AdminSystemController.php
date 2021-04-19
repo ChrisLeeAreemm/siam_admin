@@ -5,6 +5,7 @@ namespace app\controller\admin;
 use app\exception\ErrorCode;
 use app\model\PlugsStatusModel;
 use app\model\UsersModel as Model;
+use app\plugs\base\Plugs as BasePlugs;
 use think\helper\Str;
 
 class AdminSystemController extends AdminBaseController
@@ -93,46 +94,39 @@ class AdminSystemController extends AdminBaseController
                 /** @var \app\plugs\PlugsBase $plugs */
                 $plugs = new $Plugs();
                 $name       = $plugs->get_config()->getName();
-                //过滤base,不需要显示
+                //过滤base,不需要独立显示
                 if ($name == 'base') {
                     continue;
                 }
 
                 //组装菜单  读取插件的状态，显示对应的按钮和名称
                 $plugsObj = PlugsStatusModel::find($name);
-
+                
+                //获取Base 菜单
+                $basePlugs = new BasePlugs();
+                $baseMenu = $basePlugs->get_config()->getMenu();
+                $temp_key = array_column($baseMenu,'title');  //键值
+                $baseMenu = array_combine($temp_key,$baseMenu);
                 // 未安装状态 ： 只显示 名称 + 安装项
                 if (!$plugsObj){
-                    $arr = [
-                        'title'  => '安装',
-                        'href'   => 'page/plugs/base/install.html?plugs_name='.$name,
-                        'icon'   => "fa fa-tachometer",
-                        'target' => '_self',
-                    ];
+                    $arr = $baseMenu['安装'];
+                    $arr['href'] .= '?plugs_name='.$name;
                 }else{
                     // 安装并启动状态： 只显示 名称 + 停用项
                     if ($plugsObj['plugs_status'] == PlugsStatusModel::PLUGS_STATUS_ON){
-                        $arr = [
-                            'title'  => '停用',
-                            'href'   => 'page/plugs/base/status.html?plugs_name='.$name.'&status=off',
-                            'icon'   => "fa fa-tachometer",
-                            'target' => '_self',
-                        ];
+                        $arr = $baseMenu['停用'];
+                        $arr['href'] .= '?plugs_name='.$name.'&status=off';
                     }
 
                     // 安装未启动状态： 只显示 名称 + 启动项
                     if ($plugsObj['plugs_status'] == PlugsStatusModel::PLUGS_STATUS_OFF){
-                        $arr = [
-                            'title'  => '启用',
-                            'href'   => 'page/plugs/base/status.html?plugs_name='.$name.'&status=on',
-                            'icon'   => "fa fa-tachometer",
-                            'target' => '_self',
-                        ];
+                        $arr = $baseMenu['启用'];
+                        $arr['href'] .= '?plugs_name='.$name.'&status=on';
                     }
                 }
 
                 $plugs_menu = [];
-                if (!empty($plugs->get_config()->getMenu())){
+                if (!empty($plugs->get_config()->getMenu()) && $arr['title'] !== '启用' && $arr['title'] !== '安装'){
                     foreach ($plugs->get_config()->getMenu() as $one){
                         if (!Str::startsWith($one['href'],'/page') && !Str::startsWith($one['href'],'page') && !Str::startsWith($one['href'],'http')){
                             $one['href'] = "/index.php/".$one['href'];
