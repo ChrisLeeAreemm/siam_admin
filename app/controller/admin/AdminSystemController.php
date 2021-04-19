@@ -123,6 +123,9 @@ class AdminSystemController extends AdminBaseController
                         $arr = $baseMenu['启用'];
                         $arr['href'] .= '?plugs_name='.$name.'&status=on';
                     }
+                    //编辑页
+                    $edit_arr = $baseMenu['编辑'];
+                    $edit_arr['href'] .= '?plugs_name='.$name;
                 }
 
                 $plugs_menu = [];
@@ -136,6 +139,9 @@ class AdminSystemController extends AdminBaseController
                     }
                 }
                 array_push($plugs_menu,$arr);
+                if (isset($edit_arr)){
+                    array_push($plugs_menu,$edit_arr);
+                }
 
                 $child[] = [
                     'title'  => $name,
