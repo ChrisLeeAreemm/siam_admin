@@ -140,7 +140,7 @@ class AdminSystemController extends AdminBaseController
                 $child[] = [
                     'title'  => $name,
                     'href'   => '',
-                    'icon'   => "fa fa-tachometer",
+                    'icon'   => "",
                     'target' => '_self',
                     'child'  => $plugs_menu
                 ];

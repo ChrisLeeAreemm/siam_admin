@@ -21,7 +21,7 @@ class Plugs extends PlugsBase
             [
                 'title'  => "errorCode",
                 'href'   => "/plugs/error-code/index",
-                'icon'   => "fa fa-tachometer",
+                'icon'   => "fa fa-book",
                 'target' => '_self',
             ],
         ]);
