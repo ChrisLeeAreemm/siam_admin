@@ -19,15 +19,9 @@ class Plugs extends PlugsBase
             [
                 'title'  => "curd",
                 'href'   => "/plugs/curd/index",
-                'icon'   => "fa fa-tachometer",
+                'icon'   => "fa fa-code",
                 'target' => '_self',
-            ],
-            [
-                'title'  => "测试",
-                'href'   => "https://www.baidu.com",
-                'icon'   => "fa fa-tachometer",
-                'target' => '_self',
-            ],
+            ]
         ]);
         return $config;
     }

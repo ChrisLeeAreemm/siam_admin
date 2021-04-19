@@ -21,7 +21,7 @@ class Plugs extends PlugsBase
             [
                 'title'  => "cronDoc",
                 'href'   => "/plugs/cron-doc/index",
-                'icon'   => "fa fa-tachometer",
+                'icon'   => "fa fa-book",
                 'target' => '_self',
             ],
         ]);

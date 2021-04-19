@@ -26,19 +26,19 @@ class Plugs extends PlugsBase
             [
                 'title'  => '安装',
                 'href'   => 'page/plugs/base/install.html',
-                'icon'   => "fa fa-tachometer",
+                'icon'   => "fa fa-wrench",
                 'target' => '_self',
             ],
             [
                 'title'  => '停用',
                 'href'   => 'page/plugs/base/status.html',
-                'icon'   => "fa fa-tachometer",
+                'icon'   => "fa fa-unlock-alt",
                 'target' => '_self',
             ],
             [
                 'title'  => '启用',
                 'href'   => 'page/plugs/base/status.html',
-                'icon'   => "fa fa-tachometer",
+                'icon'   => "fa fa-unlock",
                 'target' => '_self',
             ],
         ]);
