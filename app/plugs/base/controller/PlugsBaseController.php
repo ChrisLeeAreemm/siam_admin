@@ -51,7 +51,7 @@ class PlugsBaseController extends BaseController
                 }
 
                 //写入安装记录
-                $data         = [
+                $data = [
                     'plugs_name'    => $name,
                     'plugs_status ' => 0,
                     'create_time'   => date('Y-m-d H:i:s')
@@ -90,7 +90,7 @@ class PlugsBaseController extends BaseController
 
         //判断状态
         $plugsObj = PlugsStatusModel::find($plugsName);
-        if (!$plugsObj){
+        if (!$plugsObj) {
             return $this->send(ErrorCode::DB_DATA_DOES_NOT_EXIST, [], '插件不存在');
         }
 
@@ -98,7 +98,7 @@ class PlugsBaseController extends BaseController
         //执行开启操作
         if ($status == 'on') {
             if ($plugsObj['plugs_status'] != PlugsStatusModel::PLUGS_STATUS_ON) {
-                $save = PlugsStatusModel::update(['plugs_status'=>PlugsStatusModel::PLUGS_STATUS_ON],['plugs_name'=>$plugsName]);
+                $save = PlugsStatusModel::update(['plugs_status' => PlugsStatusModel::PLUGS_STATUS_ON], ['plugs_name' => $plugsName]);
                 if (!$save) {
                     return $this->send(ErrorCode::THIRD_PART_ERROR, [], '开启失败');
                 }
@@ -109,7 +109,7 @@ class PlugsBaseController extends BaseController
         //执行关闭操作
         if ($status == 'off') {
             if ($plugsObj['plugs_status'] != PlugsStatusModel::PLUGS_STATUS_OFF) {
-                $save = PlugsStatusModel::update(['plugs_status'=>PlugsStatusModel::PLUGS_STATUS_OFF],['plugs_name'=>$plugsName]);
+                $save = PlugsStatusModel::update(['plugs_status' => PlugsStatusModel::PLUGS_STATUS_OFF], ['plugs_name' => $plugsName]);
                 if (!$save) {
                     return $this->send(ErrorCode::THIRD_PART_ERROR, [], '开启失败');
                 }
@@ -118,6 +118,53 @@ class PlugsBaseController extends BaseController
         }
 
         return $this->send(ErrorCode::PARAM_FORMAT_ERROR, [], '参数值错误');
+
+    }
+
+    public function edit_plugs()
+    {
+        $this->validate(['plugs_name' => 'require', 'select' => 'require'], $this->request->param());
+        $plugs_name = $this->request->param('plugs_name');
+        $select     = $this->request->param('select');
+        //格式化
+        $select = explode(',', $select);
+        foreach ($select as &$value) {
+            $value = "\"$value\"";
+        }
+        $select = implode(',', $select);
+        //查找文件
+        $file = app_path() . 'plugs\\' . $plugs_name . '\Plugs.php';
+        if (!file_exists($file)) {
+            return $this->send(ErrorCode::FILE_NOT_EXIST, [], '文件不存在');
+        }
+        $plugs_file = file_get_contents($file);
+        if (!$plugs_file) {
+            return $this->send(ErrorCode::FILE_READ_FAIL, [], '文件读取错误');
+        }
+        //获取原配置
+        $namespace = '\app\plugs\\';
+        $Plugs      = $namespace . $plugs_name . '\Plugs';
+        /** @var \app\plugs\PlugsBase $plugs */
+        $plugs = new $Plugs();
+        $modules = $plugs->get_config()->getHandleModule();
+        foreach ($modules as &$value) {
+            $value = "\"$value\"";
+        }
+        $modules = implode(',',$modules);
+
+        //替换
+        $str_search = '$config->setHandleModule(['.$modules.']);';
+        $replace    = '$config->setHandleModule(';
+        $replace    .= "[$select]";
+        $replace    .= ');';
+        $content    = str_replace($str_search, $replace, $plugs_file);
+
+        $put_file   = file_put_contents($file, $content);
+        if (!$put_file){
+            return $this->send(ErrorCode::FILE_WRITE_FAIL, [], '文件写入错误');
+        }
+
+        return $this->send(ErrorCode::SUCCESS, [], '更新成功');
 
     }
 
