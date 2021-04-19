@@ -3,6 +3,7 @@
 namespace app\plugs;
 
 
+use app\exception\ErrorCode;
 use think\Exception;
 
 abstract class PlugsBase
@@ -19,11 +20,11 @@ abstract class PlugsBase
     {
         // 文件是否存在判断
         if (!is_file($path)){
-            throw new Exception('文件不存在');
+            throw new Exception('文件不存在',ErrorCode::FILE_NOT_EXIST);
         }
         $content = file_get_contents($path);
         if (!$content) {
-            throw new Exception('文件读取错误');
+            throw new Exception('文件读取错误',ErrorCode::FILE_READ_FAIL);
         }
         //  替换宏
         $map = [
