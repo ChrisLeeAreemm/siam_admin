@@ -62,6 +62,7 @@ APP_DEBUG = true
 [APP]
 DEFAULT_TIMEZONE = Asia/Shanghai
 APP_NAME = {$app_name}
+SIAM_PLUGS = true
 
 [DATABASE]
 TYPE = mysql
