@@ -16,9 +16,6 @@ class AdminSystemController extends AdminBaseController
      */
     public function get_list()
     {
-        
-        // 获取插件列表(带安装状态)
-        $plug_arr = $this->get_plugs();
         $arr      = [
             'homeInfo' => [
                 "title" => "首页",
@@ -63,16 +60,23 @@ class AdminSystemController extends AdminBaseController
                             ]
                         ],
                     ]
-                ],
-                [
-                    "title"  => "组件管理",
-                    "icon"   => "fa fa-address-book",
-                    "href"   => "",
-                    "target" => "_self",
-                    "child"  => $plug_arr
                 ]
             ]
         ];
+        // 是否有权限  是否开启插件功能
+        $siam_plugs = env("app.siam_plugs");
+        if (!!$siam_plugs) {
+            // 获取插件列表(带安装状态)
+            $plug_arr = $this->get_plugs();
+            $arr['menuInfo'][] = [
+                "title"  => "组件管理",
+                "icon"   => "fa fa-address-book",
+                "href"   => "",
+                "target" => "_self",
+                "child"  => $plug_arr,
+            ];
+        }
+
         return json($arr);
 
     }

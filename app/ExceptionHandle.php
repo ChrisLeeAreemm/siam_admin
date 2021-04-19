@@ -2,6 +2,8 @@
 namespace app;
 
 use app\exception\BaseException;
+use app\model\PlugsStatusModel;
+use app\plugs\base\service\PlugsBaseHelper;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\ModelNotFoundException;
 use think\exception\Handle;
@@ -53,6 +55,12 @@ class ExceptionHandle extends Handle
     {
         // 添加自定义异常处理机制
         // TODO 是否安装异常记录插件，是则插入
+        if (PlugsBaseHelper::isInstall("exceptionLogger")){
+            $plugs_status = PlugsBaseHelper::getPlugsStatus("exceptionLogger");
+            if ($plugs_status['plugs_status'] == PlugsStatusModel::PLUGS_STATUS_ON){
+
+            }
+        }
 
         
         if ($e instanceof BaseException){

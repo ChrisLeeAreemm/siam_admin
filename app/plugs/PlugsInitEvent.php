@@ -13,6 +13,10 @@ class PlugsInitEvent
 {
     public static function app_init()
     {
+        // 不开启插件模块
+        $siam_plugs = env("app.siam_plugs");
+        if (!$siam_plugs) return false;
+
         //遍历plugs目录,执行已经安装过的plugs init
         $arr = scandir(__DIR__);
 
