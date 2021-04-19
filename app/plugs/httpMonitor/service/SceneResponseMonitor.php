@@ -13,11 +13,10 @@ use app\facade\SiamApp;
 use app\facade\TimeHelper;
 use app\plugs\httpMonitor\model\PlugsHttpMonitorModel;
 use think\Model;
-use think\Response;
 
 class SceneResponseMonitor
 {
-    public static function run(Response $response, $id)
+    public static function run($id,$response)
     {
         $model = PlugsHttpMonitorModel::find($id);
         $model->save([
