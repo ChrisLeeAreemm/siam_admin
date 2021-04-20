@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "923eec184fd42cb77db3258f6fddc754",
+    "content-hash": "07416e2113c0a49cba8a6915191c8c92",
     "packages": [
         {
             "name": "dragonmantank/cron-expression",
@@ -939,6 +939,63 @@
             "time": "2021-02-26T10:20:00+00:00"
         },
         {
+            "name": "topthink/think-worker",
+            "version": "v3.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/top-think/think-worker.git",
+                "reference": "dc0ac655a0a2efda073ec18e67668bc02d17cabe"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/top-think/think-worker/zipball/dc0ac655a0a2efda073ec18e67668bc02d17cabe",
+                "reference": "dc0ac655a0a2efda073ec18e67668bc02d17cabe",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.cloud.tencent.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "ext-fileinfo": "*",
+                "topthink/framework": "^6.0.0",
+                "workerman/gateway-worker": "^3.0.0",
+                "workerman/workerman": "^3.5.23"
+            },
+            "type": "library",
+            "extra": {
+                "think": {
+                    "services": [
+                        "think\\worker\\Service"
+                    ],
+                    "config": {
+                        "worker": "src/config/worker.php",
+                        "worker_server": "src/config/server.php",
+                        "gateway_worker": "src/config/gateway.php"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "think\\worker\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "liu21st",
+                    "email": "liu21st@gmail.com"
+                }
+            ],
+            "description": "workerman extend for thinkphp6.0",
+            "time": "2020-04-30T13:39:47+00:00"
+        },
+        {
             "name": "webmozart/assert",
             "version": "1.10.0",
             "source": {
@@ -997,6 +1054,154 @@
                 "validate"
             ],
             "time": "2021-03-09T10:59:23+00:00"
+        },
+        {
+            "name": "workerman/crontab",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/walkor/crontab.git",
+                "reference": "1a37a941e53ca09e9f10f34132001d624cde96da"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/walkor/crontab/zipball/1a37a941e53ca09e9f10f34132001d624cde96da",
+                "reference": "1a37a941e53ca09e9f10f34132001d624cde96da",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "php": ">=7.0",
+                "workerman/workerman": ">=3.5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Workerman\\Crontab\\": "./src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "walkor",
+                    "email": "walkor@workerman.net",
+                    "homepage": "http://www.workerman.net",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A crontab written in PHP based on workerman",
+            "homepage": "http://www.workerman.net",
+            "keywords": [
+                "crontab"
+            ],
+            "support": {
+                "email": "walkor@workerman.net",
+                "forum": "http://wenda.workerman.net/",
+                "issues": "https://github.com/walkor/workerman/issues",
+                "source": "https://github.com/walkor/crontab",
+                "wiki": "http://doc.workerman.net/"
+            },
+            "time": "2021-02-02T12:29:44+00:00"
+        },
+        {
+            "name": "workerman/gateway-worker",
+            "version": "v3.0.19",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/walkor/GatewayWorker.git",
+                "reference": "720cb0f23c3ae5f0143b3457901e177dd3d54387"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/walkor/GatewayWorker/zipball/720cb0f23c3ae5f0143b3457901e177dd3d54387",
+                "reference": "720cb0f23c3ae5f0143b3457901e177dd3d54387",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.cloud.tencent.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "workerman/workerman": ">=3.5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "GatewayWorker\\": "./src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "homepage": "http://www.workerman.net",
+            "keywords": [
+                "communication",
+                "distributed"
+            ],
+            "time": "2021-01-25T03:01:01+00:00"
+        },
+        {
+            "name": "workerman/workerman",
+            "version": "v3.5.31",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/walkor/Workerman.git",
+                "reference": "b73ddc45b3c7299f330923a2bde23ca6e974fd96"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/walkor/Workerman/zipball/b73ddc45b3c7299f330923a2bde23ca6e974fd96",
+                "reference": "b73ddc45b3c7299f330923a2bde23ca6e974fd96",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.cloud.tencent.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "suggest": {
+                "ext-event": "For better performance. "
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Workerman\\": "./"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "walkor",
+                    "email": "walkor@workerman.net",
+                    "homepage": "http://www.workerman.net",
+                    "role": "Developer"
+                }
+            ],
+            "description": "An asynchronous event driven PHP framework for easily building fast, scalable network applications.",
+            "homepage": "http://www.workerman.net",
+            "keywords": [
+                "asynchronous",
+                "event-loop"
+            ],
+            "time": "2020-08-24T03:49:23+00:00"
         }
     ],
     "packages-dev": [

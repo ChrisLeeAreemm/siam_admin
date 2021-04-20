@@ -28,7 +28,10 @@
         "dragonmantank/cron-expression": "3.1.0",
         "easyswoole/utility": "^1.2",
         "ext-mysqli": "*",
-        "easyswoole/ddl": "^1.0"
+        "easyswoole/ddl": "^1.0",
+        "topthink/think-worker": "^3.0",
+        "workerman/crontab": "^1.0",
+      "ext-pcntl": "*"
     },
     "require-dev": {
         "symfony/var-dumper": "^4.2",
