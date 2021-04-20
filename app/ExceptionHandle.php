@@ -63,7 +63,7 @@ class ExceptionHandle extends Handle
                 //序列化保存
                 $ExceptionLogger                  = new PlugsExceptionLoggerModel();
                 $ExceptionLogger->exception_class = get_class($e);
-                $ExceptionLogger->exception_date  = time();
+                $ExceptionLogger->exception_date  = date('Ymd');
                 $traces[] = [
                     'name'    => get_class($e),
                     'file'    => $e->getFile(),
