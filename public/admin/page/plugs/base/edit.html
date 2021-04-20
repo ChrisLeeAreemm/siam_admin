@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>CURD 脚本</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../../lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../../css/public.css" media="all">
+
+</head>
+<body>
+<div class="layui-form" lay-filter="edit_list" style="padding: 0">
+    <div class="layui-form-item">
+        <label class="layui-form-label">名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="plugs_name" lay-verify="require" autocomplete="off" class="layui-input" id="plugs_name" disabled>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">允许运行的Module</label>
+        <div class="layui-input-block">
+            <div name="module" id="module">
+        </div>
+    </div>
+    <div class="layui-form-item">
+
+    <div id="demo1">
+
+    </div>
+    </div>
+
+
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="submit">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重新填写</button>
+        </div>
+    </div>
+</div>
+
+
+<script src="../../../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+<script src="../../../js/lay-config.js?v=2.0.5" charset="utf-8"></script>
+<script src="../../../js/lay-module/xm-select.js?v=2.0.5" charset="utf-8"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+    layui.use(['form', 'view','miniTab'], function () {
+        var form = layui.form
+            , layer = layui.layer
+            , view = layui.view
+            , $ = layui.jquery
+            ,miniTab = layui.miniTab
+        let get_one_url = '/index.php/admin/plugsStatus/get_one'
+        let submit_url = "/index.php/plugs/base/edit_plugs";
+        let plugs_name = view.getQueryletiable('plugs_name');
+        let module;
+        if(plugs_name){
+            //获取信息
+            view.req({
+                url: get_one_url,
+                data: {plugs_name:plugs_name},
+                type: "get",
+                dataType: "json",
+                success:function (res){
+                    if (res.code === 200){
+                        // 初始化赋值
+                        form.val("edit_list", {
+                            "plugs_name" :res.data.lists.plugs_name,
+                        });
+                        form.render();
+                        module = xmSelect.render({
+                            el: '#module',
+                            language: 'zn',
+                            filterable: true,
+                            create: function(val, arr){
+                                //返回一个创建成功的对象, val是搜索的数据, arr是搜索后的当前页面数据
+                                return {
+                                    name: '创建-' + val,
+                                    value: val
+                                }
+                            },
+                            data: []
+                        })
+
+                        module.update({
+                            data: res.data.modules,
+                            autoRow: true,
+                        })
+                    }
+                }
+            })
+        }
+        //监听提交
+        form.on('submit(submit)', function (data) {
+            view.req({
+                url: submit_url,
+                data: data.field,
+                type: "post",
+                success: function (res) {
+                    if (res.code == '200'){
+                        //关闭
+                        layer.msg(res.msg, {icon: 1,time:1500},function(){
+                            window.parent.location.href = '/admin/index.html';
+                        });
+                    }
+                }
+            });
+        });
+
+    });
+</script>
+
+</body>
+</html>

@@ -39,16 +39,17 @@ class Plugs extends PlugsBase
 
     public function install()
     {
-        PlugsDatabaseHelper::run(PlugsDatabaseHelper::create_ddl("plugs_http_monitor", function(Table $table){
+        PlugsDatabaseHelper::run(PlugsDatabaseHelper::create_ddl("plugs_http_monitor", function (Table $table) {
             $table->setIfNotExists()->setTableComment('httpMonitor记录表');          //设置表名称
-            $table->setTableCharset(Character::UTF8MB4_GENERAL_CI);     //设置表字符集
-            $table->setTableEngine(Engine::INNODB);                     //设置表引擎
+            $table->setTableCharset(Character::UTF8MB4_GENERAL_CI);               //设置表字符集
+            $table->setTableEngine(Engine::INNODB);                               //设置表引擎
             $table->int('id')->setIsUnsigned()->setIsAutoIncrement()->setIsPrimaryKey()->setColumnComment('自增ID');
             $table->varchar('path', 255)->setColumnComment("请求地址");
+            $table->varchar('request_sn', 255)->setColumnComment("用于API记录查询")->setIsNotNull(false);
             $table->text('request_content')->setColumnComment("请求内容序列化");
             $table->text('response_content')->setColumnComment("响应内容序列化")->setIsNotNull(false);
             $table->int('run_time')->setColumnComment("执行耗时 毫秒")->setDefaultValue(0);
-            $table->varchar("create_time",30)->setColumnComment("请求时间 毫秒");
+            $table->varchar("create_time", 30)->setColumnComment("请求时间 毫秒");
         }));
     }
 
@@ -68,8 +69,8 @@ class Plugs extends PlugsBase
         Route::any('plugs/http_monitor/clear', 'app\plugs\httpMonitor\controller\PlugsHttpMonitorController@clear');
 
         $id = RequestMonitor::run(request());
-        Event::listen('HttpEnd', function($response) use($id) {
-            if ($id === null) return ;
+        Event::listen('HttpEnd', function ($response) use ($id) {
+            if ($id === null) return;
             ResponseMonitor::run($response, $id);
         });
     }

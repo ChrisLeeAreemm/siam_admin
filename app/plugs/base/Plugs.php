@@ -41,6 +41,12 @@ class Plugs extends PlugsBase
                 'icon'   => "fa fa-unlock",
                 'target' => '_self',
             ],
+            [
+                'title'  => '编辑',
+                'href'   => 'page/plugs/base/edit.html',
+                'icon'   => "fa fa-edit",
+                'target' => '_self',
+            ]
         ]);
         return $config;
     }
@@ -63,7 +69,7 @@ class Plugs extends PlugsBase
         Route::group(function () {
             Route::get('plugs/base/install', 'PlugsBaseController@install');
             Route::get('plugs/base/status', 'PlugsBaseController@status');
-            Route::get('plugs/base/uninstall', 'PlugsBaseController@uninstall');
+            Route::post('plugs/base/edit_plugs', 'PlugsBaseController@edit_plugs');
         })->prefix('\app\plugs\base\controller\\');
         
     }
