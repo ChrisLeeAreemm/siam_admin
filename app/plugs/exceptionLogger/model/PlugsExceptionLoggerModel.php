@@ -23,7 +23,4 @@ class PlugsExceptionLoggerModel extends BaseModel
 {
     protected $name = 'plugs_exception_logger';
     protected $pk   = 'id';
-    protected $type = [
-        'exception_date'  =>  'timestamp',
-    ];
 }

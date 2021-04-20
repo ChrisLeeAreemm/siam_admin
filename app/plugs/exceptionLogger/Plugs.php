@@ -57,5 +57,6 @@ class Plugs extends PlugsBase
         });
         Route::any('plugs/exception_logger/api/get_list', 'app\plugs\exceptionLogger\controller\ExceptionLoggerController@get_list');
         Route::any('plugs/exception_logger/api/check_exception', 'app\plugs\exceptionLogger\controller\ExceptionLoggerController@check_exception');
+        Route::any('plugs/exception_logger/api/echarts_data', 'app\plugs\exceptionLogger\controller\ExceptionLoggerController@echarts_data');
     }
 }

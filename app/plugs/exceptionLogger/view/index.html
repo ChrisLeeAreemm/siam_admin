@@ -17,6 +17,9 @@
         <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
             <legend>exceptionLogger</legend>
         </fieldset>
+        <div class="layui-card-body">
+            <div id="echarts-records" style="width: 100%;min-height:200px"></div>
+        </div>
         <table class="layui-hide" id="list" lay-filter="list"></table>
     </div>
 </div>
@@ -30,13 +33,14 @@
 <script>
 
 
-    layui.use(['form', 'view', 'laytpl','table'], function () {
+    layui.use(['form', 'view', 'laytpl','table','echarts'], function () {
         let form = layui.form
             , layer = layui.layer
             , view = layui.view
             , $ = layui.jquery
             , laytpl = layui.laytpl
             , table = layui.table
+            ,echarts = layui.echarts
 
         let get_list_url = '/index.php/plugs/exception_logger/api/get_list';
 
@@ -85,6 +89,54 @@
             }
         });
         // 监听工具条结束
+
+        /**
+         * 报表功能
+         */
+        var echartsRecords = echarts.init(document.getElementById('echarts-records'), 'walden');
+        view.req({
+            url: '/index.php/plugs/exception_logger/api/echarts_data',
+            type: "get",
+            success: function (res) {
+                var optionRecords = {
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    toolbox: {
+                        feature: {
+                            saveAsImage: {}
+                        }
+                    },
+                    xAxis: {
+                        type: 'category',
+                        boundaryGap: false,
+                        data:res.data.days
+                    },
+                    yAxis: {
+                        type: 'value'
+
+                    },
+                    series: [{
+                        name:'次数',
+                        type:'line',
+                        data:res.data.count
+                    }]
+                };
+                echartsRecords.setOption(optionRecords);
+
+                // echarts 窗口缩放自适应
+                window.onresize = function(){
+                    echartsRecords.resize();
+                }
+            }
+        })
+
     });
 
 
