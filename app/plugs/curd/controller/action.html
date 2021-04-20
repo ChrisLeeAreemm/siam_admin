@@ -42,7 +42,7 @@
     let setter = layui.setter;
     let submit_url = "--add_url--";
     let get_one_url = "--get_one_url--";
-    let --pk-- = getQueryletiable('--pk--');
+    let --pk-- = view.getQueryletiable('--pk--');
     if(--pk--){
       //获取信息
       view.req({
@@ -88,19 +88,6 @@
     });
 
   });
-
-  //获取参数
-  function getQueryletiable(letiable) {
-    let query = window.location.search.substring(1);
-    let lets = query.split("&");
-    for (let i = 0; i < lets.length; i++) {
-      let pair = lets[i].split("=");
-      if (pair[0] == letiable) {
-        return pair[1];
-      }
-    }
-    return (false);
-  }
 </script>
 </body>
 </html>

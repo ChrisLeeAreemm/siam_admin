@@ -56,5 +56,6 @@ class Plugs extends PlugsBase
             return $this->pre_render_file(__DIR__ . "/view/index.html");
         });
         Route::any('plugs/exception_logger/api/get_list', 'app\plugs\exceptionLogger\controller\ExceptionLoggerController@get_list');
+        Route::any('plugs/exception_logger/api/check_exception', 'app\plugs\exceptionLogger\controller\ExceptionLoggerController@check_exception');
     }
 }
