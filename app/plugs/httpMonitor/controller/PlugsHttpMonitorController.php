@@ -18,15 +18,23 @@ class PlugsHttpMonitorController extends PlugsBaseController
      */
     public function get_list()
     {
-
         $page  = input('page', 1);
         $limit = input('limit', 10);
-
-        $result = Model::page($page, $limit)->order("id", "DESC")->select();
+        $where = $this->where_build();
+        $result = Model::page($page, $limit)->where($where)->order("id", "DESC")->select();
         $count  = Model::count();
 
         return $this->send(ErrorCode::SUCCESS,['lists'=>$result,'count'=>$count]);
 
+    }
+
+    public function where_build($where = [])
+    {
+        $request_sn = input('request_sn');
+        if ($request_sn){
+            $where['request_sn'] = $request_sn;
+        }
+        return $where;
     }
 
     public function get_one()

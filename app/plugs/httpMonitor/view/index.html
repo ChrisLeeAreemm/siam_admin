@@ -25,6 +25,24 @@
         <div class="layui-col-md12">
             <div class="layui-card">
                 <div class="layui-card-header">plugs_http_monitor列表</div>
+
+                    <div style="margin: 10px 10px 10px 10px">
+                        <form class="layui-form layui-form-pane" action="">
+                            <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">订单号</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="request_sn" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+
                 <div class="layui-btn-group wechat_cross_btn_group">
                     <button class="layui-btn layui-btn-sm" id="clear" lay-text="清空">
                         一键清空
@@ -49,13 +67,14 @@
 <script src="__ADMIN__/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
 <script src="__ADMIN__/js/lay-config.js?v=2.0.4" charset="utf-8"></script>
 <script>
-    layui.use([ 'table', 'jquery','setter','view'], function () {
+    layui.use([ 'table', 'jquery','setter','view','form'], function () {
         let table = layui.table;
         let $ = layui.jquery;
         let setter = layui.setter;
         let view = layui.view;
+        let form = layui.form;
 
-        table.render({
+            table.render({
             elem: '#lists'
             , url: "/index.php/plugs/http_monitor/api/get_list"
             , where: {
@@ -64,6 +83,7 @@
             , cols: [[
                 {field: 'id', title: '自增ID'},
                 {field: 'path', title: '请求地址'},
+                {field: 'request_sn', title: '单号'},
                 {field: 'run_time', title: '执行耗时 ms'},
                 {field: 'create_time', title: '请求时间'}
                 , {toolbar: '#do', width: 300}
@@ -80,6 +100,21 @@
                     "data": res.data.lists
                 };
             }
+        });
+
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            //执行搜索重载
+            table.reload('lists', {
+                page: {
+                    curr: 1
+                }
+                , where: {
+                    request_sn: data.field.request_sn
+                }
+            }, 'data');
+            return false;
         });
 
         //添加
