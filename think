@@ -4,11 +4,17 @@ namespace think;
 
 // 命令行入口文件
 // 加载基础文件
+use app\facade\SiamApp;
 use app\plugs\PlugsInitEvent;
 
 require __DIR__ . '/vendor/autoload.php';
 
-$console = (new App())->console;
+$app     = new App();
+$console = $app->console;
+
+SiamApp::getInstance()->setApp($app);
+SiamApp::getInstance()->setConsole($console);
+
 // 应用初始化
 try {
     PlugsInitEvent::app_init('cli');

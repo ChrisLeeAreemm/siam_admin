@@ -3,10 +3,12 @@
 namespace app\plugs\apiFilter;
 
 
+use app\facade\SiamApp;
 use app\plugs\apiFilter\service\ApiFilterCommand;
 use app\plugs\errorCode\controller\ApiFilterController;
 use app\plugs\PlugsBase;
 use app\plugs\PlugsConfig;
+use think\App;
 use think\facade\Route;
 
 class Plugs extends PlugsBase
@@ -47,6 +49,9 @@ class Plugs extends PlugsBase
         Route::any('plugs/api_filter/api/get_list', 'app\plugs\apiFilter\controller\ApiFilterController@get_list');
 
         // 注入自定义命令行
-        app()->console->addCommand(new ApiFilterCommand(), 'api-filter');
+        $console = SiamApp::getInstance()->getConsole();
+        if ($console){
+            $console->addCommand(new ApiFilterCommand(), 'api-filter');
+        }
     }
 }
