@@ -4,7 +4,15 @@ namespace think;
 
 // 命令行入口文件
 // 加载基础文件
+use app\plugs\PlugsInitEvent;
+
 require __DIR__ . '/vendor/autoload.php';
 
+$console = (new App())->console;
 // 应用初始化
-(new App())->console->run();
+try {
+    PlugsInitEvent::app_init('cli');
+} catch (db\exception\DataNotFoundException | db\exception\DbException $e) {
+    var_dump($e);
+}
+$console->run();
