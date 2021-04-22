@@ -61,10 +61,24 @@ class CronRunnerCommand extends Command
                 $class = new $class_namespace;
 
                 new Crontab("0 {$class->run_period()}", function() use($class){
-                    echo "=============\n";
-                    echo date("Y-m-d H:i:s") . "\n";
-                    echo $class->run();
-                    echo "\n=============\n";
+                    try{
+                        // 保存到对应的日志文件中
+                        ob_start();
+                        echo "=============\n";
+                        echo date("Y-m-d H:i:s") . "\n";
+                        echo $class->run();
+                        echo "\n=============\n";
+                        $content = ob_get_contents();
+                        ob_clean();
+                        $file_path = runtime_path("cron");
+                        if (!is_dir($file_path)){
+                            mkdir($file_path);
+                        }
+                        $file_path .= $class->rule().".log";
+                        file_put_contents($file_path, $content, FILE_APPEND);
+                    }catch (\Throwable $throwable){
+                        var_dump($throwable);
+                    }
                 });
                 echo "已注册 {$class->rule()}\n";
             }
