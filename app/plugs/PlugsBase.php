@@ -28,8 +28,9 @@ abstract class PlugsBase
         }
         //  替换宏
         $map = [
-            '__STATIC__' => request()->domain() . '/static',// 获取域名 固定路径
-            '__ADMIN__'  => request()->domain() . '/admin',// 获取域名 固定路径
+            '__VUE__'  => '<script src="__STATIC__/js/vue.js" charset="utf-8"></script>',
+            '__STATIC__' => request()->domain() . '/static',
+            '__ADMIN__'  => request()->domain() . '/admin',
         ];
         foreach ($map as $key => $value) {
             $content =  str_replace($key, $value, $content);

@@ -11,14 +11,75 @@
 
 </head>
 <body>
-<div class="layuimini-container">
+<div class="layuimini-container" id="app">
     <div class="layuimini-main">
 
         <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-            <legend>attachmentManager</legend>
+            <legend>附件管理配置</legend>
         </fieldset>
 
-        <div id="table"></div>
+        <div class="layui-form"  lay-filter="config">
+            <div class="layui-form-item">
+                <label class="layui-form-label">允许后缀</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="config_allow" required  lay-verify="required" placeholder="示例: jpg,png,gif" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">允许大小</label>
+                <div class="layui-input-inline">
+                    <input type="password" name="config_file_max" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">单位MB</div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">文件域名</label>
+                <div class="layui-input-block">
+                    <input type="password" name="config_host" required lay-verify="required" placeholder="为空则默认取当前项目域名，开启OSS则为OSS域名" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">驱动</label>
+                <div class="layui-input-inline">
+                    <select name="config_driver" lay-verify="required" lay-filter="config_driver">
+                        <option value="0">普通文件</option>
+                        <option value="1">腾讯云OSS</option>
+                        <option value="2">阿里云OSS</option>
+                        <option value="3">七牛云OSS</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="ali_bd" hidden>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">阿里云专用配置项</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" name="config_ali_oss" title="写作">
+                        <input type="checkbox" name="config_ali_oss" title="阅读" checked>
+                        <input type="checkbox" name="config_ali_oss" title="发呆">
+                    </div>
+                </div>
+            </div>
+
+            <div id="tencent_bd" hidden>
+                <div class="layui-form-item" >
+                    <label class="layui-form-label">腾讯云专用配置项</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" name="config_tencent_oss" title="写作">
+                        <input type="checkbox" name="config_tencent_oss" title="阅读" checked>
+                        <input type="checkbox" name="config_tencent_oss" title="发呆">
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -28,13 +89,38 @@
 <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
 <script>
 
-
     layui.use(['form', 'view', 'laytpl'], function () {
         let form = layui.form
             , layer = layui.layer
             , view = layui.view
             , $ = layui.jquery
             , laytpl = layui.laytpl;
+
+        form.val("config",{
+            config_driver:1
+        });
+        auto_switch_config_bd(form.val("config").config_driver);
+        form.on("select(config_driver)", function(data){
+           auto_switch_config_bd(data.value)
+        });
+
+        function auto_switch_config_bd(value){
+            // 根据驱动 显示dom
+            let ali_dom = $("#ali_bd");
+            let tencent_dom = $("#tencent_bd");
+
+            ali_dom.hide();
+            tencent_dom.hide();
+
+            switch (parseInt(value)){
+                case 1:
+                    tencent_dom.show();
+                    break;
+                case 2:
+                    ali_dom.show();
+                    break;
+            }
+        }
 
 
     });

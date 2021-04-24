@@ -3,9 +3,13 @@
 namespace app\plugs\attachmentManager;
 
 
+use app\plugs\base\service\PlugsDatabaseHelper;
 use app\plugs\errorCode\controller\AttachmentManagerController;
 use app\plugs\PlugsBase;
 use app\plugs\PlugsConfig;
+use EasySwoole\DDL\Blueprint\Create\Table;
+use EasySwoole\DDL\Enum\Character;
+use EasySwoole\DDL\Enum\Engine;
 use think\facade\Route;
 
 class Plugs extends PlugsBase
@@ -30,8 +34,29 @@ class Plugs extends PlugsBase
 
     public function install()
     {
-        // TODO 附件管理配置表
-        // TODO 附件列表
+        // 附件管理配置表
+        PlugsDatabaseHelper::run(PlugsDatabaseHelper::create_ddl("plugs_attachment_config", function (Table $table) {
+            $table->setIfNotExists()->setTableComment('附件配置表');
+            $table->setTableCharset(Character::UTF8MB4_GENERAL_CI);
+            $table->setTableEngine(Engine::INNODB);
+            $table->int('id')->setIsUnsigned()->setIsAutoIncrement()->setIsPrimaryKey()->setColumnComment('自增ID');
+            $table->varchar('key', 255)->setColumnComment("配置项");
+            $table->varchar('value', 255)->setColumnComment("配置值");
+            $table->datetime("create_time")->setColumnComment("创建时间");
+        }));
+        // 附件列表
+        PlugsDatabaseHelper::run(PlugsDatabaseHelper::create_ddl("plugs_attachment_list", function (Table $table) {
+            $table->setIfNotExists()->setTableComment('附件列表');
+            $table->setTableCharset(Character::UTF8MB4_GENERAL_CI);
+            $table->setTableEngine(Engine::INNODB);
+            $table->int('id')->setIsUnsigned()->setIsAutoIncrement()->setIsPrimaryKey()->setColumnComment('自增ID');
+            $table->int('u_id', 10)->setColumnComment("所属用户id");
+            $table->varchar('file_name', 255)->setColumnComment("文件名");
+            $table->varchar('file_type', 255)->setColumnComment("文件类型");
+            $table->varchar('file_size', 255)->setColumnComment("文件大小");
+            $table->varchar('real_path', 255)->setColumnComment("真实存储地址");
+            $table->datetime("create_time")->setColumnComment("创建时间");
+        }));
     }
 
     public function remove()
