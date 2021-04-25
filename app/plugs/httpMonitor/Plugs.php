@@ -4,7 +4,6 @@ namespace app\plugs\httpMonitor;
 
 
 use app\plugs\base\service\PlugsDatabaseHelper;
-use app\plugs\errorCode\controller\HttpMonitorController;
 use app\plugs\httpMonitor\service\RequestMonitor;
 use app\plugs\httpMonitor\service\ResponseMonitor;
 use app\plugs\PlugsBase;
