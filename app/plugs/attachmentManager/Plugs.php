@@ -72,6 +72,9 @@ class Plugs extends PlugsBase
         });
         Route::any('plugs/attachment_manager/api/get_list', 'app\plugs\attachmentManager\controller\AttachmentManagerController@get_list');
 
+        Route::any('plugs/attachment_manager/api/save_config', 'app\plugs\attachmentManager\controller\AttachmentManagerController@save_config');
+        Route::any('plugs/attachment_manager/api/get_config', 'app\plugs\attachmentManager\controller\AttachmentManagerController@get_config');
         // TODO 这里还要注入一个admin page和接口  添加到auth菜单 给用户使用（上传 删除自己的图片）
+
     }
 }
