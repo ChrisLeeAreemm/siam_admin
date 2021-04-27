@@ -15,6 +15,7 @@ class ApiAccessContain
 {
     use Singleton;
 
+    const API_FILTER_TOTAL = "TOTAL";
     protected $listTag    = 'filterList';
     protected $filterList = [];
     protected $handle;
@@ -33,6 +34,7 @@ class ApiAccessContain
     function getNumber(string $filter_key)
     {
         return $this->getAuto($filter_key)['number'];
+
     }
 
     /**
@@ -40,28 +42,32 @@ class ApiAccessContain
      * @param string $filter_key
      * @return int
      */
-    function getAccess(string $filter_key): int
+    function getAccess(string $filter_key)
     {
         return $this->getAuto($filter_key)['count'];
     }
+    //TODO 流程重写
+
 
     /**
-     * 生成或统计
-     * @param $filter_key
+     * @param       $filter_key
+     * @param bool $auto_create
      * @return mixed
      */
-    public function getAuto($filter_key)
+    public function getAuto($filter_key, $auto_create = false)
     {
         $key  = substr(md5($filter_key), 8, 16);
-        $info = $this->handle->get($key);
-
-        if ($info) {
-            $this->handle->tag($this->listTag)->set($key, [
-                'lastAccessTime' => time(),
-                'count'          => $info['count'] + 1,
-                'number'         => $info['number'],
-            ]);
-        } else {
+        if ($auto_create === false){
+            $info = $this->handle->get($key);
+            if ($info) {
+                $this->handle->tag($this->listTag)->set($key, [
+                    'lastAccessTime' => time(),
+                    'count'          => $info['count'] + 1,
+                    'number'         => $info['number']??-1,
+                ]);
+            }
+        }
+        if ($auto_create === true) {
             $this->handle->tag($this->listTag)->set($key, [
                 'filter_key'     => $filter_key,
                 'lastAccessTime' => time(),
@@ -79,7 +85,7 @@ class ApiAccessContain
      */
     public function updateSetting($filter_key, $setNumber)
     {
-        $info           = $this->getAuto($filter_key);
+        $info           = $this->getAuto($filter_key, true);
         $info['number'] = $setNumber;
         $key            = substr(md5($filter_key), 8, 16);
         $this->handle->tag($this->listTag)->set($key, $info);
