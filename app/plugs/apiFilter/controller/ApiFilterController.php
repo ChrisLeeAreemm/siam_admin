@@ -24,9 +24,9 @@ class ApiFilterController extends PlugsBaseController
         $id     = input('set_id');
         $result = Model::find($id);
         if (!$result) {
-            return $this->send(ErrorCode::THIRD_PART_ERROR, [], '获取失败');
+            return $this->send(ErrorCode::DB_DATA_DOES_NOT_EXIST, [], '获取失败');
         }
-        return $this->send(ErrorCode::SUCCESS, ['lists' => $result]);
+        return $this->send(ErrorCode::SUCCESS, ['lists' => $result],'SUCCESS');
     }
 
     /**
@@ -37,13 +37,14 @@ class ApiFilterController extends PlugsBaseController
 
         $param                = input();
         $param['create_time'] = date('Y-m-d H:i:s');
+        $param['update_time'] = date('Y-m-d H:i:s');
 
         $start = Model::create($param);
 
         if (!$start) {
-            return $this->send(ErrorCode::THIRD_PART_ERROR, [], '新增失败');
+            return $this->send(ErrorCode::DB_EXCEPTION, [], '新增失败');
         }
-        return $this->send(ErrorCode::SUCCESS);
+        return $this->send(ErrorCode::SUCCESS,[],'新增成功');
     }
 
     /**
@@ -57,9 +58,9 @@ class ApiFilterController extends PlugsBaseController
         $res                  = $start->save($param);
 
         if (!$res) {
-            return $this->send(ErrorCode::THIRD_PART_ERROR, [], '编辑失败');
+            return $this->send(ErrorCode::DB_EXCEPTION, [], '编辑失败');
         }
-        return $this->send(ErrorCode::SUCCESS);
+        return $this->send(ErrorCode::SUCCESS,[],'编辑成功');
     }
 
     /**
@@ -70,7 +71,11 @@ class ApiFilterController extends PlugsBaseController
         $id = input('set_id');
 
         $result = Model::destroy($id);
+        if (!$result){
+            return $this->send(ErrorCode::DB_EXCEPTION, [], '删除失败');
 
-        return $this->send(ErrorCode::SUCCESS, [], 'ok');
+        }
+
+        return $this->send(ErrorCode::SUCCESS, [], '成功');
     }
 }
