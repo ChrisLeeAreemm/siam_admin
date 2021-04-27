@@ -77,7 +77,7 @@ class Plugs extends PlugsBase
         if ($console) {
             $console->addCommand(new ApiFilterCommand(), 'api-filter');
         }
-        //TODO 流程重写
+        
         //全局限流
         $set = ApiAccessContain::getInstance()->getNumber(ApiAccessContain::API_FILTER_TOTAL);
         if ($set >= 0) {

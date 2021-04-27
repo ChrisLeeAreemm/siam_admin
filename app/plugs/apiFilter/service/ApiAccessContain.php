@@ -4,6 +4,7 @@
 namespace app\plugs\apiFilter\service;
 
 use app\facade\Redis;
+use app\plugs\apiFilter\model\PlugsApiFilterSettingModel;
 use Siam\Component\Singleton;
 
 /**
@@ -14,18 +15,18 @@ use Siam\Component\Singleton;
 class ApiAccessContain
 {
     use Singleton;
-
+    
     const API_FILTER_TOTAL = "TOTAL";
     protected $listTag    = 'filterList';
     protected $filterList = [];
     protected $handle;
-
+    
     public function __construct()
     {
         $this->handle     = Redis::getInstance()->init();
         $this->filterList = $this->handle->getTagItems($this->listTag);
     }
-
+    
     /**
      * 获取规则
      * @param string $filter_key
@@ -34,9 +35,9 @@ class ApiAccessContain
     function getNumber(string $filter_key)
     {
         return $this->getAuto($filter_key)['number'];
-
+        
     }
-
+    
     /**
      * 请求次数
      * @param string $filter_key
@@ -46,57 +47,63 @@ class ApiAccessContain
     {
         return $this->getAuto($filter_key)['count'];
     }
-    //TODO 流程重写
-
-
+    
+    
     /**
      * @param       $filter_key
-     * @param bool  $auto_create
+     * @param bool $auto_create
      * @return mixed
      */
     public function getAuto($filter_key, $auto_create = false)
     {
-        $key = substr(md5($filter_key), 8, 16);
-
+        $key  = substr(md5($filter_key), 8, 16);
         $info = $this->handle->get($key);
-        if ($info) {
-            $this->handle->tag($this->listTag)->set($key, [
-                'lastAccessTime' => time(),
-                'count'          => $info['count'] + 1,
-                'number'         => $info['number'] ?? -1,
-            ]);
-        }
-        $info = [
+        $arr  = [
             'filter_key'     => $filter_key,
             'lastAccessTime' => time(),
-            'count'          => 1,
-            'number'         => -1,
         ];
-        if ($auto_create === true) {
-            $this->handle->tag($this->listTag)->set($key, $info);
+        if (!$info) {
+            $arr['count']  = 1;
+            $arr['number'] = -1;
+            if ($auto_create !== false) {
+                $this->handle->tag($this->listTag)->set($key, $arr);
+            }
+            return $arr;
         }
-        return $info;
-
-
+        $arr['count']  = $info['count'] + 1;
+        $arr['number'] = $info['number'];
+        $this->handle->tag($this->listTag)->set($key, $arr);
+        
+        return $arr;
+        
+        
     }
-
+    
     /**
      * 同步Token到缓存
      * @param $filter_key
      * @param $setNumber
      */
-    public function updateSetting($filter_key, $setNumber)
+    public function updateSetting()
     {
-        $info           = $this->getAuto($filter_key, true);
-        $info['number'] = $setNumber;
-        $key            = substr(md5($filter_key), 8, 16);
-        $this->handle->tag($this->listTag)->set($key, $info);
+        //清空旧缓存
+        $this->handle->tag($this->listTag)->clear();
+        //更新数据
+        $setting = PlugsApiFilterSettingModel::select();
+        foreach ($setting as $value) {
+            $info           = $this->getAuto($value['key'], true);
+            $info['number'] = $value['number'];
+            $key            = substr(md5($value['key']), 8, 16);
+            $this->handle->tag($this->listTag)->set($key, $info);
+        }
+        
+        
     }
-
+    
     /**
-     * 清除标记缓存Count
+     * 重置缓存Count
      */
-    public function clear()
+    public function reset()
     {
         foreach ($this->filterList as $value) {
             $info          = $this->handle->get($value);
