@@ -3,7 +3,6 @@
 namespace app\plugs\dbHelper;
 
 
-use app\plugs\errorCode\controller\DbHelperController;
 use app\plugs\PlugsBase;
 use app\plugs\PlugsConfig;
 use think\facade\Route;

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{:lang('action')}</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../../lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../../css/public.css" media="all">
+</head>
+<body>
+
+<div class="layui-form" lay-filter="user" style="padding: 0">
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <input type="hidden" name="set_id" lay-verify="" autocomplete="off" placeholder="请输入标题" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">配置key</label>
+        <div class="layui-input-block">
+            <input type="text" name="key" lay-verify="" autocomplete="off" placeholder="请输入" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">配置数量</label>
+        <div class="layui-input-block">
+            <input type="text" name="number" lay-verify="" autocomplete="off" placeholder="请输入" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="display: none;">
+        <label class="layui-form-label">token</label>
+        <div class="layui-input-inline">
+            <input type="text" name="__token__" value="{$Request.token}" readonly lay-verify="required" autocomplete="off" lass="layui-input">
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="submit">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重新填写</button>
+        </div>
+    </div>
+</div>
+
+
+<script src="../../../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+<script src="../../../js/lay-config.js?v=2.0.4" charset="utf-8"></script>
+<script>
+    layui.use(['form', 'layer','view','setter'], function () {
+        let form = layui.form;
+        let layer = layui.layer;
+        let $ = layui.jquery;
+        let view = layui.view;
+        let setter = layui.setter;
+        let submit_url = "/plugs/api_filter/api/add";
+        let get_one_url = "/plugs/api_filter/api/get_one";
+        let set_id = view.getQueryletiable('set_id');
+        if(set_id){
+            //获取信息
+            view.req({
+                url: '/index.php/'+get_one_url,
+                data: {set_id:set_id},
+                type: "get",
+                dataType: "json",
+                success:function (res){
+                    if (res.code == "200"){
+                        // 初始化赋值
+                        form.val("user", {
+                            "set_id" :res.data.lists.set_id,
+                            "key" :res.data.lists.key,
+                            "number" :res.data.lists.number,
+                        });
+                        layui.form.render();
+                    }
+                }
+            })
+            submit_url = "/plugs/api_filter/api/edit";
+        }
+        form.on('submit(submit)', function (data) {
+            let load = layer.load(0, {
+                shade: 0.5
+            });
+            view.req({
+                url: '/index.php/'+submit_url,
+                data: data.field,
+                type: "post",
+                dataType: "json",
+                success: function (res) {
+                    layer.close(load);
+                    if (res.code === '200') {
+                        layer.msg(res.msg,{time: 2000},function () {
+                            window.location.reload();
+                        });
+                    } else {
+                        layer.msg(res.msg,{time: 2000},function () {
+                            window.location.reload();
+                        });
+                    }
+                }
+            });
+            return false;
+        });
+
+    });
+</script>
+</body>
+</html>
