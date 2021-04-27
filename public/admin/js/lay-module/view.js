@@ -68,6 +68,9 @@ layui.define(['laytpl', 'layer', 'jquery', 'setter'], function (exports) {
                     ? options.headers[request.tokenName]
                     : (layui.data(setter.tableName)[request.tokenName] || '');
             }
+            options.url = options.url.replace(/index.php/, '');
+            options.url = options.url.replace(/\/\//g, '/');
+            options.url = setter.Api + options.url;
 
             delete options.success;
             delete options.error;

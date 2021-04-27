@@ -137,15 +137,17 @@
 <script src="lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
 <script src="js/lay-config.js?v=2.0.0" charset="utf-8"></script>
 <script>
-    layui.use(['jquery', 'layer', 'miniAdmin','miniTongji','setter'], function () {
+    layui.use(['jquery', 'layer', 'miniAdmin','miniTongji','setter', 'view'], function () {
         var $ = layui.jquery,
             layer = layui.layer,
             miniAdmin = layui.miniAdmin,
             miniTongji = layui.miniTongji,
             setter = layui.setter;
 
+        let view = layui.view;
+
         var options = {
-            iniUrl: setter.Api+"index.php/admin/system/get_list",// 初始化接口
+            iniUrl: setter.Api+"/admin/system/get_list",// 初始化接口
             clearUrl: "api/clear.json", // 缓存清理接口
             urlHashLocation: true,      // 是否打开hash定位
             bgColorDefault: false,      // 主题默认配置
@@ -161,15 +163,13 @@
         miniTongji.render({
             specific: true,
             domains: [
-                '99php.cn',
-                'layuimini.99php.cn',
-                'layuimini-onepage.99php.cn',
+                // '99php.cn',
             ],
         });
 
         $('.login-out').on("click", function () {
-            layer.msg('退出登录成功', function () {
-                window.location = 'page/login-3.html';
+            view.logout(function () {
+                window.location.href = 'login.html';
             });
         });
     });
