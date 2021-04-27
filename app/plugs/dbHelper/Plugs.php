@@ -18,12 +18,6 @@ class Plugs extends PlugsBase
         $config->setHandleModule(["admin","plugs"]);// 只有admin模块才会执行初始化
         $config->setMenu([
             [
-                'title'  => "dbHelper",
-                'href'   => "/plugs/db_helper/index",
-                'icon'   => "fa fa-tachometer",
-                'target' => '_self',
-            ],
-            [
                 'title'  => "数据表字典", //数据表字典
                 'href'   => "/plugs/db_helper/db_dict/index",
                 'icon'   => "fa fa-tachometer",

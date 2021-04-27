@@ -17,6 +17,7 @@ class ErrorCode
     const AUTH_USER_NONE = '102';// token获取信息失败
     const AUTH_USER_BAN = '103';// token用户被封禁
     const AUTH_USER_CANNOT = '104';// 用户没有该操作权限节点
+    const AUTH_NEED_LOGIN_AGAIN = '111';// 需要重新登录
 
     // 20x为业务逻辑正常
     const SUCCESS = '200';// 服务成功，逻辑执行正常
