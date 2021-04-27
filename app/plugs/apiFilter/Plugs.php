@@ -90,7 +90,6 @@ class Plugs extends PlugsBase
         $ip = request()->ip();
         $set = ApiAccessContain::getInstance()->getNumber($ip);
         if ($set >= 0) {
-            print_r($set);
             if (ApiAccessContain::getInstance()->getAccess($ip) > $set) {
                 throw new Exception('IP限流',ErrorCode::WAF_IP_FILTER);
             }

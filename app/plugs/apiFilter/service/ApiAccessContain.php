@@ -51,31 +51,33 @@ class ApiAccessContain
 
     /**
      * @param       $filter_key
-     * @param bool $auto_create
+     * @param bool  $auto_create
      * @return mixed
      */
     public function getAuto($filter_key, $auto_create = false)
     {
-        $key  = substr(md5($filter_key), 8, 16);
-        if ($auto_create === false){
-            $info = $this->handle->get($key);
-            if ($info) {
-                $this->handle->tag($this->listTag)->set($key, [
-                    'lastAccessTime' => time(),
-                    'count'          => $info['count'] + 1,
-                    'number'         => $info['number']??-1,
-                ]);
-            }
-        }
-        if ($auto_create === true) {
+        $key = substr(md5($filter_key), 8, 16);
+
+        $info = $this->handle->get($key);
+        if ($info) {
             $this->handle->tag($this->listTag)->set($key, [
-                'filter_key'     => $filter_key,
                 'lastAccessTime' => time(),
-                'count'          => 1,
-                'number'         => -1,
+                'count'          => $info['count'] + 1,
+                'number'         => $info['number'] ?? -1,
             ]);
         }
-        return !!$info ? $info : $this->handle->get($key);
+        $info = [
+            'filter_key'     => $filter_key,
+            'lastAccessTime' => time(),
+            'count'          => 1,
+            'number'         => -1,
+        ];
+        if ($auto_create === true) {
+            $this->handle->tag($this->listTag)->set($key, $info);
+        }
+        return $info;
+
+
     }
 
     /**
