@@ -4,13 +4,14 @@
  * version:2.0
  * description:layuimini 主体框架扩展
  */
-layui.define(["jquery", "miniMenu", "element","miniTab", "miniTheme"], function (exports) {
+layui.define(["jquery", "miniMenu", "element","miniTab", "miniTheme", "view"], function (exports) {
     var $ = layui.$,
         layer = layui.layer,
         miniMenu = layui.miniMenu,
         miniTheme = layui.miniTheme,
         element = layui.element ,
         miniTab = layui.miniTab;
+    let view = layui.view;
 
     if (!/http(s*):\/\//.test(location.href)) {
         var tips = "请先将项目部署至web容器（Apache/Tomcat/Nginx/IIS/等），否则部分数据将无法显示";
@@ -41,41 +42,47 @@ layui.define(["jquery", "miniMenu", "element","miniTab", "miniTheme"], function 
             options.loadingTime = options.loadingTime || 1;
             options.pageAnim = options.pageAnim || false;
             options.maxTabNum = options.maxTabNum || 20;
-            $.getJSON(options.iniUrl, function (data) {
-                if (data == null) {
-                    miniAdmin.error('暂无菜单信息')
-                } else {
-                    miniAdmin.renderLogo(data.logoInfo);
-                    miniAdmin.renderClear(options.clearUrl);
-                    miniAdmin.renderHome(data.homeInfo);
-                    miniAdmin.renderAnim(options.pageAnim);
-                    miniAdmin.listen();
-                    miniMenu.render({
-                        menuList: data.menuInfo,
-                        multiModule: options.multiModule,
-                        menuChildOpen: options.menuChildOpen
-                    });
-                    miniTab.render({
-                        filter: 'layuiminiTab',
-                        urlHashLocation: options.urlHashLocation,
-                        multiModule: options.multiModule,
-                        menuChildOpen: options.menuChildOpen,
-                        maxTabNum: options.maxTabNum,
-                        menuList: data.menuInfo,
-                        homeInfo: data.homeInfo,
-                        listenSwichCallback: function () {
-                            miniAdmin.renderDevice();
-                        }
-                    });
-                    miniTheme.render({
-                        bgColorDefault: options.bgColorDefault,
-                        listen: true,
-                    });
-                    miniAdmin.deleteLoader(options.loadingTime);
+            view.req({
+                url: options.iniUrl,
+                type:"post",
+                success(data){
+                    data = data.data;
+                    if (data == null) {
+                        miniAdmin.error('暂无菜单信息')
+                    } else {
+                        miniAdmin.renderLogo(data.logoInfo);
+                        miniAdmin.renderClear(options.clearUrl);
+                        miniAdmin.renderHome(data.homeInfo);
+                        miniAdmin.renderAnim(options.pageAnim);
+                        miniAdmin.listen();
+                        miniMenu.render({
+                            menuList: data.menuInfo,
+                            multiModule: options.multiModule,
+                            menuChildOpen: options.menuChildOpen
+                        });
+                        miniTab.render({
+                            filter: 'layuiminiTab',
+                            urlHashLocation: options.urlHashLocation,
+                            multiModule: options.multiModule,
+                            menuChildOpen: options.menuChildOpen,
+                            maxTabNum: options.maxTabNum,
+                            menuList: data.menuInfo,
+                            homeInfo: data.homeInfo,
+                            listenSwichCallback: function () {
+                                miniAdmin.renderDevice();
+                            }
+                        });
+                        miniTheme.render({
+                            bgColorDefault: options.bgColorDefault,
+                            listen: true,
+                        });
+                        miniAdmin.deleteLoader(options.loadingTime);
+                    }
+                },
+                fail(){
+                    miniAdmin.error('菜单接口有误');
                 }
-            }).fail(function () {
-                miniAdmin.error('菜单接口有误');
-            });
+            })
         },
 
         /**

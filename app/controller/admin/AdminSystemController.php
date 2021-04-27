@@ -77,7 +77,7 @@ class AdminSystemController extends AdminBaseController
             ];
         }
 
-        return json($arr);
+        return $this->send(ErrorCode::SUCCESS, $arr);
 
     }
 
@@ -213,5 +213,10 @@ class AdminSystemController extends AdminBaseController
 
         return $this->send(ErrorCode::SUCCESS,[],'ok');
 
+    }
+
+    public function is_login()
+    {
+        return $this->send(ErrorCode::SUCCESS);
     }
 }

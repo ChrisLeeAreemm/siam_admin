@@ -61,7 +61,9 @@ abstract class BaseController
 
     // 初始化
     protected function initialize()
-    {}
+    {
+        $this->auth();
+    }
 
     /**
      * 验证数据

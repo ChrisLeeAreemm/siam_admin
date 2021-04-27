@@ -147,7 +147,7 @@
         let view = layui.view;
 
         var options = {
-            iniUrl: setter.Api+"/admin/system/get_list",// 初始化接口
+            iniUrl: "/admin/system/get_list",// 初始化接口
             clearUrl: "api/clear.json", // 缓存清理接口
             urlHashLocation: true,      // 是否打开hash定位
             bgColorDefault: false,      // 主题默认配置
@@ -166,6 +166,10 @@
                 // '99php.cn',
             ],
         });
+
+        view.req({
+            url:"/admin/system/is_login"
+        })
 
         $('.login-out').on("click", function () {
             view.logout(function () {

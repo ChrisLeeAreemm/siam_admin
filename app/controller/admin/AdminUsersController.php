@@ -10,6 +10,8 @@ use Siam\JWT;
 
 class AdminUsersController extends AdminBaseController
 {
+    protected $white = ['login'];
+
     /**
      * @return mixed
      * @throws \think\Exception
@@ -105,8 +107,8 @@ class AdminUsersController extends AdminBaseController
 
         $jwt = JWT::getInstance();
         $jwtData = $user->toArray();
-        $jwtToken =  $jwt->setIss(config('app.iss'))->setSecretKey(config('app.jwt_secretkey'))
-            ->setSub(config('app.iss'))->setWith($jwtData)->make();
+        $jwtToken =  $jwt->setIss('SiamAdmin')->setSecretKey('siam_admin_key')
+            ->setSub("SiamAdmin")->setWith($jwtData)->make();
 
         return $this->send(ErrorCode::SUCCESS, [
             'token' => $jwtToken

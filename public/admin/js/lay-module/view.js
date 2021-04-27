@@ -81,14 +81,17 @@ layui.define(['laytpl', 'layer', 'jquery', 'setter'], function (exports) {
                 , success: function (res) {
                     var statusCode = response.statusCode;
 
-                    //只有 response 的 code 一切正常才执行 done
+                    //只有 response 的 code 一切正常才执行 done 和 success
                     if (res[response.statusName] == statusCode.ok) {
                         typeof options.done === 'function' && options.done(res);
+                        typeof success === 'function' && success(res);
                     }
 
                     //登录状态失效，清除本地 access_token，并强制跳转到登入页
                     else if (res[response.statusName] == statusCode.logout) {
-                        view.exit();
+                        view.logout(function(){
+                            window.location.href = './login.html';
+                        });
                     }
 
                     //其它异常
@@ -98,12 +101,9 @@ layui.define(['laytpl', 'layer', 'jquery', 'setter'], function (exports) {
                             , debug()
                         ].join('');
                         view.error(error);
+                        return false;
                     }
-
-                    //只要 http 状态码正常，无论 response 的 code 是否正常都执行 success
-                    typeof success === 'function' && success(res);
                 }
-                //TODO  需要做一个报错兼容 Chris  view.error
                 , error: function (e, code) {
                     var error = [
                         '请求异常，请重试<br><cite>错误信息：</cite>' + code
@@ -147,11 +147,11 @@ layui.define(['laytpl', 'layer', 'jquery', 'setter'], function (exports) {
     view.error = function(content, options){
         return view.popup($.extend({
             content: content
-            ,maxWidth: 300
+            ,maxWidth: 500
             //,shade: 0.01
             ,offset: 't'
-            ,anim: 6
-            ,id: 'LAY_adminError'
+            // ,anim: 6
+            ,id: 'SiamAdminError'
         }, options))
     };
     //对外接口
