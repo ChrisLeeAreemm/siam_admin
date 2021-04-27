@@ -97,14 +97,14 @@ class ExceptionHandle extends Handle
         if ($e instanceof BaseException) {
             return json([
                 'code' => $e->getCode(),
-                'data' => $e->get_return(),
+                'data' => (object) $e->get_return(),
                 'msg'  => $e->getMessage(),
             ]);
         }
         if ($e instanceof ValidateException) {
             return json([
                 'code' => $e->getCode(),
-                'data' => [],
+                'data' => (object) [],
                 'msg'  => $e->getMessage(),
             ]);
         }

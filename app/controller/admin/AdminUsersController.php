@@ -3,7 +3,10 @@
 namespace app\controller\admin;
 
 use app\exception\ErrorCode;
+use app\model\UsersModel;
 use app\model\UsersModel as Model;
+use Siam\Api;
+use Siam\JWT;
 
 class AdminUsersController extends AdminBaseController
 {
@@ -75,5 +78,38 @@ class AdminUsersController extends AdminBaseController
         $result = Model::destroy($id);
 
         return $this->send(ErrorCode::SUCCESS,[],'ok');
+    }
+
+    public function login()
+    {
+        $this->validate([
+            'u_account'  => 'require',
+            'u_password' => 'require',
+        ]);
+
+        $password = input('u_password');
+
+        $where = [
+            'u_account'  => input('u_account'),
+        ];
+        $user = UsersModel::where($where)->find();
+        if (!$user) return $this->send(ErrorCode::DB_DATA_DOES_NOT_EXIST,[],'用户信息不存在');
+
+        if ($user['u_password'] !== md5($password)){
+            return $this->send(ErrorCode::AUTH_USER_CANNOT,[],'密码错误');
+        }
+
+        if ($user['u_status'] == '0') {
+            return $this->send(ErrorCode::AUTH_USER_BAN,[],'用户被封禁');
+        }
+
+        $jwt = JWT::getInstance();
+        $jwtData = $user->toArray();
+        $jwtToken =  $jwt->setIss(config('app.iss'))->setSecretKey(config('app.jwt_secretkey'))
+            ->setSub(config('app.iss'))->setWith($jwtData)->make();
+
+        return $this->send(ErrorCode::SUCCESS, [
+            'token' => $jwtToken
+        ], 'LOGIN_SUCCESS');
     }
 }

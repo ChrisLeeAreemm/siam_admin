@@ -3,6 +3,8 @@ declare (strict_types = 1);
 
 namespace app;
 
+use app\exception\AuthException;
+use app\exception\ErrorCode;
 use think\App;
 use think\exception\ValidateException;
 use think\Validate;
@@ -96,7 +98,13 @@ abstract class BaseController
             $v->batch(true);
         }
 
-        return $v->failException(true)->check($data);
+        try{
+            $res = $v->failException(true)->check($data);
+        }catch (\Exception $e){
+            throw new AuthException($e->getMessage(), (int)ErrorCode::PARAM_EMPTY);
+        }
+
+        return $res;
     }
 
     /**
