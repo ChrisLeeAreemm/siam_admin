@@ -3,7 +3,7 @@
 namespace app\plugs\cronDoc;
 
 
-use app\plugs\errorCode\controller\CronDocController;
+
 use app\plugs\PlugsBase;
 use app\plugs\PlugsConfig;
 use think\facade\Route;
