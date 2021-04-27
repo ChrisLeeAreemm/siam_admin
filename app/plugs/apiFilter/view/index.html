@@ -22,7 +22,7 @@
                 <i class="layui-icon">&#xe654;</i>添加
             </button>
         </div>
-        <div id="table"></div>
+        <div id="table" lay-filter="table"></div>
     </div>
 
 </div>
@@ -66,14 +66,14 @@
                     "code": res.code,
                     "msg": res.msg,
                     "count": res.data.count,
-                    "data": res.data.list
+                    "data": res.data.lists
                 };
             }
         });
 
         //添加
         $('#add_btn').click(function (){
-            let url = "/admin/page/users/action.html";
+            let url = "/admin/page/plugs/apiFilter/action.html";
             layer.open({
                 type: 2,
                 title: "添加",
@@ -81,6 +81,52 @@
                 area: ['70%', '90%']
             });
         });
+
+        // 监听工具条
+        table.on('tool(table)', function (obj) {
+            let data = obj.data;
+            let layEvent = obj.event; //获得 lay-event 对应的值
+
+            switch (layEvent) {
+                case 'del':
+                    layer.confirm('确认删除?', {icon: 3, title: '提示'}, function (index) {
+                        view.req({
+                            url: "/index.php/plugs/api_filter/api/delete",
+                            data: {
+                                set_id: data.set_id
+                            },
+                            type: "post",
+                            dataType: "json",
+                            success: function (res) {
+                                if (res.code == '200') {
+                                    layer.msg(res.msg,{icon:1,time: 1500},function () {
+                                        window.location.reload();
+                                    });
+                                } else {
+                                    layer.msg(res.msg,{icon:2,time: 1500},function () {
+                                        window.location.reload();
+                                    });
+                                }
+                            }
+                        });
+
+                        layer.close(index);
+                    });
+                    break;
+                case 'edit':
+                    let url = "/admin/page/plugs/apiFilter/action.html?set_id="+data.set_id;
+                    layer.open({
+                        type: 2,
+                        title: "编辑",
+                        content: url,
+                        area:['70%','90%']
+                    });
+                    break;
+                default:
+                    break;
+            }
+        });
+        // 监听工具条结束
 
     });
 </script>
