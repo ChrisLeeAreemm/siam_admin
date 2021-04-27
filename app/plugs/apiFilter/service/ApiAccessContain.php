@@ -90,6 +90,9 @@ class ApiAccessContain
         $this->handle->tag($this->listTag)->clear();
         //更新数据
         $setting = PlugsApiFilterSettingModel::select();
+        if (!$setting){
+            return false;
+        }
         foreach ($setting as $value) {
             $info           = $this->getAuto($value['key'], true);
             $info['number'] = $value['number'];
@@ -105,6 +108,9 @@ class ApiAccessContain
      */
     public function reset()
     {
+        if (!$this->filterList){
+            return false;
+        }
         foreach ($this->filterList as $value) {
             $info          = $this->handle->get($value);
             $info['count'] = 0;
