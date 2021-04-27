@@ -51,7 +51,7 @@
         type: "get",
         dataType: "json",
         success:function (res){
-          if (res.code === "200"){
+          if (res.code == "200"){
             // 初始化赋值
             form.val("user", {
               --get_one_val--
@@ -73,8 +73,8 @@
         dataType: "json",
         success: function (res) {
           layer.close(load);
-          if (res.code === '200') {
-              layer.msg("成功",{time: 2000},function () {
+          if (res.code == '200') {
+              layer.msg(res.msg,{time: 2000},function () {
                 window.location.reload();
               });
             } else {
