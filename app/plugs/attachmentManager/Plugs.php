@@ -69,6 +69,9 @@ class Plugs extends PlugsBase
         Route::get('plugs/attachment_manager/index', function () {
             return $this->pre_render_file(__DIR__ . "/view/index.html");
         });
+        Route::get('plugs/attachment_manager/manage', function () {
+            return $this->pre_render_file(__DIR__ . "/view/manage.html");
+        });
 
         Route::group(function () {
             // 配置编辑相关

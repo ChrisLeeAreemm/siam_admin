@@ -77,11 +77,20 @@ class AttachmentManagerController extends PlugsBaseController
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
+     * @throws \app\exception\AuthException
      */
     public function get_list()
     {
-        $list  = PlugsAttachmentListModel::page(input('page',1), input('limit', 16))->select();
-        $count = PlugsAttachmentListModel::count();
+        // 根据u_id决定返回的列表
+        $user = $this->auth();
+        $where = [];
+        if ($user->u_id!==1){
+            $where = [
+                'u_id' => $user->u_id,
+            ];
+        }
+        $list  = PlugsAttachmentListModel::page(input('page',1), input('limit', 16))->where($where)->select();
+        $count = PlugsAttachmentListModel::where($where)->count();
 
         // 把压缩包、txt等文件的图片 替换成固定图片
         $auto = [
