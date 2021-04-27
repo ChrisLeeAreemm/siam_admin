@@ -89,13 +89,25 @@
 <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
 <script>
 
-    layui.use(['form', 'view', 'laytpl'], function () {
+    layui.use(['form', 'view', 'laytpl','imagemanage', 'setter'], function () {
         let form = layui.form
             , layer = layui.layer
             , view = layui.view
             , $ = layui.jquery
             , laytpl = layui.laytpl;
+        let imagemanage = layui.imagemanage;
+        let setter = layui.setter;
 
+        imagemanage.config = {
+            get_list_url: "/plugs/attachment_manager/api/get_list",
+            upload_url: "/plugs/attachment_manager/api/upload",
+            delete_url: "/plugs/attachment_manager/api/delete",
+            multiple:false,
+        };
+
+        imagemanage.open(function(values){
+            imagemanage.close();
+        });
 
         auto_switch_config_bd(form.val("config").config_driver);
         form.on("select(config_driver)", function(data){

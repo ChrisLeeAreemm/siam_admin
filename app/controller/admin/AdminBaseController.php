@@ -33,7 +33,7 @@ abstract class AdminBaseController extends BaseController
         }
         // 解析token 如果超时或者错误则返回 重新登录的状态码 前端跳转到登录页
         $token = input('access_token');
-        if (!$token) throw new AuthException("token不可为空", ErrorCode::AUTH_TOKEN_INVALID);
+        if (!$token) throw new AuthException("token不可为空", ErrorCode::AUTH_NEED_LOGIN_AGAIN);
 
         try {
             $jwt = JWT::getInstance()->setSecretKey('siam_admin_key')->decode($token);

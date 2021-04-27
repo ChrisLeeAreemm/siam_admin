@@ -39,8 +39,7 @@ class Plugs extends PlugsBase
             $table->setIfNotExists()->setTableComment('附件配置表');
             $table->setTableCharset(Character::UTF8MB4_GENERAL_CI);
             $table->setTableEngine(Engine::INNODB);
-            $table->int('id')->setIsUnsigned()->setIsAutoIncrement()->setIsPrimaryKey()->setColumnComment('自增ID');
-            $table->varchar('key', 255)->setColumnComment("配置项");
+            $table->varchar('key', 255)->setIsPrimaryKey()->setColumnComment('配置项');
             $table->varchar('value', 255)->setColumnComment("配置值");
             $table->datetime("create_time")->setColumnComment("创建时间");
         }));

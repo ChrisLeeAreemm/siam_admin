@@ -21,27 +21,28 @@ class AttachmentService
         $config = PlugsAttachmentConfigModel::where([
            ['key', 'IN', ['config_allow','config_file_max', 'config_driver']]
         ])->select();
+        $config = array_column($config->toArray(), null, 'key');
 
         // 检测后缀
-        $allow = explode(',', $config[0]['value']);
+        $allow = explode(',', $config['config_allow']['value']);
         if (!in_array($file->getOriginalExtension(), $allow)){
             throw new ServiceException("文件后缀不允许",ErrorCode::FILE_WRITE_FAIL);
         }
 
         // 检测大小 转为字节
-        $max_size = $config[1]['value'] * 1024 * 1024;
+        $max_size = $config['config_file_max']['value'] * 1024 * 1024;
         if ($file->getSize() > $max_size){
             throw new ServiceException("文件大小超限",ErrorCode::FILE_WRITE_FAIL);
         }
 
         // 根据上传方式 决定上传的驱动
-        $save_path = Factory::init($config[2]['value'])->upload($file, $user);
+        $save_path = Factory::init($config['config_driver']['value'])->upload($file, $user);
 
         $upload            = new PlugsAttachmentListModel;
         $upload->u_id      = $user->u_id;
         $upload->file_name = $file->getOriginalName();
         $upload->file_size = $file->getSize();
-        $upload->file_type = $file->getType();
+        $upload->file_type = $file->getOriginalExtension();
         $upload->real_path = $save_path;
         $upload->save();
 
