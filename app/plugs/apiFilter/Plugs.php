@@ -21,7 +21,7 @@ class Plugs extends PlugsBase
     {
         $config = new PlugsConfig();
         $config->setName("apiFilter");
-        $config->setHandleModule(["api", "plugs", "cli"]);// 只有admin模块才会执行初始化
+        $config->setHandleModule(["api", "plugs", "cli"]);
         $config->setMenu([
             [
                 'title'  => "apiFilter",

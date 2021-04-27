@@ -3,13 +3,14 @@
 
 namespace app\plugs\apiFilter\service;
 
-
+use app\plugs\apiFilter\model\PlugsApiFilterSettingModel;
 use think\console\Command;
 use think\console\Input;
 use think\console\input\Argument;
 use think\console\input\Option;
 use think\console\Output;
 use Workerman\Crontab\Crontab;
+use Workerman\Lib\Timer;
 use Workerman\Worker;
 
 class ApiFilterCommand extends Command
@@ -46,12 +47,21 @@ class ApiFilterCommand extends Command
 
         $worker = new Worker();
         $worker->onWorkerStart = function () {
-            // TODO 定时器 1分钟同步一次token到缓存
-
-            // TODO 定时器 1秒一次限流检测
+            //  定时器 1分钟同步一次token到缓存
+            Timer::add(60,function (){
+                $setting = PlugsApiFilterSettingModel::select();
+                foreach ($setting as $set){
+                    ApiAccessContain::getInstance()->updateSetting($set['key'],$set['number']);
+                }
+            });
+            // 定时器 1秒一次限流检测
+            Timer::add(1,function (){
+                ApiAccessContain::getInstance()->clear();
+            });
 
         };
 
         Worker::runAll();
     }
+
 }
