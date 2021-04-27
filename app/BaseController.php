@@ -72,7 +72,7 @@ abstract class BaseController
      */
     protected function validate($validate, $data = null, array $message = [], bool $batch = false)
     {
-        if ($data === null) $data = $this->request->input();
+        if ($data === null) $data = $this->request->param();
 
         if (is_array($validate)) {
             $v = new Validate();

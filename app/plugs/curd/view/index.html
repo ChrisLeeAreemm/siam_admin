@@ -44,6 +44,7 @@
             <div class="layui-form-item">
                 <div class="layui-input-block">
                     <button class="layui-btn" lay-submit lay-filter="create_curd">生成模型控制器</button>
+                    <button class="layui-btn" lay-submit lay-filter="get_model">获取Model初始文件</button>
                     <button class="layui-btn" lay-submit lay-filter="update_notes">更新Model字段属性</button>
                     <button class="layui-btn" lay-submit lay-filter="create_html">生成前端页面</button>
                 </div>
@@ -81,6 +82,23 @@
                 success: function (res) {
                     if (res.code === 200){
                         layer.msg(res.msg,{icon: 1,time:1500});
+                    }
+                }
+            });
+        });
+        //监听提交
+        form.on('submit(get_model)', function (data) {
+            data.field.return_html = 1;
+            view.req({
+                url: "get_model",
+                data: data.field,
+                type: "get",
+                success: function (res) {
+                    if (res.code === 200){
+                        layer.open({
+                            title: '生成结果'
+                            ,content: `<textarea>${res.data.model_content}</textarea>`
+                        });
                     }
                 }
             });

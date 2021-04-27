@@ -28,14 +28,14 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">允许大小</label>
                 <div class="layui-input-inline">
-                    <input type="password" name="config_file_max" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+                    <input type="text" name="config_file_max" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
                 </div>
                 <div class="layui-form-mid layui-word-aux">单位MB</div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">文件域名</label>
                 <div class="layui-input-block">
-                    <input type="password" name="config_host" required lay-verify="required" placeholder="为空则默认取当前项目域名，开启OSS则为OSS域名" autocomplete="off" class="layui-input">
+                    <input type="password" name="config_host"  placeholder="为空则默认取当前项目域名，开启OSS则为OSS域名" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">
@@ -76,7 +76,7 @@
 
             <div class="layui-form-item">
                 <div class="layui-input-block">
-                    <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                    <button class="layui-btn" lay-submit lay-filter="config">立即提交</button>
                 </div>
             </div>
         </div>
@@ -96,9 +96,7 @@
             , $ = layui.jquery
             , laytpl = layui.laytpl;
 
-        form.val("config",{
-            config_driver:1
-        });
+
         auto_switch_config_bd(form.val("config").config_driver);
         form.on("select(config_driver)", function(data){
            auto_switch_config_bd(data.value)
@@ -121,6 +119,32 @@
                     break;
             }
         }
+
+        view.req({
+            url:"/plugs/attachment_manager/api/get_config",
+            data: {},
+            type:"post",
+            success(res){
+                let obj = {};
+                for (let i = 0; i < res.data.list.length; i++) {
+                    let temp = res.data.list[i];
+                    obj[temp.key] = temp.value;
+                }
+                form.val("config",obj);
+            }
+        })
+
+        form.on("submit(config)", function(data){
+            view.req({
+                url:"/plugs/attachment_manager/api/save_config",
+                data:data.field,
+                type:"post",
+                success(res){
+                    console.log(res);
+                    layer.msg("保存成功");
+                }
+            })
+        })
 
 
     });

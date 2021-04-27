@@ -47,6 +47,19 @@ class PlugsCurdController extends PlugsBaseController
         }
         return $this->send(ErrorCode::SUCCESS, [], '生成成功');
     }
+
+    public function get_model()
+    {
+        try {
+            $model_content = $this->parseField()->putModelFile();
+        } catch (Exception $e) {
+            return $this->send($e->getCode(), [], $e->getMessage());
+        }
+
+        return $this->send(ErrorCode::SUCCESS, [
+            'model_content' => $model_content
+        ], '生成成功');
+    }
     
     /**
      * 更新所有数据模型字段
@@ -276,7 +289,7 @@ EOF;
         return $this;
     }
     
-    private function putModelFile(): bool
+    private function putModelFile()
     {
         $modelName = Str::studly($this->tableName);
         
@@ -285,7 +298,11 @@ EOF;
         $template = str_replace("-notesString-", $this->tableNotes ?? '', $template);
         $template = str_replace("-tableName-", $this->tableName ?? '', $template);
         $template = str_replace("-pk-", $this->pk ?? '', $template);
-        
+
+        if (input('return_html') == '1'){
+            return $template;
+        }
+
         $fullPath = $this->modelPath . "$modelName" . "Model.php";
         if (file_exists($fullPath)) {
             throw new Exception('模型已存在',ErrorCode::FILE_EXIST);

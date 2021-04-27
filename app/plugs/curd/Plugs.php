@@ -48,6 +48,7 @@ class Plugs extends PlugsBase
             Route::get('plugs/curd/create_curd', 'PlugsCurdController@create_curd');
             Route::get('plugs/curd/update_notes', 'PlugsCurdController@update_notes');
             Route::get('plugs/curd/create_html', 'PlugsCurdController@create_html');
+            Route::get('plugs/curd/get_model', 'PlugsCurdController@get_model');
         })->prefix('\app\plugs\curd\controller\\');
         
     }

@@ -70,8 +70,20 @@ class Plugs extends PlugsBase
         Route::get('plugs/attachment_manager/index', function () {
             return $this->pre_render_file(__DIR__ . "/view/index.html");
         });
-        Route::any('plugs/attachment_manager/api/get_list', 'app\plugs\attachmentManager\controller\AttachmentManagerController@get_list');
 
-        // TODO 这里还要注入一个admin page和接口  添加到auth菜单 给用户使用（上传 删除自己的图片）
+        Route::group(function () {
+            // 配置编辑相关
+            Route::any('plugs/attachment_manager/api/save_config', 'AttachmentManagerController@save_config');
+            Route::any('plugs/attachment_manager/api/get_config', 'AttachmentManagerController@get_config');
+            // 上传附件、获取附件列表、删除附件  三个接口
+            Route::any('plugs/attachment_manager/api/upload', 'AttachmentManagerController@upload');
+            Route::any('plugs/attachment_manager/api/get_list', 'AttachmentManagerController@get_list');
+            Route::any('plugs/attachment_manager/api/delete', 'AttachmentManagerController@delete');
+
+            // TODO 这里还要注入一个admin page和接口  添加到auth菜单 给用户使用（上传 删除自己的图片）
+
+        })->prefix('app\plugs\attachmentManager\controller\\');
+
+
     }
 }

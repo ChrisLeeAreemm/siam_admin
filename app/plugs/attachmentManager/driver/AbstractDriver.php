@@ -9,8 +9,12 @@
 namespace app\plugs\attachmentManager\driver;
 
 
+use app\model\UsersModel;
+use app\plugs\attachmentManager\model\PlugsAttachmentListModel;
+use think\file\UploadedFile;
+
 abstract class AbstractDriver
 {
-    abstract function upload();
-    abstract function delete();
+    abstract function upload(UploadedFile $file, UsersModel $user): string;
+    abstract function delete(PlugsAttachmentListModel $upload): bool;
 }

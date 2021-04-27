@@ -6,7 +6,7 @@
  * Time: 8:44
  */
 
-namespace app\controller\admin;
+namespace app\controller\index;
 
 
 use app\BaseController;

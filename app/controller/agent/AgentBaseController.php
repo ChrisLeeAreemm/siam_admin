@@ -1,6 +1,6 @@
 <?php
 
-namespace app\controller\admin;
+namespace app\controller\agent;
 
 
 use app\BaseController;
