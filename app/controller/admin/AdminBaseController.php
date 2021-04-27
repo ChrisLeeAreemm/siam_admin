@@ -18,6 +18,6 @@ abstract class AdminBaseController extends BaseController
     /** 鉴权 */
     public function auth()
     {
-
+        // TODO 解析token 如果超时或者错误则返回 重新登录的状态码 前端跳转到登录页
     }
 }
