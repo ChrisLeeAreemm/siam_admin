@@ -74,11 +74,11 @@
         success: function (res) {
           layer.close(load);
           if (res.code == '200') {
-              layer.msg(res.msg,{time: 2000},function () {
+              layer.msg(res.msg,{icon:1,time: 1500},function () {
                 window.location.reload();
               });
             } else {
-            layer.msg(res.msg,{time: 2000},function () {
+            layer.msg(res.msg,{icon:2,time: 1500},function () {
               window.location.reload();
             });
           }
