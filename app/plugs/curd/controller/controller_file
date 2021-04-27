@@ -19,7 +19,7 @@ class Admin-controllerName-Controller extends AdminBaseController
 
         $result = Model::page($page, $limit)->order('-pk-','DESC')->select();
         $count  = Model::count();
-        return $this->send(ErrorCode::SUCCESS,['lists'=>$result,'count'=>$count]);
+        return $this->send(ErrorCode::SUCCESS,['lists'=>$result,'count'=>$count],'成功');
 
     }
 
@@ -30,7 +30,7 @@ class Admin-controllerName-Controller extends AdminBaseController
         if (!$result){
             return $this->send(ErrorCode::THIRD_PART_ERROR,[],'获取失败');
         }
-            return $this->send(ErrorCode::SUCCESS,['lists'=>$result]);
+            return $this->send(ErrorCode::SUCCESS,['lists'=>$result],'成功');
     }
 
     /**
@@ -46,7 +46,7 @@ class Admin-controllerName-Controller extends AdminBaseController
         if (!$start) {
             return $this->send(ErrorCode::THIRD_PART_ERROR,[],'新增失败');
          }
-            return $this->send(ErrorCode::SUCCESS);
+            return $this->send(ErrorCode::SUCCESS,[],'成功);
     }
 
     /**
@@ -61,7 +61,7 @@ class Admin-controllerName-Controller extends AdminBaseController
         if (!$res){
             return $this->send(ErrorCode::THIRD_PART_ERROR,[],'编辑失败');
         }
-            return $this->send(ErrorCode::SUCCESS);
+            return $this->send(ErrorCode::SUCCESS,[],'成功);
     }
 
     /**
@@ -72,7 +72,9 @@ class Admin-controllerName-Controller extends AdminBaseController
         $id = input('-pk-');
 
         $result = Model::destroy($id);
-
-        return $this->send(ErrorCode::SUCCESS,[],'ok');
+        if (!$result){
+                return $this->send(ErrorCode::DB_EXCEPTION, [], '删除失败');
+          }
+        return $this->send(ErrorCode::SUCCESS,[],'成功');
     }
 }
