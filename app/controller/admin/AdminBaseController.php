@@ -38,7 +38,7 @@ abstract class AdminBaseController extends BaseController
         try {
             $jwt = JWT::getInstance()->setSecretKey('siam_admin_key')->decode($token);
         } catch (\Exception $e) {
-            throw new AuthException($e->getMessage(), ErrorCode::AUTH_TOKEN_ERROR);
+            throw new AuthException($e->getMessage(), ErrorCode::AUTH_NEED_LOGIN_AGAIN);
         }
 
         $user = UsersModel::where([
