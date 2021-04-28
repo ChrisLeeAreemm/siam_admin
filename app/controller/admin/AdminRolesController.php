@@ -41,13 +41,18 @@ class AdminRolesController extends AdminBaseController
     {
 
         $param = input();
-
+        $rules_arr = json_decode($this->request->param('role_auth'),true);
+        $arr = [];
+        foreach ($rules_arr as $value){
+            $arr[] = $value['id'];
+        }
+        $param['role_auth'] = implode(',',$arr);
         $start = Model::create($param);
 
         if (!$start) {
             return $this->send(ErrorCode::THIRD_PART_ERROR,[],'新增失败');
         }
-        return $this->send(ErrorCode::SUCCESS);
+        return $this->send(ErrorCode::SUCCESS,[],'成功');
     }
 
     /**

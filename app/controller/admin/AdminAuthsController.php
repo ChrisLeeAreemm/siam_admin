@@ -18,10 +18,19 @@ class AdminAuthsController extends AdminBaseController
         $auths       = new Model();
         $list        = $auths->get_admin_auths_by_u_id(1);
         $menu_helper = new MenuHelper();
-        $tree        = $menu_helper->list_to_tree($list);
+        $tree        = $menu_helper->list_to_tree($list)->getTree();
         $html        = $this->makeTree($tree);
         return $this->send(ErrorCode::SUCCESS, ['lists' => $html]);
 
+    }
+
+    public function get_roles_tree()
+    {
+        $auths       = new Model();
+        $list        = $auths->get_admin_auths_by_u_id(1);
+        $menu_helper = new MenuHelper();
+        $tree        = $menu_helper->list_to_tree($list)->getTreeRoles();
+        return $this->send(ErrorCode::SUCCESS, ['tree' => $tree]);
     }
 
     /**
@@ -88,7 +97,6 @@ html;
      */
     public function add()
     {
-
         $model = new Model();
         $res   = $model->save([
             'auth_name'   => $this->request->param('auth_name'),
