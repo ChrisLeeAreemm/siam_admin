@@ -51,9 +51,10 @@ class AdminRolesController extends AdminBaseController
      */
     public function add(): Json
     {
-        $param     = input();
-        $roles_arr = json_decode($this->request->param('role_auth'), true);
-        $arr       = [];
+        $param                = input();
+        $param['create_time'] = time();
+        $roles_arr            = json_decode($this->request->param('role_auth'), true);
+        $arr                  = [];
         foreach ($roles_arr as $value) {
             $arr[] = $value['id'];
         }
@@ -74,7 +75,9 @@ class AdminRolesController extends AdminBaseController
     {
         $this->validate(['role_id' => 'require'], input());
         
-        $param     = input();
+        $param                = input();
+        $param['update_time'] = time();
+        
         $roles_arr = json_decode($this->request->param('role_auth'), true);
         $arr       = [];
         foreach ($roles_arr as $value) {
