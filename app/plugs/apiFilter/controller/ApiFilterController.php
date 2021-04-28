@@ -4,6 +4,8 @@ namespace app\plugs\apiFilter\controller;
 
 
 use app\exception\ErrorCode;
+use app\facade\Redis;
+use app\plugs\apiFilter\service\ApiAccessContain;
 use app\plugs\PlugsBaseController;
 use app\plugs\apiFilter\model\PlugsApiFilterSettingModel as Model;
 
@@ -13,7 +15,6 @@ class ApiFilterController extends PlugsBaseController
     {
         $page  = input('page', 1);
         $limit = input('limit', 10);
-
         $result = Model::page($page, $limit)->order('set_id', 'DESC')->select();
         $count  = Model::count();
         return $this->send(ErrorCode::SUCCESS, ['lists' => $result, 'count' => $count]);

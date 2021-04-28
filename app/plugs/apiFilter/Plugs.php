@@ -2,16 +2,22 @@
 
 namespace app\plugs\apiFilter;
 
+use app\exception\ErrorCode;
+use app\plugs\apiFilter\model\PlugsApiFilterSettingModel;
+use app\plugs\apiFilter\service\ApiAccessContain;
 use app\plugs\base\service\PlugsDatabaseHelper;
 use app\facade\SiamApp;
 use app\plugs\apiFilter\service\ApiFilterCommand;
 use app\plugs\PlugsBase;
 use app\plugs\PlugsConfig;
 use think\App;
+use think\Exception;
+use think\facade\Event;
 use think\facade\Route;
 use EasySwoole\DDL\Blueprint\Create\Table;
 use EasySwoole\DDL\Enum\Character;
 use EasySwoole\DDL\Enum\Engine;
+use Workerman\Events\Ev;
 
 class Plugs extends PlugsBase
 {
@@ -21,7 +27,7 @@ class Plugs extends PlugsBase
     {
         $config = new PlugsConfig();
         $config->setName("apiFilter");
-        $config->setHandleModule(["api", "plugs", "cli"]);// 只有admin模块才会执行初始化
+        $config->setHandleModule(["api", "plugs", "cli"]);
         $config->setMenu([
             [
                 'title'  => "apiFilter",
@@ -45,6 +51,9 @@ class Plugs extends PlugsBase
             $table->datetime('create_time')->setIsNotNull()->setColumnComment('创建时间');
             $table->datetime('update_time')->setIsNotNull()->setColumnComment('更新时间');
         }));
+        $time = date('Y-m-d H:i:s');
+        PlugsApiFilterSettingModel::create(['key' => 'TOTAL', 'number' => 30, 'create_time' => $time, 'update_time' => $time]);
+
     }
 
     public function remove()
@@ -68,5 +77,35 @@ class Plugs extends PlugsBase
         if ($console) {
             $console->addCommand(new ApiFilterCommand(), 'api-filter');
         }
+        
+        //全局限流
+        $set = ApiAccessContain::getInstance()->getNumber(ApiAccessContain::API_FILTER_TOTAL);
+        if ($set >= 0) {
+            if (ApiAccessContain::getInstance()->getAccess(ApiAccessContain::API_FILTER_TOTAL) > $set) {
+                throw new Exception('全局限流',ErrorCode::WAF_IP_FILTER);
+            }
+        }
+
+        // ip限流
+        $ip = request()->ip();
+        $set = ApiAccessContain::getInstance()->getNumber($ip);
+        if ($set >= 0) {
+            if (ApiAccessContain::getInstance()->getAccess($ip) > $set) {
+                throw new Exception('IP限流',ErrorCode::WAF_IP_FILTER);
+            }
+        }
+
+        // token限流/分组限流/自定义限流  从Token限流事件中获取Token
+        Event::listen('TokenFilter', function ($token) {
+            if (isset($token)) {
+                $set = ApiAccessContain::getInstance()->getNumber($token);
+                if (ApiAccessContain::getInstance()->getAccess($token) > $set) {
+                    throw new Exception('Token限流',ErrorCode::WAF_IP_FILTER);
+                }
+            }
+        });
+
+
+        return true;
     }
 }
