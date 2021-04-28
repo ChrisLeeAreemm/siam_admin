@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="../../css/public.css" media="all">
 </head>
 <body>
-<div class="layui-form" lay-filter="user" style="padding: 0">
+<div class="layui-form" lay-filter="roles" style="padding: 0">
     <div class="layui-row">
         <div class="layui-col-md4">
             <div class="layui-card">
@@ -75,33 +75,6 @@
         let submit_url = "/admin/roles/add";
         let get_one_url = "/admin/roles/get_one";
         let role_id = getQueryletiable('role_id');
-        if (role_id) {
-            //获取信息
-            view.req({
-                url: '/index.php/' + get_one_url,
-                data: {role_id: role_id},
-                type: "get",
-                dataType: "json",
-                success: function (res) {
-                    if (res.code === "200") {
-                        // 初始化赋值
-                        form.val("user", {
-                            "role_id": res.data.lists.role_id,
-                            "role_name": res.data.lists.role_name,
-                            "role_auth": res.data.lists.role_auth,
-                            "role_status": res.data.lists.role_status,
-                            "level": res.data.lists.level,
-                            "create_time": res.data.lists.create_time,
-                            "update_time": res.data.lists.update_time,
-
-                        });
-                        layui.form.render();
-                    }
-                }
-            })
-            submit_url = "/admin/roles/edit";
-        }
-
         //获取权限结构
         view.req({
             url: "/index.php/admin/auths/get_roles_tree",
@@ -120,6 +93,31 @@
             }
         })
 
+        if (role_id) {
+            //获取信息
+            view.req({
+                url: '/index.php/' + get_one_url,
+                data: {role_id: role_id},
+                type: "get",
+                dataType: "json",
+                success: function (res) {
+                    if (res.code === 200) {
+                        // 初始化赋值
+                        form.val("roles", {
+                            "role_id": res.data.lists.role_id,
+                            "role_name": res.data.lists.role_name,
+                        });
+                        layui.form.render();
+                        console.log(res.data.lists.role_auth);
+                        tree.setChecked('rolesTree', res.data.lists.role_auth); //批量勾选 id 为 2、3 的节点
+                    }
+                }
+            })
+            submit_url = "/admin/roles/edit";
+        }
+
+
+
 
         form.on('submit(submit)', function (data) {
             let load = layer.load(0, {
@@ -130,6 +128,7 @@
             view.req({
                 url: '/index.php/' + submit_url,
                 data: {
+                    role_id:data.field.role_id,
                     role_name: data.field.role_name,
                     role_auth: checkData
                 },
@@ -137,7 +136,7 @@
                 dataType: "json",
                 success: function (res) {
                     layer.close(load);
-                    if (res.code === '200') {
+                    if (res.code === 200) {
                         layer.msg("成功", {time: 2000}, function () {
                             window.location.reload();
                         });
