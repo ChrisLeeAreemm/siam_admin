@@ -22,7 +22,12 @@ class ExceptionLoggerController extends PlugsBaseController
         $page  = input('page', 1);
         $limit = input('limit', 10);
 
-        $result = PlugsExceptionLoggerModel::page($page, $limit)->order('id', 'DESC')->select();
+        $result = PlugsExceptionLoggerModel::page($page, $limit)->order('id', 'DESC')->field([
+            'id',
+            'exception_class',
+            'exception_date',
+            'create_time',
+        ])->select();
         $count  = PlugsExceptionLoggerModel::count();
         return $this->send(ErrorCode::SUCCESS, ['list' => $result, 'count' => $count]);
     }
