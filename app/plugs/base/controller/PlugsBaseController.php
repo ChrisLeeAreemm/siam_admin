@@ -150,14 +150,19 @@ class PlugsBaseController extends BaseController
         foreach ($modules as &$value) {
             $value = "\"$value\"";
         }
-        $modules = implode(',',$modules);
+        $modules1 = implode(',',$modules);
+        $modules2 = implode(', ',$modules);
 
         //替换
-        $str_search = '$config->setHandleModule(['.$modules.']);';
+        $str_search = '$config->setHandleModule(['.$modules1.']);';
+        $str_search2 = '$config->setHandleModule(['.$modules2.']);';
+
         $replace    = '$config->setHandleModule(';
         $replace    .= "[$select]";
         $replace    .= ');';
         $content    = str_replace($str_search, $replace, $plugs_file);
+        $content    = str_replace($str_search2, $replace, $content);
+
 
         $put_file   = file_put_contents($file, $content);
         if (!$put_file){

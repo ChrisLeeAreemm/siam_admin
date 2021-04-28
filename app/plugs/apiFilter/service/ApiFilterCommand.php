@@ -49,7 +49,7 @@ class ApiFilterCommand extends Command
         $worker->onWorkerStart = function () {
             //  定时器 1分钟同步一次token到缓存
             Timer::add(60,function (){
-                    ApiAccessContain::getInstance()->updateSetting();
+                ApiAccessContain::getInstance()->updateSetting();
             });
             // 定时器 1秒一次限流检测
             Timer::add(1,function (){
