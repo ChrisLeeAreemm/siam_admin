@@ -76,7 +76,7 @@
         //监听提交
         form.on('submit(create_curd)', function (data) {
             view.req({
-                url: "create_curd.html",
+                url: "plugs/curd/create_curd",
                 data: data.field,
                 type: "get",
                 success: function (res) {
@@ -90,7 +90,7 @@
         form.on('submit(get_model)', function (data) {
             data.field.return_html = 1;
             view.req({
-                url: "get_model",
+                url: "plugs/curd/get_model",
                 data: data.field,
                 type: "get",
                 success: function (res) {
@@ -106,7 +106,7 @@
         //监听提交
         form.on('submit(update_notes)', function (data) {
             view.req({
-                url: "update_notes.html",
+                url: "plugs/curd/update_notes",
                 data: data.field,
                 type: "get",
                 success: function (res) {
@@ -120,7 +120,7 @@
         //监听提交
         form.on('submit(create_html)', function (data) {
             view.req({
-                url: "create_html.html",
+                url: "plugs/curd/create_html",
                 data: data.field,
                 type: "get",
                 success: function (res) {
