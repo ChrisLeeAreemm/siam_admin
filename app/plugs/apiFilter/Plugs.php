@@ -76,6 +76,7 @@ class Plugs extends PlugsBase
         $console = SiamApp::getInstance()->getConsole();
         if ($console) {
             $console->addCommand(new ApiFilterCommand(), 'api-filter');
+            return true;
         }
         
         //全局限流

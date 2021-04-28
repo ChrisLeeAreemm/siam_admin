@@ -19,7 +19,7 @@ class Redis
 
     public function __construct()
     {
-        $config = [];
+        $config = config('redis');
         $this->driver = new  \think\cache\driver\Redis($config);
     }
 
