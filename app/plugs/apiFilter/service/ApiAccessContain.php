@@ -51,10 +51,9 @@ class ApiAccessContain
     
     /**
      * @param       $filter_key
-     * @param bool $auto_create
-     * @return mixed
+     * @return array
      */
-    public function getAuto($filter_key, $auto_create = false)
+    public function getAuto($filter_key)
     {
         $key  = substr(md5($filter_key), 8, 16);
         $info = $this->handle->get($key);
@@ -65,9 +64,6 @@ class ApiAccessContain
         if (!$info) {
             $arr['count']  = 1;
             $arr['number'] = -1;
-            if ($auto_create !== false) {
-                $this->handle->tag($this->listTag)->set($key, $arr);
-            }
             return $arr;
         }
         $arr['count']  = $info['count'] + 1;
@@ -78,11 +74,13 @@ class ApiAccessContain
         
         
     }
-    
+
     /**
      * 同步Token到缓存
-     * @param $filter_key
-     * @param $setNumber
+     * @return false
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
      */
     public function updateSetting()
     {
@@ -94,7 +92,7 @@ class ApiAccessContain
             return false;
         }
         foreach ($setting as $value) {
-            $info           = $this->getAuto($value['key'], true);
+            $info           = $this->getAuto($value['key']);
             $info['number'] = $value['number'];
             $key            = substr(md5($value['key']), 8, 16);
             $this->handle->tag($this->listTag)->set($key, $info);
@@ -108,9 +106,6 @@ class ApiAccessContain
      */
     public function reset()
     {
-        if (!$this->filterList){
-            return false;
-        }
         foreach ($this->filterList as $value) {
             $info          = $this->handle->get($value);
             $info['count'] = 0;

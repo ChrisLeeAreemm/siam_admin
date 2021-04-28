@@ -27,7 +27,7 @@ class Plugs extends PlugsBase
     {
         $config = new PlugsConfig();
         $config->setName("apiFilter");
-        $config->setHandleModule(["api", "plugs", "cli"]);
+        $config->setHandleModule(["api","plugs","cli","admin"]);
         $config->setMenu([
             [
                 'title'  => "apiFilter",

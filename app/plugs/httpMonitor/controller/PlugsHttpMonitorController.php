@@ -94,9 +94,13 @@ class PlugsHttpMonitorController extends PlugsBaseController
     {
         $id = input('id');
         $model = Model::find($id);
-        /** @var Response $response */
-        $response = unserialize($model->response_content);
-        return $response->getContent();
+        if ($model->request_sn){
+            return $model->response_content;
+        }else{
+            /** @var Response $response */
+            $response = unserialize($model->response_content);
+            return $response->getContent();
+        }
     }
 
     public function resend()
