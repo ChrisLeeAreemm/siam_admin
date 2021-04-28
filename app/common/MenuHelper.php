@@ -21,14 +21,13 @@ class MenuHelper
     {
         $newList = [];
         foreach ($list as $key => $t){
-            $newList[$t['auth_id']] = $t->toArray();
+            $newList[$t['auth_id']] = $t;
         }
 
         $this->auth_list = $newList;
 
         $System = SystemModel::where(['id' => 1])->field('auth_order')->find()->toArray();
         $order  = json_decode($System['auth_order'], TRUE);
-
         return $this->test($order);
     }
 
