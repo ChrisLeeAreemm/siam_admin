@@ -34,35 +34,7 @@ class AdminSystemController extends AdminBaseController
                     "icon"   => "fa fa-address-book",
                     "href"   => "",
                     "target" => "_self",
-                    "child"  => [
-                        [
-                            "title"  => "管理列表",
-                            "href"   => "",
-                            "icon"   => "fa fa-home",
-                            "target" => "_self",
-                            "child"  => [
-                                [
-                                    "title"  => "权限",
-                                    "href"   => "page/auths/lists.html",
-                                    "icon"   => "fa fa-tachometer",
-                                    "target" => "_self"
-                                ],
-                                [
-                                    "title"  => "角色",
-                                    "href"   => "page/roles/lists.html",
-                                    "icon"   => "fa fa-tachometer",
-                                    "target" => "_self"
-                                ],
-                                [
-                                    "title"  => "用户",
-                                    "href"   => "page/users/lists.html",
-                                    "icon"   => "fa fa-tachometer",
-                                    "target" => "_self"
-                                ]
-                            ]
-                        ],
-
-                    ]
+                    "child"  => []
                 ]
             ]
         ];
