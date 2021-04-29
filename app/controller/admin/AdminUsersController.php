@@ -3,8 +3,10 @@
 namespace app\controller\admin;
 
 use app\exception\ErrorCode;
+use app\model\RolesModel;
 use app\model\UsersModel;
 use app\model\UsersModel as Model;
+use app\plugs\apiFilter\model\PlugsApiFilterSettingModel;
 use Siam\JWT;
 use think\helper\Str;
 
@@ -22,8 +24,19 @@ class AdminUsersController extends AdminBaseController
         $page  = input('page', 1);
         $limit = input('limit', 10);
 
-        $result = Model::page($page, $limit)->order('u_id', 'DESC')->select();
-        $count  = Model::count();
+        $result = Model::page($page, $limit)->order('u_id', 'DESC')->select()->toArray();
+
+        foreach ($result as &$value) {
+            $arr = explode(',', $value['role_id']);
+            $res = RolesModel::field('role_name')->select($arr)->toArray();
+            foreach ($res as $vo) {
+                $role[] = $vo['role_name'];
+            }
+            $value['role_id'] = implode(',', $role);
+        }
+
+
+        $count = Model::count();
         return $this->send(ErrorCode::SUCCESS, ['lists' => $result, 'count' => $count]);
 
 

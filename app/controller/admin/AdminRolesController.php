@@ -3,7 +3,9 @@
 namespace app\controller\admin;
 
 use app\exception\ErrorCode;
+use app\model\AuthsModel;
 use app\model\RolesModel as Model;
+use app\model\SystemModel;
 use think\response\Json;
 
 class AdminRolesController extends AdminBaseController
@@ -16,17 +18,25 @@ class AdminRolesController extends AdminBaseController
      */
     public function get_list()
     {
-        
+
         $page  = input('page', 1);
         $limit = input('limit', 10);
-        
-        $result = Model::page($page, $limit)->order('role_id', 'DESC')->select();
-        $count  = Model::count();
+
+        $result = Model::page($page, $limit)->order('role_id', 'DESC')->select()->toArray();
+        foreach ($result as &$value) {
+            $arr = explode(',', $value['role_auth']);
+            $res = AuthsModel::field('auth_name')->select($arr)->toArray();
+            foreach ($res as $vo) {
+                $auth[] = $vo['auth_name'];
+            }
+            $value['role_auth'] = implode(',', $auth);
+        }
+        $count = Model::count();
         return $this->send(ErrorCode::SUCCESS, ['lists' => $result, 'count' => $count]);
-        
-        
+
+
     }
-    
+
     /**
      * @return Json
      * @throws \app\exception\AuthException
@@ -45,7 +55,7 @@ class AdminRolesController extends AdminBaseController
         $result['role_auth'] = explode(',', $result['role_auth']);
         return $this->send(ErrorCode::SUCCESS, ['lists' => $result]);
     }
-    
+
     /**
      * @return Json
      */
@@ -60,13 +70,13 @@ class AdminRolesController extends AdminBaseController
         }
         $param['role_auth'] = implode(',', $arr);
         $start              = Model::create($param);
-        
+
         if (!$start) {
             return $this->send(ErrorCode::THIRD_PART_ERROR, [], '新增失败');
         }
         return $this->send(ErrorCode::SUCCESS, [], '成功');
     }
-    
+
     /**
      * @return Json
      * @throws \app\exception\AuthException
@@ -74,10 +84,10 @@ class AdminRolesController extends AdminBaseController
     public function edit(): Json
     {
         $this->validate(['role_id' => 'require'], input());
-        
+
         $param                = input();
         $param['update_time'] = time();
-        
+
         $roles_arr = json_decode($this->request->param('role_auth'), true);
         $arr       = [];
         foreach ($roles_arr as $value) {
@@ -88,29 +98,29 @@ class AdminRolesController extends AdminBaseController
         } catch (\Exception $e) {
             return $this->send(ErrorCode::DB_EXCEPTION, [], $e->getMessage());
         }
-        
+
         $param['role_auth'] = implode(',', $arr);
         $res                = $start->save($param);
-        
+
         if (!$res) {
             return $this->send(ErrorCode::DB_EXCEPTION, [], '编辑失败');
         }
         return $this->send(ErrorCode::SUCCESS);
     }
-    
+
     /**
      * @return Json
      */
     public function delete(): Json
     {
         $id = input('role_id');
-        
+
         $result = Model::destroy($id);
         if (!$result) {
             return $this->send(ErrorCode::DB_EXCEPTION, [], '失败');
         }
-        
+
         return $this->send(ErrorCode::SUCCESS, [], '成功');
-        
+
     }
 }
