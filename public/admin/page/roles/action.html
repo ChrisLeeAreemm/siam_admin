@@ -74,7 +74,7 @@
         let setter = layui.setter;
         let submit_url = "/admin/roles/add";
         let get_one_url = "/admin/roles/get_one";
-        let role_id = getQueryletiable('role_id');
+        let role_id = view.getQueryletiable('role_id');
         //获取权限结构
         view.req({
             url: "/index.php/admin/auths/get_roles_tree",
@@ -108,15 +108,12 @@
                             "role_name": res.data.lists.role_name,
                         });
                         layui.form.render();
-                        console.log(res.data.lists.role_auth);
-                        tree.setChecked('rolesTree', res.data.lists.role_auth); //批量勾选 id 为 2、3 的节点
+                        tree.setChecked('rolesTree', res.data.lists.role_auth); //批量勾选
                     }
                 }
             })
             submit_url = "/admin/roles/edit";
         }
-
-
 
 
         form.on('submit(submit)', function (data) {
@@ -128,7 +125,7 @@
             view.req({
                 url: '/index.php/' + submit_url,
                 data: {
-                    role_id:data.field.role_id,
+                    role_id: data.field.role_id,
                     role_name: data.field.role_name,
                     role_auth: checkData
                 },
@@ -137,7 +134,7 @@
                 success: function (res) {
                     layer.close(load);
                     if (res.code === 200) {
-                        layer.msg("成功", {time: 2000}, function () {
+                        layer.msg(res.msg, {time: 2000}, function () {
                             window.location.reload();
                         });
                     } else {
@@ -151,19 +148,6 @@
         });
 
     });
-
-    //获取参数
-    function getQueryletiable(letiable) {
-        let query = window.location.search.substring(1);
-        let lets = query.split("&");
-        for (let i = 0; i < lets.length; i++) {
-            let pair = lets[i].split("=");
-            if (pair[0] == letiable) {
-                return pair[1];
-            }
-        }
-        return (false);
-    }
 </script>
 </body>
 </html>
