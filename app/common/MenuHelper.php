@@ -104,10 +104,13 @@ class MenuHelper
             $res['icon']  = $tem['auth_icon'];
             $res['href']  = $tem['auth_rules'];
             $res['target']  = '_self';
-            if (!Str::startsWith($tem['auth_rules'], '/page') && !Str::startsWith($tem['auth_rules'], 'page') && !Str::startsWith($tem['auth_rules'], 'http')) {
-                $res['href'] = "/index.php/" . $tem['auth_rules'];
-                $res['href'] = str_replace("//", "/", $res['href']);
+            if (!empty($res['href'])){
+                if (!Str::startsWith($tem['auth_rules'], '/page') && !Str::startsWith($tem['auth_rules'], 'page') && !Str::startsWith($tem['auth_rules'], 'http')) {
+                    $res['href'] = "/index.php/" . $tem['auth_rules'];
+                    $res['href'] = str_replace("//", "/", $res['href']);
+                }
             }
+            
             if (isset($value['child'])) {
                 $res['child'] = $this->AuthMenuTree($value['child']);
             }
