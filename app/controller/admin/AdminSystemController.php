@@ -2,7 +2,9 @@
 
 namespace app\controller\admin;
 
+use app\common\MenuHelper;
 use app\exception\ErrorCode;
+use app\model\AuthsModel;
 use app\model\PlugsStatusModel;
 use app\model\UsersModel as Model;
 use app\plugs\base\Plugs as BasePlugs;
@@ -59,6 +61,7 @@ class AdminSystemController extends AdminBaseController
                                 ]
                             ]
                         ],
+
                     ]
                 ]
             ]
@@ -76,11 +79,24 @@ class AdminSystemController extends AdminBaseController
                 "child"  => $plug_arr,
             ];
         }
+        $authMenu = $this->get_auth();
+        foreach ($authMenu as $value){
+            array_push($arr['menuInfo'][0]['child'],$value);
 
+        }
         return $this->send(ErrorCode::SUCCESS, $arr);
 
     }
 
+    public function get_auth()
+    {
+        //获取权限列表
+        $AuthsModel = new AuthsModel();
+        $auth_list = $AuthsModel->get_admin_auths_by_u_id($this->who->u_id);
+        $menu_helper = new MenuHelper();
+        $tree        = $menu_helper->list_to_tree($auth_list)->getTreeAuthMenu();
+        return $tree;
+    }
     public function get_plugs()
     {
         $dir = app_path() . 'plugs\\';

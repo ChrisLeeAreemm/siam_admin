@@ -4,6 +4,7 @@
 namespace app\common;
 
 use app\model\SystemModel;
+use think\helper\Str;
 
 class MenuHelper
 {
@@ -50,6 +51,14 @@ class MenuHelper
     }
 
     /**
+     * @return array
+     */
+    public function getTreeAuthMenu()
+    {
+        return $this->AuthMenuTree();
+    }
+
+    /**
      * @param $order
      * @return array
      */
@@ -70,6 +79,42 @@ class MenuHelper
                 $tem['child'] = $this->AuthTree($value['child']);
             }
             $return[] = $tem;
+        }
+        return $return;
+    }
+
+    /**
+     * @param $order
+     * @return array
+     */
+    private function AuthMenuTree($order = '')
+    {
+        if (!$order) {
+            $order = $this->order;
+        }
+        $return = [];
+        foreach ($order as $key => $value) {
+            // 未有权限
+            if (empty($this->auth_list[$value['id']])) {
+                continue;
+            }
+
+            $tem          = $this->auth_list[$value['id']];
+            if ($tem['auth_id'] == 1 ||$tem['auth_id'] == 2 || $tem['auth_id'] == 3){
+                continue;
+            }
+            $res['title'] = $tem['auth_name'];
+            $res['icon']  = $tem['auth_icon'];
+            $res['href']  = $tem['auth_rules'];
+            $res['target']  = '_self';
+            if (!Str::startsWith($tem['auth_rules'], '/page') && !Str::startsWith($tem['auth_rules'], 'page') && !Str::startsWith($tem['auth_rules'], 'http')) {
+                $res['href'] = "/index.php/" . $tem['auth_rules'];
+                $res['href'] = str_replace("//", "/", $res['href']);
+            }
+            if (isset($value['child'])) {
+                $res['child'] = $this->AuthMenuTree($value['child']);
+            }
+            $return[] = $res;
         }
         return $return;
     }

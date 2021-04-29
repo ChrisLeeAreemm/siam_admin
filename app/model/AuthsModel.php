@@ -77,7 +77,7 @@ class AuthsModel extends BaseModel
     protected function getAuth($map)
     {
         // 这里做了更改 只要是 管理员 都能查看员工权限并修改
-        $list = $this::where($map)->select();
+        $list = $this::where($map)->select()->toArray();
         if (!empty($list)) {
             return $list;
         }
