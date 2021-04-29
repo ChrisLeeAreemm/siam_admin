@@ -20,6 +20,8 @@
         <div class="layui-card-body">
             <div id="echarts-records" style="width: 100%;min-height:200px"></div>
         </div>
+        <button class="layui-btn" id="del_all">清除所有记录</button>
+        <button class="layui-btn" id="del_seven">清除7天前记录</button>
         <table class="layui-hide" id="list" lay-filter="list"></table>
     </div>
 </div>
@@ -33,14 +35,14 @@
 <script>
 
 
-    layui.use(['form', 'view', 'laytpl','table','echarts'], function () {
+    layui.use(['form', 'view', 'laytpl', 'table', 'echarts'], function () {
         let form = layui.form
             , layer = layui.layer
             , view = layui.view
             , $ = layui.jquery
             , laytpl = layui.laytpl
             , table = layui.table
-            ,echarts = layui.echarts
+            , echarts = layui.echarts
 
         let get_list_url = '/index.php/plugs/exception_logger/api/get_list';
 
@@ -48,15 +50,14 @@
             elem: '#list',
             url: get_list_url,
             cols: [[
-                {field: 'id',  title: 'ID'},
+                {field: 'id', title: 'ID'},
                 {field: 'exception_class', title: '异常类名(异常类型)'},
                 {field: 'exception_date', title: '异常日期'},
-                {field: 'exception_data', title: '异常内容'},
                 {field: 'create_time', title: '创建时间'},
                 {toolbar: '#do', width: 300}
             ]]
             , page: true
-            ,limit:10
+            , limit: 10
             , response: {
                 statusCode: 200
             }
@@ -76,12 +77,12 @@
 
             switch (layEvent) {
                 case 'check':
-                    let url = "/index.php/plugs/exception_logger/api/check_exception?id="+data.id;
+                    let url = "/index.php/plugs/exception_logger/api/check_exception?id=" + data.id;
                     layer.open({
                         type: 2,
                         title: "异常还原",
                         content: url,
-                        area:['70%','90%']
+                        area: ['70%', '90%']
                     });
                     break;
                 default:
@@ -116,26 +117,75 @@
                     xAxis: {
                         type: 'category',
                         boundaryGap: false,
-                        data:res.data.days
+                        data: res.data.days
                     },
                     yAxis: {
                         type: 'value'
 
                     },
                     series: [{
-                        name:'次数',
-                        type:'line',
-                        data:res.data.count
+                        name: '次数',
+                        type: 'line',
+                        data: res.data.count
                     }]
                 };
                 echartsRecords.setOption(optionRecords);
 
                 // echarts 窗口缩放自适应
-                window.onresize = function(){
+                window.onresize = function () {
                     echartsRecords.resize();
                 }
             }
         })
+
+        $('#del_all').on('click', function () {
+            layer.confirm('确认删除所有数据?', {icon: 3, title: '提示'}, function (index) {
+                view.req({
+                    url: "/index.php/plugs/exception_logger/api/delete",
+                    data: {
+                        type: 1
+                    },
+                    type: "post",
+                    dataType: "json",
+                    success: function (res) {
+                        if (res.code == 200) {
+                            window.location.reload();
+                        } else {
+                            layer.msg(res.msg, {
+                                icon: 2
+                            })
+                        }
+                    }
+                });
+
+                layer.close(index);
+            });
+        });
+        $('#del_seven').on('click', function () {
+            layer.confirm('确认删除七天前数据?', {icon: 3, title: '提示'}, function (index) {
+                view.req({
+                    url: "/index.php/plugs/exception_logger/api/delete",
+                    data: {
+                        type: 2
+                    },
+                    type: "post",
+                    dataType: "json",
+                    success: function (res) {
+                        if (res.code === 200) {
+                            layer.msg(res.msg, {icon:1,time: 2000}, function () {
+                                window.location.reload();
+                            });
+                        } else {
+                            layer.msg(res.msg, {icon:2,time: 2000}, function () {
+                                window.location.reload();
+                            });
+                        }
+                    }
+                });
+
+                layer.close(index);
+            });
+        });
 
     });
 

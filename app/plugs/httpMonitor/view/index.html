@@ -47,6 +47,12 @@
                     <button class="layui-btn layui-btn-sm" id="clear" lay-text="清空">
                         一键清空
                     </button>
+                    <button class="layui-btn layui-btn-sm" id="clear_m" lay-text="清空一个月前">
+                        清空一个月前
+                    </button>
+                    <button class="layui-btn layui-btn-sm" id="clear_on" lay-text="清空非自动注入数据">
+                        清空非自动注入数据
+                    </button>
                 </div>
                 <div class="layui-card-body">
                     <table class="layui-hide" id="lists" lay-filter="lists"></table>
@@ -131,6 +137,29 @@
             view.req({
                 url:"/index.php/plugs/http_monitor/clear",
                 data:{
+                    type : 1
+                },
+                success(res){
+                    $(".layui-laypage-btn").click();
+                },
+            });
+        });
+        $("#clear_m").on("click", function(){
+            view.req({
+                url:"/index.php/plugs/http_monitor/clear",
+                data:{
+                    type:2
+                },
+                success(res){
+                    $(".layui-laypage-btn").click();
+                },
+            });
+        });
+        $("#clear_on").on("click", function(){
+            view.req({
+                url:"/index.php/plugs/http_monitor/clear",
+                data:{
+                    type:3
                 },
                 success(res){
                     $(".layui-laypage-btn").click();
