@@ -30,26 +30,17 @@
                                    class="layui-input">
                         </div>
                     </div>
-                    <div class="layui-form-item" style="display: none;">
-                        <label class="layui-form-label">token</label>
-                        <div class="layui-input-inline">
-                            <input type="text" name="__token__" value="{$Request.token}" readonly lay-verify="required"
-                                   autocomplete="off" lass="layui-input">
-                        </div>
-                    </div>
                 </div>
             </div>
 
-
         </div>
-        <div class="layui-col-md8">
+        <div class="layui-col-md4">
             <div class="layui-card">
                 <div class="layui-card-header">权限</div>
                 <div class="layui-card-body">
                     <div id="tree_role"></div>
                 </div>
             </div>
-
         </div>
 
         <div class="layui-form-item">
@@ -64,17 +55,14 @@
 <script src="../../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
 <script src="../../js/lay-config.js?v=2.0.4" charset="utf-8"></script>
 <script>
-    layui.use(['form', 'layer', 'view', 'setter', 'tree', 'util'], function () {
+    layui.use(['form', 'layer', 'view', 'tree'], function () {
         let form = layui.form;
         let layer = layui.layer;
-        let $ = layui.jquery;
         let view = layui.view;
         let tree = layui.tree;
-        let util = layui.util;
-        let setter = layui.setter;
         let submit_url = "/admin/roles/add";
         let get_one_url = "/admin/roles/get_one";
-        let role_id = getQueryletiable('role_id');
+        let role_id = view.getQueryletiable('role_id');
         //获取权限结构
         view.req({
             url: "/index.php/admin/auths/get_roles_tree",
@@ -82,7 +70,7 @@
             dataType: "json",
             success: function (res) {
                 if (res.code === 200) {
-                    var inst1 = tree.render({
+                    tree.render({
                         elem: '#tree_role'  //绑定元素
                         , showCheckbox: true
                         , data: res.data.tree
@@ -108,8 +96,7 @@
                             "role_name": res.data.lists.role_name,
                         });
                         layui.form.render();
-                        console.log(res.data.lists.role_auth);
-                        tree.setChecked('rolesTree', res.data.lists.role_auth); //批量勾选 id 为 2、3 的节点
+                        tree.setChecked('rolesTree', res.data.lists.role_auth); //批量勾选
                     }
                 }
             })
@@ -117,18 +104,16 @@
         }
 
 
-
-
         form.on('submit(submit)', function (data) {
             let load = layer.load(0, {
                 shade: 0.5
             });
             //获得选中的节点
-            var checkData = window.JSON.stringify(tree.getChecked('rolesTree'));
+            let checkData = window.JSON.stringify(tree.getChecked('rolesTree'));
             view.req({
                 url: '/index.php/' + submit_url,
                 data: {
-                    role_id:data.field.role_id,
+                    role_id: data.field.role_id,
                     role_name: data.field.role_name,
                     role_auth: checkData
                 },
@@ -137,7 +122,7 @@
                 success: function (res) {
                     layer.close(load);
                     if (res.code === 200) {
-                        layer.msg("成功", {time: 2000}, function () {
+                        layer.msg(res.msg, {time: 2000}, function () {
                             window.location.reload();
                         });
                     } else {
@@ -151,19 +136,6 @@
         });
 
     });
-
-    //获取参数
-    function getQueryletiable(letiable) {
-        let query = window.location.search.substring(1);
-        let lets = query.split("&");
-        for (let i = 0; i < lets.length; i++) {
-            let pair = lets[i].split("=");
-            if (pair[0] == letiable) {
-                return pair[1];
-            }
-        }
-        return (false);
-    }
 </script>
 </body>
 </html>

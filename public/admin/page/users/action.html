@@ -1,210 +1,184 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <title>{:lang('action')}</title>
-  <meta name="renderer" content="webkit">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
-  <link rel="stylesheet" href="../../lib/layui-v2.6.3/css/layui.css" media="all">
-  <link rel="stylesheet" href="../../css/public.css" media="all">
+    <meta charset="utf-8">
+    <title>{:lang('action')}</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../css/public.css" media="all">
 </head>
 <body>
 
 <div class="layui-form" lay-filter="user" style="padding: 0">
-  <div class="layui-form-item">
-    <label class="layui-form-label">u_id</label>
-    <div class="layui-input-block">
-      <input type="text" name="u_id" lay-verify="" autocomplete="off" placeholder="请输入标题" class="layui-input">
+    <div class="layui-row">
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-header">用户信息</div>
+                <div class="layui-card-body">
+
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <input type="hidden" name="u_id" lay-verify="" autocomplete="off" placeholder=""
+                                   class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">用户名</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="u_name" lay-verify="" autocomplete="off" placeholder=""
+                                   class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item " id="u_password">
+                        <label class="layui-form-label">密码</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="u_password" lay-verify="" autocomplete="off" placeholder=""
+                                   class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">角色</label>
+                        <div class="layui-input-block" id="role_id">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <div class="layui-form-item">
+                <div class="layui-card">
+                    <div class="layui-card-header">权限</div>
+                    <div class="layui-card-body">
+                        <div id="tree_role"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="submit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重新填写</button>
+            </div>
+        </div>
     </div>
-  </div>
-
-  <div class="layui-form-item">
-    <label class="layui-form-label">u_password</label>
-    <div class="layui-input-block">
-      <input type="text" name="u_password" lay-verify="" autocomplete="off" placeholder="请输入标题" class="layui-input">
-    </div>
-  </div>
-
-  <div class="layui-form-item">
-    <label class="layui-form-label">u_name</label>
-    <div class="layui-input-block">
-      <input type="text" name="u_name" lay-verify="" autocomplete="off" placeholder="请输入标题" class="layui-input">
-    </div>
-  </div>
-
-  <div class="layui-form-item">
-    <label class="layui-form-label">u_account</label>
-    <div class="layui-input-block">
-      <input type="text" name="u_account" lay-verify="" autocomplete="off" placeholder="请输入标题" class="layui-input">
-    </div>
-  </div>
-
-  <div class="layui-form-item">
-    <label class="layui-form-label">p_u_id</label>
-    <div class="layui-input-block">
-      <input type="text" name="p_u_id" lay-verify="" autocomplete="off" placeholder="请输入标题" class="layui-input">
-    </div>
-  </div>
-
-  <div class="layui-form-item">
-    <label class="layui-form-label">role_id</label>
-    <div class="layui-input-block">
-      <input type="text" name="role_id" lay-verify="" autocomplete="off" placeholder="请输入标题" class="layui-input">
-    </div>
-  </div>
-
-  <div class="layui-form-item">
-    <label class="layui-form-label">u_status</label>
-    <div class="layui-input-block">
-      <input type="text" name="u_status" lay-verify="" autocomplete="off" placeholder="请输入标题" class="layui-input">
-    </div>
-  </div>
-
-  <div class="layui-form-item">
-    <label class="layui-form-label">u_level_line</label>
-    <div class="layui-input-block">
-      <input type="text" name="u_level_line" lay-verify="" autocomplete="off" placeholder="请输入标题" class="layui-input">
-    </div>
-  </div>
-
-  <div class="layui-form-item">
-    <label class="layui-form-label">last_login_ip</label>
-    <div class="layui-input-block">
-      <input type="text" name="last_login_ip" lay-verify="" autocomplete="off" placeholder="请输入标题" class="layui-input">
-    </div>
-  </div>
-
-  <div class="layui-form-item">
-    <label class="layui-form-label">last_login_time</label>
-    <div class="layui-input-block">
-      <input type="text" name="last_login_time" lay-verify="" autocomplete="off" placeholder="请输入标题" class="layui-input">
-    </div>
-  </div>
-
-  <div class="layui-form-item">
-    <label class="layui-form-label">create_time</label>
-    <div class="layui-input-block">
-      <input type="text" name="create_time" lay-verify="" autocomplete="off" placeholder="请输入标题" class="layui-input">
-    </div>
-  </div>
-
-  <div class="layui-form-item">
-    <label class="layui-form-label">update_time</label>
-    <div class="layui-input-block">
-      <input type="text" name="update_time" lay-verify="" autocomplete="off" placeholder="请输入标题" class="layui-input">
-    </div>
-  </div>
-
-  <div class="layui-form-item">
-    <label class="layui-form-label">u_auth</label>
-    <div class="layui-input-block">
-      <input type="text" name="u_auth" lay-verify="" autocomplete="off" placeholder="请输入标题" class="layui-input">
-    </div>
-  </div>
-
-
-  <div class="layui-form-item" style="display: none;">
-    <label class="layui-form-label">token</label>
-    <div class="layui-input-inline">
-      <input type="text" name="__token__" value="{$Request.token}" readonly lay-verify="required" autocomplete="off" lass="layui-input">
-    </div>
-  </div>
-
-
-  <div class="layui-form-item">
-    <div class="layui-input-block">
-      <button class="layui-btn" lay-submit lay-filter="submit">立即提交</button>
-      <button type="reset" class="layui-btn layui-btn-primary">重新填写</button>
-    </div>
-  </div>
+</div>
 </div>
 
 
 <script src="../../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
 <script src="../../js/lay-config.js?v=2.0.4" charset="utf-8"></script>
 <script>
-  layui.use(['form', 'layer','view','setter'], function () {
-    let form = layui.form;
-    let layer = layui.layer;
-    let $ = layui.jquery;
-    let view = layui.view;
-    let setter = layui.setter;
-    let submit_url = "/admin/users/add";
-    let get_one_url = "/admin/users/get_one";
-    let u_id = getQueryletiable('u_id');
-    if(u_id){
-      //获取信息
-      view.req({
-        url: '/index.php/'+get_one_url,
-        data: {u_id:u_id},
-        type: "get",
-        dataType: "json",
-        success:function (res){
-          if (res.code === "200"){
-            // 初始化赋值
-            form.val("user", {
-              "u_id" :res.data.lists.u_id,
-              "u_password" :res.data.lists.u_password,
-              "u_name" :res.data.lists.u_name,
-              "u_account" :res.data.lists.u_account,
-              "p_u_id" :res.data.lists.p_u_id,
-              "role_id" :res.data.lists.role_id,
-              "u_status" :res.data.lists.u_status,
-              "u_level_line" :res.data.lists.u_level_line,
-              "last_login_ip" :res.data.lists.last_login_ip,
-              "last_login_time" :res.data.lists.last_login_time,
-              "create_time" :res.data.lists.create_time,
-              "update_time" :res.data.lists.update_time,
-              "u_auth" :res.data.lists.u_auth,
+    layui.use(['form', 'layer', 'view', 'setter', 'tree'], function () {
+        let form = layui.form;
+        let layer = layui.layer;
+        let $ = layui.jquery;
+        let view = layui.view;
+        let tree = layui.tree;
+        let submit_url = "/admin/users/add";
+        let get_one_url = "/admin/users/get_one";
+        let u_id = view.getQueryletiable('u_id');
+        //获取权限结构
+        view.req({
+            url: "/index.php/admin/auths/get_roles_tree",
+            type: "get",
+            dataType: "json",
+            success: function (res) {
+                if (res.code === 200) {
+                    tree.render({
+                        elem: '#tree_role'  //绑定元素
+                        , showCheckbox: true
+                        , data: res.data.tree
+                        , id: 'rolesTree'
+                    });
 
-            });
-            layui.form.render();
-          }
+                }
+            }
+        })
+        view.req({
+            url: '/index.php/admin/roles/get_list',
+            type: "get",
+            success: function (res) {
+                //获取返回的数据
+                let value = res.data.lists;
+                let opt = '';
+                //循环遍历
+                for (let i in value) {
+                    opt += '<input type="checkbox" name="u_role[]" title="' + value[i].role_name + '" value="' + value[i].role_id + '" id="' + value[i].role_id + '">'
+                }
+                $("#role_id").html(opt);
+                layui.form.render();
+            }
+        });
+        if (u_id) {
+            //获取信息
+            view.req({
+                url: '/index.php/' + get_one_url,
+                data: {u_id: u_id},
+                type: "get",
+                dataType: "json",
+                success: function (res) {
+                    if (res.code === 200) {
+                        console.log(res);
+                        // 初始化赋值
+                        form.val("user", {
+                            "u_id": res.data.lists.u_id,
+                            "u_password": res.data.lists.u_password,
+                            "u_name": res.data.lists.u_name,
+                            "u_account": res.data.lists.u_account,
+                            "u_status": res.data.lists.u_status,
+                        });
+                        $('#u_password').remove();
+                        tree.setChecked('rolesTree', res.data.lists.u_auth); //批量勾选
+                        //checked
+                        let value = res.data.lists.role_id;
+                        //循环遍历
+                        for (let i in value) {
+                            let id = value[i];
+                            $('#' + id).attr('checked', 'checked')
+                        }
+                        layui.form.render();
+                    }
+                }
+            })
+            submit_url = "/admin/users/edit";
         }
-      })
-      submit_url = "/admin/users/edit";
-    }
-    form.on('submit(submit)', function (data) {
-      let load = layer.load(0, {
-        shade: 0.5
-      });
-      view.req({
-        url: '/index.php/'+submit_url,
-        data: data.field,
-        type: "post",
-        dataType: "json",
-        success: function (res) {
-          layer.close(load);
-          if (res.code === '200') {
-            layer.msg("成功",{time: 2000},function () {
-              window.location.reload();
+        form.on('submit(submit)', function (data) {
+            let load = layer.load(0, {
+                shade: 0.5
             });
-          } else {
-            layer.msg(res.msg,{time: 2000},function () {
-              window.location.reload();
+            let checkData = window.JSON.stringify(tree.getChecked('rolesTree'));
+            data.field.role_auth = checkData
+            view.req({
+                url: '/index.php/' + submit_url,
+                data: {
+                    data: data.field,
+                },
+                type: "post",
+                dataType: "json",
+                success: function (res) {
+                    layer.close(load);
+                    if (res.code === 200) {
+                        layer.msg(res.msg, {time: 2000}, function () {
+                            window.location.reload();
+                        });
+                    } else {
+                        layer.msg(res.msg, {time: 2000}, function () {
+                            window.location.reload();
+                        });
+                    }
+                }
             });
-          }
-        }
-      });
-      return false;
+            return false;
+        });
+
     });
-
-  });
-
-  //获取参数
-  function getQueryletiable(letiable) {
-    let query = window.location.search.substring(1);
-    let lets = query.split("&");
-    for (let i = 0; i < lets.length; i++) {
-      let pair = lets[i].split("=");
-      if (pair[0] == letiable) {
-        return pair[1];
-      }
-    }
-    return (false);
-  }
 </script>
 </body>
 </html>
