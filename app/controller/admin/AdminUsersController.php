@@ -6,6 +6,7 @@ use app\exception\ErrorCode;
 use app\model\UsersModel;
 use app\model\UsersModel as Model;
 use Siam\JWT;
+use think\helper\Str;
 
 class AdminUsersController extends AdminBaseController
 {
@@ -20,22 +21,24 @@ class AdminUsersController extends AdminBaseController
 
         $page  = input('page', 1);
         $limit = input('limit', 10);
-    
-        $result = Model::page($page, $limit)->order('u_id','DESC')->select();
+
+        $result = Model::page($page, $limit)->order('u_id', 'DESC')->select();
         $count  = Model::count();
-        return $this->send(ErrorCode::SUCCESS,['lists'=>$result,'count'=>$count]);
+        return $this->send(ErrorCode::SUCCESS, ['lists' => $result, 'count' => $count]);
 
 
     }
 
     public function get_one()
     {
-        $id = input('u_id');
+        $id     = input('u_id');
         $result = Model::find($id);
-        if (!$result){
-            return $this->send(ErrorCode::THIRD_PART_ERROR,[],'获取失败');
+        if (!$result) {
+            return $this->send(ErrorCode::THIRD_PART_ERROR, [], '获取失败');
         }
-        return $this->send(ErrorCode::SUCCESS,['lists'=>$result]);
+        $result['u_auth']  = explode(',', $result['u_auth']);
+        $result['role_id'] = explode(',', $result['role_id']);
+        return $this->send(ErrorCode::SUCCESS, ['lists' => $result]);
     }
 
     /**
@@ -44,14 +47,36 @@ class AdminUsersController extends AdminBaseController
     public function add()
     {
 
-        $param = input();
+        $param     = input('data');
+        $role_auth = json_decode($param['role_auth'], true);
+        $role_id   = [];
+        $auth      = [];
 
-        $start = Model::create($param);
+        foreach ($param as $key => $val) {
+            if (!Str::startsWith($key, 'u_role')) {
+                continue;
+            }
+            $role_id[] = $val;
+        }
+        foreach ($role_auth as $value) {
+            $auth[] = $value['id'];
+        }
+
+        $data      = [
+            'u_name'      => $param['u_name'],
+            'p_u_id'      => $this->who['u_id'],
+            'u_password'  => $param['u_password'],
+            'role_id'     => implode(',', $role_id),
+            'u_auth'      => implode(',', $auth),
+            'create_time' => date('Y-m-d H:i:s'),
+        ];
+        $userModel = new UsersModel();
+        $start     = $userModel->addUser($data);
 
         if (!$start) {
-            return $this->send(ErrorCode::THIRD_PART_ERROR,[],'新增失败');
+            return $this->send(ErrorCode::THIRD_PART_ERROR, [], '新增失败');
         }
-        return $this->send(ErrorCode::SUCCESS);
+        return $this->send(ErrorCode::SUCCESS, [], '成功');
     }
 
     /**
@@ -59,14 +84,37 @@ class AdminUsersController extends AdminBaseController
      */
     public function edit()
     {
-        $param = input();
+        $param = input('data');
+        $this->validate(['u_id' => 'require'], $param);
+
+        $param['update_time'] = date('Y-m-d H:i:s');
+        $role_auth            = json_decode($param['role_auth'], true);
+        $role_id              = [];
+        $auth                 = [];
+
+        foreach ($param as $key => $val) {
+            if (!Str::startsWith($key, 'u_role')) {
+                continue;
+            }
+            $role_id[] = $val;
+        }
+        foreach ($role_auth as $value) {
+            $auth[] = $value['id'];
+        }
+
+        $data  = [
+            'u_name'      => $param['u_name'],
+            'role_id'     => implode(',', $role_id),
+            'u_auth'      => implode(',', $auth),
+            'update_time' => date('Y-m-d H:i:s'),
+        ];
         $start = Model::find($param['u_id']);
-        $res   = $start->save($param);
+        $res   = $start->save($data);
 
         if (!$res) {
-            return $this->send(ErrorCode::THIRD_PART_ERROR,[],'编辑失败');
+            return $this->send(ErrorCode::THIRD_PART_ERROR, [], '编辑失败');
         }
-        return $this->send(ErrorCode::SUCCESS);
+        return $this->send(ErrorCode::SUCCESS, [], '成功');
     }
 
     /**
@@ -78,7 +126,7 @@ class AdminUsersController extends AdminBaseController
 
         $result = Model::destroy($id);
 
-        return $this->send(ErrorCode::SUCCESS,[],'ok');
+        return $this->send(ErrorCode::SUCCESS, [], 'ok');
     }
 
     public function login()
@@ -91,22 +139,22 @@ class AdminUsersController extends AdminBaseController
         $password = input('u_password');
 
         $where = [
-            'u_account'  => input('u_account'),
+            'u_account' => input('u_account'),
         ];
-        $user = UsersModel::where($where)->find();
-        if (!$user) return $this->send(ErrorCode::DB_DATA_DOES_NOT_EXIST,[],'用户信息不存在');
+        $user  = UsersModel::where($where)->find();
+        if (!$user) return $this->send(ErrorCode::DB_DATA_DOES_NOT_EXIST, [], '用户信息不存在');
 
-        if ($user['u_password'] !== md5($password)){
-            return $this->send(ErrorCode::AUTH_USER_CANNOT,[],'密码错误');
+        if ($user['u_password'] !== md5($password)) {
+            return $this->send(ErrorCode::AUTH_USER_CANNOT, [], '密码错误');
         }
 
         if ($user['u_status'] == '0') {
-            return $this->send(ErrorCode::AUTH_USER_BAN,[],'用户被封禁');
+            return $this->send(ErrorCode::AUTH_USER_BAN, [], '用户被封禁');
         }
 
-        $jwt = JWT::getInstance();
-        $jwtData = $user->toArray();
-        $jwtToken =  $jwt->setIss('SiamAdmin')->setSecretKey('siam_admin_key')
+        $jwt      = JWT::getInstance();
+        $jwtData  = $user->toArray();
+        $jwtToken = $jwt->setIss('SiamAdmin')->setSecretKey('siam_admin_key')
             ->setSub("SiamAdmin")->setWith($jwtData)->make();
 
         return $this->send(ErrorCode::SUCCESS, [

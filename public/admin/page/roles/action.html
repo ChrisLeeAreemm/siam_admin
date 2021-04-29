@@ -30,13 +30,6 @@
                                    class="layui-input">
                         </div>
                     </div>
-                    <div class="layui-form-item" style="display: none;">
-                        <label class="layui-form-label">token</label>
-                        <div class="layui-input-inline">
-                            <input type="text" name="__token__" value="{$Request.token}" readonly lay-verify="required"
-                                   autocomplete="off" lass="layui-input">
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -116,7 +109,7 @@
                 shade: 0.5
             });
             //获得选中的节点
-            var checkData = window.JSON.stringify(tree.getChecked('rolesTree'));
+            let checkData = window.JSON.stringify(tree.getChecked('rolesTree'));
             view.req({
                 url: '/index.php/' + submit_url,
                 data: {
