@@ -8,11 +8,12 @@ use app\model\SystemModel;
 class MenuHelper
 {
     public $auth_list = [];
+    protected $order;
 
     /**
-     * 列表转化树形结构
+     * 列表转换树形结构
      * @param $list
-     * @return array
+     * @return $this
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
@@ -20,23 +21,43 @@ class MenuHelper
     public function list_to_tree($list)
     {
         $newList = [];
-        foreach ($list as $key => $t){
+        foreach ($list as $key => $t) {
             $newList[$t['auth_id']] = $t;
         }
 
         $this->auth_list = $newList;
 
-        $System = SystemModel::where(['id' => 1])->field('auth_order')->find()->toArray();
-        $order  = json_decode($System['auth_order'], TRUE);
-        return $this->test($order);
+        $System      = SystemModel::where(['id' => 1])->field('auth_order')->find()->toArray();
+        $order       = json_decode($System['auth_order'], TRUE);
+        $this->order = $order;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTree()
+    {
+        return $this->AuthTree();
+    }
+
+    /**
+     * @return array
+     */
+    public function getTreeRoles()
+    {
+        return $this->AuthTreeRules();
     }
 
     /**
      * @param $order
      * @return array
      */
-    private function test($order)
+    private function AuthTree($order = '')
     {
+        if (!$order) {
+            $order = $this->order;
+        }
         $return = [];
         foreach ($order as $key => $value) {
             // 未有权限
@@ -46,9 +67,37 @@ class MenuHelper
 
             $tem = $this->auth_list[$value['id']];
             if (isset($value['child'])) {
-                $tem['child'] = $this->test($value['child']);
+                $tem['child'] = $this->AuthTree($value['child']);
             }
             $return[] = $tem;
+        }
+        return $return;
+    }
+
+    /**
+     * @param $order
+     * @return array
+     */
+    private function AuthTreeRules($order = '')
+    {
+        if (!$order) {
+            $order = $this->order;
+        }
+
+        $return = [];
+        foreach ($order as $key => $value) {
+            // 未有权限
+            if (empty($this->auth_list[$value['id']])) {
+                continue;
+            }
+
+            $tem          = $this->auth_list[$value['id']];
+            $res['id']    = $tem['auth_id'];
+            $res['title'] = $tem['auth_name'];
+            if (isset($value['child'])) {
+                $res['children'] = $this->AuthTreeRules($value['child']);
+            }
+            $return[] = $res;
         }
         return $return;
     }
@@ -59,8 +108,8 @@ class MenuHelper
     public function tree_to_html($list)
     {
         $html = '';
-        foreach ($list as $key => $value){
-            if (!empty($value['child'])){
+        foreach ($list as $key => $value) {
+            if (!empty($value['child'])) {
 
                 $html .= <<<html
 <li class="layui-nav-item">
@@ -71,25 +120,25 @@ class MenuHelper
     <dl class="layui-nav-child">
 html;
 
-                foreach ($value['child'] as $v){
-                    if (!empty($v['child'])){
+                foreach ($value['child'] as $v) {
+                    if (!empty($v['child'])) {
                         // 三级
                         $html .= <<<html
 <dd>
     <a href="javascript:;">{$v['auth_name']}</a>
     <dl class="layui-nav-child">
 html;
-                        foreach ($v['child'] as $threev){
+                        foreach ($v['child'] as $threev) {
                             $temUrl = url($threev['auth_rules']);
-                            $html.= <<<html
+                            $html   .= <<<html
 <dd><a lay-href="{$temUrl}">{$threev['auth_name']}</a></dd>
 html;
                         }
-                        $html.="</dl>";
+                        $html .= "</dl>";
                         // 三级结束
-                    }else{
+                    } else {
                         $temUrl = url($v['auth_rules']);
-                        $html .= <<<html
+                        $html   .= <<<html
 <dd>
     <a lay-href="{$temUrl}">
     {$v['auth_name']}
@@ -99,10 +148,10 @@ html;
                     }
                 }
 
-                $html.="</dl></li>";
+                $html .= "</dl></li>";
                 // 二级结束
 
-            }else{
+            } else {
                 // 一级的
                 $temUrl = url("{$value['auth_rules']}");
 

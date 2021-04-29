@@ -4,78 +4,113 @@ namespace app\controller\admin;
 
 use app\exception\ErrorCode;
 use app\model\RolesModel as Model;
+use think\response\Json;
 
 class AdminRolesController extends AdminBaseController
 {
     /**
-     * @return mixed
-     * @throws \think\Exception
+     * @return Json
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
      */
     public function get_list()
     {
-
+        
         $page  = input('page', 1);
         $limit = input('limit', 10);
-    
-        $result = Model::page($page, $limit)->order('role_id','DESC')->select();
+        
+        $result = Model::page($page, $limit)->order('role_id', 'DESC')->select();
         $count  = Model::count();
-        return $this->send(ErrorCode::SUCCESS,['lists'=>$result,'count'=>$count]);
-
-
+        return $this->send(ErrorCode::SUCCESS, ['lists' => $result, 'count' => $count]);
+        
+        
     }
-
-    public function get_one()
+    
+    /**
+     * @return Json
+     * @throws \app\exception\AuthException
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function get_one(): Json
     {
-        $id = input('role_id');
+        $this->validate(['role_id' => 'require'], input());
+        $id     = input('role_id');
         $result = Model::find($id);
-        if (!$result){
-            return $this->send(ErrorCode::THIRD_PART_ERROR,[],'获取失败');
+        if (!$result) {
+            return $this->send(ErrorCode::THIRD_PART_ERROR, [], '获取失败');
         }
-        return $this->send(ErrorCode::SUCCESS,['lists'=>$result]);
+        $result['role_auth'] = explode(',', $result['role_auth']);
+        return $this->send(ErrorCode::SUCCESS, ['lists' => $result]);
     }
-
+    
     /**
-     * @return \think\response\Json
+     * @return Json
      */
-    public function add()
+    public function add(): Json
     {
-
-        $param = input();
-
-        $start = Model::create($param);
-
+        $param                = input();
+        $param['create_time'] = time();
+        $roles_arr            = json_decode($this->request->param('role_auth'), true);
+        $arr                  = [];
+        foreach ($roles_arr as $value) {
+            $arr[] = $value['id'];
+        }
+        $param['role_auth'] = implode(',', $arr);
+        $start              = Model::create($param);
+        
         if (!$start) {
-            return $this->send(ErrorCode::THIRD_PART_ERROR,[],'新增失败');
+            return $this->send(ErrorCode::THIRD_PART_ERROR, [], '新增失败');
         }
-        return $this->send(ErrorCode::SUCCESS);
+        return $this->send(ErrorCode::SUCCESS, [], '成功');
     }
-
+    
     /**
-     * @return \think\response\Json
+     * @return Json
+     * @throws \app\exception\AuthException
      */
-    public function edit()
+    public function edit(): Json
     {
-        $param = input();
-        $start = Model::find($param['role_id']);
-        $res   = $start->save($param);
-
-        if (!$res){
-            return $this->send(ErrorCode::THIRD_PART_ERROR,[],'编辑失败');
-
+        $this->validate(['role_id' => 'require'], input());
+        
+        $param                = input();
+        $param['update_time'] = time();
+        
+        $roles_arr = json_decode($this->request->param('role_auth'), true);
+        $arr       = [];
+        foreach ($roles_arr as $value) {
+            $arr[] = $value['id'];
+        }
+        try {
+            $start = Model::find($param['role_id']);
+        } catch (\Exception $e) {
+            return $this->send(ErrorCode::DB_EXCEPTION, [], $e->getMessage());
+        }
+        
+        $param['role_auth'] = implode(',', $arr);
+        $res                = $start->save($param);
+        
+        if (!$res) {
+            return $this->send(ErrorCode::DB_EXCEPTION, [], '编辑失败');
         }
         return $this->send(ErrorCode::SUCCESS);
     }
-
+    
     /**
-     * @return \think\response\Json
+     * @return Json
      */
-    public function delete()
+    public function delete(): Json
     {
         $id = input('role_id');
-
+        
         $result = Model::destroy($id);
-
-        return $this->send(ErrorCode::SUCCESS,[],'ok');
-
+        if (!$result) {
+            return $this->send(ErrorCode::DB_EXCEPTION, [], '失败');
+        }
+        
+        return $this->send(ErrorCode::SUCCESS, [], '成功');
+        
     }
 }

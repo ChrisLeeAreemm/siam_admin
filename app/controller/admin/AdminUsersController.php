@@ -5,7 +5,6 @@ namespace app\controller\admin;
 use app\exception\ErrorCode;
 use app\model\UsersModel;
 use app\model\UsersModel as Model;
-use Siam\Api;
 use Siam\JWT;
 
 class AdminUsersController extends AdminBaseController
