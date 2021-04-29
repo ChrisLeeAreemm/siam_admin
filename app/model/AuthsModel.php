@@ -22,14 +22,10 @@ class AuthsModel extends BaseModel
     protected $name = 'auths';
     protected $pk   = 'auth_id';
     /**
-     * 常量权限类型 0菜单1按钮2后台特有菜单3后台特有按钮4员工特有菜单5员工特有按钮
+     * 常量权限类型 0菜单1按钮
      */
     const MENU = 0;
     const BUTTON = 1;
-    const ADMIN_MENU = 2;
-    const ADMIN_BUTTON = 3;
-    const STAFFS_MENU = 4;
-    const STAFFS_BUTTON = 5;
 
     /**
      * 获取user个人权限
@@ -43,17 +39,11 @@ class AuthsModel extends BaseModel
         $auth_type_default = [
             static::MENU,
             static::BUTTON,
-            static::ADMIN_MENU,
-            static::ADMIN_BUTTON,
         ];
         if ($u_id == 1){
             $auth_type_default = [
                 static::MENU,
                 static::BUTTON,
-                static::ADMIN_MENU,
-                static::ADMIN_BUTTON,
-                static::STAFFS_MENU,
-                static::STAFFS_BUTTON,
             ];
         }
 
@@ -68,27 +58,26 @@ class AuthsModel extends BaseModel
         }else{
             $auth_type = $auth_type_default;
         }
-
         $u_auth_ids = explode(',', UsersModel::find(['u_id' => $u_id])->u_auth);
-        $where = [
-            'auth_type' => ['IN', implode(',',$auth_type)],
-            'auth_id'   => ['IN', $u_auth_ids],
-        ];
 
-        if ($u_id == 1){
-            unset($where['auth_id']);
+        $map[] = ['auth_type', 'in',$auth_type];
+        if ($u_id !== 1){
+            $map = [
+                ['auth_id', 'in', $u_auth_ids],
+                ['auth_type', 'in',$auth_type],
+            ];
         }
 
-        $list = $this->getAuth($where);
+        $list = $this->getAuth($map);
+
 
         return $list;
     }
 
-    protected function getAuth($where)
+    protected function getAuth($map)
     {
-        // 这里做了更改 只要是管理员 都能查看员工权限并修改 后期有需要再更改
-        // 目前添加了判断前后台特有权限
-        $list = $this::where($where)->select()->toArray();
+        // 这里做了更改 只要是 管理员 都能查看员工权限并修改
+        $list = $this::where($map)->select();
         if (!empty($list)) {
             return $list;
         }
