@@ -13,11 +13,12 @@
 <body>
 
 <div class="layui-form" lay-filter="user" style="padding: 0">
-    <div class="layui-card">
 
-    <div class="layui-row layui-col-space30">
+    <div class="layui-row layui-col-space15">
         <div class="layui-col-md6">
-                <div class="layui-card-header">用户信息</div>
+            <div class="layui-card">
+
+            <div class="layui-card-header">用户信息</div>
                 <div class="layui-card-body">
 
                     <div class="layui-form-item">
@@ -47,8 +48,14 @@
                         <div class="layui-input-block" id="role_id">
                         </div>
                     </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit lay-filter="submit">立即提交</button>
+                            <button type="reset" class="layui-btn layui-btn-primary">重新填写</button>
+                        </div>
+                    </div>
                 </div>
-
+            </div>
         </div>
         <div class="layui-col-md4">
             <div class="layui-form-item">
@@ -62,14 +69,7 @@
             </div>
         </div>
 
-        <div class="layui-form-item">
-            <div class="layui-input-block">
-                <button class="layui-btn" lay-submit lay-filter="submit">立即提交</button>
-                <button type="reset" class="layui-btn layui-btn-primary">重新填写</button>
-            </div>
-        </div>
     </div>
-</div>
 </div>
 </div>
 

@@ -68,7 +68,8 @@ class AdminAuthsController extends AdminBaseController
 <li class="dd-item" data-id="{$value['auth_id']}">
     <div class="dd-handle">{$value['auth_name']} </div>
     <div class="dd-btn" style="position: absolute;right: 5px;top: 7px;">
-        <a href="javascript:ediAuth('{$value['auth_id']}');">编辑</a>
+        <a href="javascript:editAuth('{$value['auth_id']}');" title="编辑"><i class="layui-icon">&#xe642;</i></a>
+        <a href="javascript:delAuth('{$value['auth_id']}');" title="删除"><i class="layui-icon">&#xe640;</i></a>
     </div>
 html;
 
@@ -97,15 +98,9 @@ html;
      */
     public function add()
     {
-        $model = new Model();
-        $res   = $model->save([
-            'auth_name'   => $this->request->param('auth_name'),
-            'auth_rules'  => $this->request->param('auth_rules'),
-            'auth_type'   => $this->request->param('auth_type'),
-            'create_time' => time(),
-            'update_time' => time(),
-        ]);
-
+        $param = input();
+        $param['create_time'] = $param['update_time'] = date('Y-m-d H:i:s');
+        $res   = Model::create($param);
         if (!$res) {
             return $this::send(ErrorCode::DB_EXCEPTION, [], 'ERROR');
         }
@@ -113,7 +108,7 @@ html;
         $system_info = SystemModel::find(['id' => 1])->toArray();
         $authOrder   = json_decode($system_info['auth_order'], true);
         $authOrder[] = [
-            'id' => $model->auth_id
+            'id' => $res->auth_id
         ];
         $SystemModel = SystemModel::find(1);
         $res         = $SystemModel->force()->save(['auth_order' => json_encode($authOrder)]);
@@ -130,6 +125,7 @@ html;
     public function edit()
     {
         $param = input();
+        $param['update_time'] = date('Y-m-d H:i:s');
         $start = Model::find($param['auth_id']);
         $res   = $start->save($param);
 
@@ -137,7 +133,7 @@ html;
             return $this->send(ErrorCode::THIRD_PART_ERROR, [], '编辑失败');
 
         }
-        return $this->send(ErrorCode::SUCCESS);
+        return $this->send(ErrorCode::SUCCESS,[],'成功');
     }
 
     /**
@@ -148,8 +144,11 @@ html;
         $id = input('auth_id');
 
         $result = Model::destroy($id);
+        if (!$result){
+            return $this->send(ErrorCode::DB_EXCEPTION, [], '失败');
 
-        return $this->send(ErrorCode::SUCCESS, [], 'ok');
+        }
+        return $this->send(ErrorCode::SUCCESS, [], '成功');
 
     }
 }

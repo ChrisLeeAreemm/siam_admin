@@ -22,15 +22,7 @@ class AdminRolesController extends AdminBaseController
         $page  = input('page', 1);
         $limit = input('limit', 10);
 
-        $result = Model::page($page, $limit)->order('role_id', 'DESC')->select()->toArray();
-        foreach ($result as &$value) {
-            $arr = explode(',', $value['role_auth']);
-            $res = AuthsModel::field('auth_name')->select($arr)->toArray();
-            foreach ($res as $vo) {
-                $auth[] = $vo['auth_name'];
-            }
-            $value['role_auth'] = implode(',', $auth);
-        }
+        $result = Model::page($page, $limit)->order('role_id', 'DESC')->select();
         $count = Model::count();
         return $this->send(ErrorCode::SUCCESS, ['lists' => $result, 'count' => $count]);
 
