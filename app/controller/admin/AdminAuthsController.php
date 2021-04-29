@@ -17,6 +17,7 @@ class AdminAuthsController extends AdminBaseController
     {
         $auths       = new Model();
         $list        = $auths->get_admin_auths_by_u_id(1);
+//        print_r($list);
         $menu_helper = new MenuHelper();
         $tree        = $menu_helper->list_to_tree($list)->getTree();
         $html        = $this->makeTree($tree);
