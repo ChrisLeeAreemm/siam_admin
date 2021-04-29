@@ -122,6 +122,12 @@ class PlugsHttpMonitorController extends PlugsBaseController
         return $this->send('200', ['result' => $content]);
     }
     
+    /**
+     * type 1 清空所有 2 清空一个月之前 3 清空非自动注入的数据
+     * @return \think\response\Json
+     * @throws \app\exception\AuthException
+     * @throws \think\db\exception\DbException
+     */
     public function clear()
     {
         $this->validate(['type' => 'require'], input());
@@ -146,7 +152,7 @@ class PlugsHttpMonitorController extends PlugsBaseController
                 return $this->send(ErrorCode::DB_DATA_DOES_NOT_EXIST, [], '失败');
             }
         }
-        return $this->send('200');
+        return $this->send(ErrorCode::SUCCESS, [], '成功');
         
         
     }

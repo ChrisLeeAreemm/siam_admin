@@ -93,6 +93,12 @@ class ExceptionLoggerController extends PlugsBaseController
         return ob_get_clean();
     }
     
+    /**
+     * type 1 清空所有 2 清空7天前
+     * @return \think\response\Json|void
+     * @throws \app\exception\AuthException
+     * @throws \think\db\exception\DbException
+     */
     public function delete()
     {
         $this->validate(['type' => 'require'], input());
@@ -105,9 +111,7 @@ class ExceptionLoggerController extends PlugsBaseController
         
         if ($type == 2) {
             $day = date('Ymd', strtotime("-7 day"));
-            $del = PlugsExceptionLoggerModel::destroy(function ($query) use ($day) {
-                $query->where('exception_date', '<', $day);
-            });
+            $del = PlugsExceptionLoggerModel::where('exception_date', '<=', $day)->delete();
             if (!$del) {
                 return $this->send(ErrorCode::DB_EXCEPTION, [], '失败');
             }

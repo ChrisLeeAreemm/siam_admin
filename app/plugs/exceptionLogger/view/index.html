@@ -138,45 +138,31 @@
             }
         })
 
+        //删除
         $('#del_all').on('click', function () {
-            layer.confirm('确认删除所有数据?', {icon: 3, title: '提示'}, function (index) {
-                view.req({
-                    url: "/index.php/plugs/exception_logger/api/delete",
-                    data: {
-                        type: 1
-                    },
-                    type: "post",
-                    dataType: "json",
-                    success: function (res) {
-                        if (res.code == 200) {
-                            window.location.reload();
-                        } else {
-                            layer.msg(res.msg, {
-                                icon: 2
-                            })
-                        }
-                    }
-                });
-
-                layer.close(index);
-            });
+            clear('确认删除所有数据?', 1);
         });
         $('#del_seven').on('click', function () {
-            layer.confirm('确认删除七天前数据?', {icon: 3, title: '提示'}, function (index) {
+            clear('确认删除七天前数据?', 2)
+        });
+
+        function clear(confirm, type) {
+            let url = "/index.php/plugs/exception_logger/api/delete";
+            layer.confirm(confirm, {icon: 3, title: '提示'}, function (index) {
                 view.req({
-                    url: "/index.php/plugs/exception_logger/api/delete",
+                    url: url,
                     data: {
-                        type: 2
+                        type: type
                     },
                     type: "post",
                     dataType: "json",
                     success: function (res) {
                         if (res.code === 200) {
-                            layer.msg(res.msg, {icon:1,time: 2000}, function () {
+                            layer.msg(res.msg, {icon: 1, time: 2000}, function () {
                                 window.location.reload();
                             });
                         } else {
-                            layer.msg(res.msg, {icon:2,time: 2000}, function () {
+                            layer.msg(res.msg, {icon: 2, time: 2000}, function () {
                                 window.location.reload();
                             });
                         }
@@ -185,8 +171,8 @@
 
                 layer.close(index);
             });
-        });
 
+        }
     });
 
 
