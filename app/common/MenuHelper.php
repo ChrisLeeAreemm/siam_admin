@@ -59,6 +59,7 @@ class MenuHelper
     }
 
     /**
+     * 权限列表数组
      * @param $order
      * @return array
      */
@@ -84,6 +85,7 @@ class MenuHelper
     }
 
     /**
+     * 菜单的权限数组
      * @param $order
      * @return array
      */
@@ -98,12 +100,13 @@ class MenuHelper
             if (empty($this->auth_list[$value['id']])) {
                 continue;
             }
-
+            //拼接数组
             $tem          = $this->auth_list[$value['id']];
             $res['title'] = $tem['auth_name'];
             $res['icon']  = $tem['auth_icon'];
             $res['href']  = $tem['auth_rules'];
             $res['target']  = '_self';
+            //为空则是最高栏，无跳转
             if (!empty($res['href'])){
                 if (!Str::startsWith($tem['auth_rules'], '/page') && !Str::startsWith($tem['auth_rules'], 'page') && !Str::startsWith($tem['auth_rules'], 'http')) {
                     $res['href'] = "/index.php/" . $tem['auth_rules'];
@@ -120,6 +123,7 @@ class MenuHelper
     }
 
     /**
+     * 角色的权限列表
      * @param $order
      * @return array
      */
