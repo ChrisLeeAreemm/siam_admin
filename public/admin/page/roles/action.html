@@ -40,16 +40,14 @@
                 </div>
             </div>
 
-
         </div>
-        <div class="layui-col-md8">
+        <div class="layui-col-md4">
             <div class="layui-card">
                 <div class="layui-card-header">权限</div>
                 <div class="layui-card-body">
                     <div id="tree_role"></div>
                 </div>
             </div>
-
         </div>
 
         <div class="layui-form-item">
@@ -64,14 +62,11 @@
 <script src="../../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
 <script src="../../js/lay-config.js?v=2.0.4" charset="utf-8"></script>
 <script>
-    layui.use(['form', 'layer', 'view', 'setter', 'tree', 'util'], function () {
+    layui.use(['form', 'layer', 'view', 'tree'], function () {
         let form = layui.form;
         let layer = layui.layer;
-        let $ = layui.jquery;
         let view = layui.view;
         let tree = layui.tree;
-        let util = layui.util;
-        let setter = layui.setter;
         let submit_url = "/admin/roles/add";
         let get_one_url = "/admin/roles/get_one";
         let role_id = view.getQueryletiable('role_id');
@@ -82,7 +77,7 @@
             dataType: "json",
             success: function (res) {
                 if (res.code === 200) {
-                    var inst1 = tree.render({
+                    tree.render({
                         elem: '#tree_role'  //绑定元素
                         , showCheckbox: true
                         , data: res.data.tree
