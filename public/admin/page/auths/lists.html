@@ -345,9 +345,17 @@
 
                                     <div class="layui-form" action="">
                                         <div class="layui-form-item">
-                                            <label class="layui-form-label">权限</label>
+                                            <label class="layui-form-label">权限名称</label>
                                             <div class="layui-input-block">
                                                 <input type="text" name="auth_name" required lay-verify="required"
+                                                       placeholder="" autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">图标</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="auth_icon" required lay-verify=""
                                                        placeholder="" autocomplete="off" class="layui-input">
                                             </div>
                                         </div>
@@ -362,8 +370,8 @@
                                         <div class="layui-form-item">
                                             <label class="layui-form-label">类型</label>
                                             <div class="layui-input-block">
-                                                <input type="radio" name="auth_type" value="0" title="菜单">
-                                                <input type="radio" name="auth_type" value="1" title="按钮" checked>
+                                                <input type="radio" name="auth_type" value="0" title="菜单" checked>
+                                                <input type="radio" name="auth_type" value="1" title="按钮">
                                             </div>
                                         </div>
 
@@ -451,6 +459,40 @@
                 }
             })
         });
+        window.editAuth = function (auth_id){
+            let url = "/admin/page/auths/action.html?auth_id="+auth_id;
+            layer.open({
+                type: 2,
+                title: "编辑",
+                content: url,
+                area:['80%','90%']
+            })
+        };
+        window.delAuth = function (auth_id){
+            let url = "/index.php/admin/auths/delete";
+            layer.confirm('确认删除?', {icon: 3, title: '提示'}, function (index) {
+                view.req({
+                    url: url,
+                    data: {
+                        auth_id: auth_id
+                    },
+                    type: "post",
+                    dataType: "json",
+                    success: function (res) {
+                        if (res.code === 200) {
+                            layer.msg(res.msg, {icon:1,time: 2000}, function () {
+                                window.location.reload();
+                            });
+                        } else {
+                            layer.msg(res.msg, {icon:2,time: 2000}, function () {
+                                window.location.reload();
+                            });
+                        }
+                    }
+                });
+                layer.close(index);
+            });
+        };
     });
 </script>
 </body>

@@ -13,61 +13,54 @@
 <body>
 
 <div class="layui-form" lay-filter="user" style="padding: 0">
-  <div class="layui-form-item">
-    <label class="layui-form-label">auth_id</label>
-    <div class="layui-input-block">
-      <input type="text" name="auth_id" lay-verify="" autocomplete="off" placeholder="请输入标题" class="layui-input">
-    </div>
-  </div>
-
-  <div class="layui-form-item">
-    <label class="layui-form-label">auth_name</label>
-    <div class="layui-input-block">
-      <input type="text" name="auth_name" lay-verify="" autocomplete="off" placeholder="请输入标题" class="layui-input">
-    </div>
-  </div>
-
-  <div class="layui-form-item">
-    <label class="layui-form-label">auth_rules</label>
-    <div class="layui-input-block">
-      <input type="text" name="auth_rules" lay-verify="" autocomplete="off" placeholder="请输入标题" class="layui-input">
-    </div>
-  </div>
-
-  <div class="layui-form-item">
-    <label class="layui-form-label">auth_type</label>
-    <div class="layui-input-block">
-      <input type="text" name="auth_type" lay-verify="" autocomplete="off" placeholder="请输入标题" class="layui-input">
-    </div>
-  </div>
-
-  <div class="layui-form-item">
-    <label class="layui-form-label">create_time</label>
-    <div class="layui-input-block">
-      <input type="text" name="create_time" lay-verify="" autocomplete="off" placeholder="请输入标题" class="layui-input">
-    </div>
-  </div>
-
-  <div class="layui-form-item">
-    <label class="layui-form-label">update_time</label>
-    <div class="layui-input-block">
-      <input type="text" name="update_time" lay-verify="" autocomplete="off" placeholder="请输入标题" class="layui-input">
-    </div>
-  </div>
-
-
-  <div class="layui-form-item" style="display: none;">
-    <label class="layui-form-label">token</label>
-    <div class="layui-input-inline">
-      <input type="text" name="__token__" value="{$Request.token}" readonly lay-verify="required" autocomplete="off" lass="layui-input">
-    </div>
-  </div>
-
+  <div class="layui-card" style="border: 1px solid #d6d6d6;">
 
   <div class="layui-form-item">
     <div class="layui-input-block">
-      <button class="layui-btn" lay-submit lay-filter="submit">立即提交</button>
-      <button type="reset" class="layui-btn layui-btn-primary">重新填写</button>
+      <input type="hidden" name="auth_id" lay-verify="" autocomplete="off" placeholder="请输入标题" class="layui-input">
+    </div>
+  </div>
+
+    <div class="layui-card-body">
+
+      <div class="layui-form" action="" >
+        <div class="layui-form-item">
+          <label class="layui-form-label">权限名称</label>
+          <div class="layui-input-block">
+            <input type="text" name="auth_name" required lay-verify="required"
+                   placeholder="" autocomplete="off" class="layui-input">
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">图标</label>
+          <div class="layui-input-block">
+            <input type="text" name="auth_icon" required lay-verify=""
+                   placeholder="Layui图标" autocomplete="off" class="layui-input">
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">规则</label>
+          <div class="layui-input-block">
+            <input type="text" name="auth_rules" required lay-verify="required"
+                   placeholder="" autocomplete="off" class="layui-input">
+            规则：模块名+控制器名(首字母大写)+方法名
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">类型</label>
+          <div class="layui-input-block">
+            <input type="radio" name="auth_type" value="0" title="菜单">
+            <input type="radio" name="auth_type" value="1" title="按钮" checked>
+          </div>
+        </div>
+
+        <div class="layui-form-item">
+          <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="submit">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重新填写</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -84,7 +77,7 @@
     let setter = layui.setter;
     let submit_url = "/admin/auths/add";
     let get_one_url = "/admin/auths/get_one";
-    let auth_id = getQueryletiable('auth_id');
+    let auth_id = view.getQueryletiable('auth_id');
     if(auth_id){
       //获取信息
       view.req({
@@ -93,16 +86,14 @@
         type: "get",
         dataType: "json",
         success:function (res){
-          if (res.code === "200"){
+          if (res.code === 200){
             // 初始化赋值
             form.val("user", {
               "auth_id" :res.data.lists.auth_id,
               "auth_name" :res.data.lists.auth_name,
               "auth_rules" :res.data.lists.auth_rules,
               "auth_type" :res.data.lists.auth_type,
-              "create_time" :res.data.lists.create_time,
-              "update_time" :res.data.lists.update_time,
-
+              "auth_icon" :res.data.lists.auth_icon,
             });
             layui.form.render();
           }
@@ -136,19 +127,6 @@
     });
 
   });
-
-  //获取参数
-  function getQueryletiable(letiable) {
-    let query = window.location.search.substring(1);
-    let lets = query.split("&");
-    for (let i = 0; i < lets.length; i++) {
-      let pair = lets[i].split("=");
-      if (pair[0] == letiable) {
-        return pair[1];
-      }
-    }
-    return (false);
-  }
 </script>
 </body>
 </html>
