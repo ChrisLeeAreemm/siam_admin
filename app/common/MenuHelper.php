@@ -100,9 +100,6 @@ class MenuHelper
             }
 
             $tem          = $this->auth_list[$value['id']];
-            if ($tem['auth_id'] == 1 ||$tem['auth_id'] == 2 || $tem['auth_id'] == 3){
-                continue;
-            }
             $res['title'] = $tem['auth_name'];
             $res['icon']  = $tem['auth_icon'];
             $res['href']  = $tem['auth_rules'];
