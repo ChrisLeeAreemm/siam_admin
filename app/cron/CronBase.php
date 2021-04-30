@@ -20,10 +20,10 @@ abstract class CronBase extends \Siam\AbstractInterface\CronBase
      * @throws \Throwable
      */
     public function run(){
-        try{
+        try {
             $data = $this->before();
-            $res = $this->do($data);
-        }catch (\Throwable $throwable){
+            $res  = $this->do($data);
+        } catch (\Throwable $throwable) {
             $this->clearClock();
             throw $throwable;
         }
