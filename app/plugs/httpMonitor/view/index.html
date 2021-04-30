@@ -26,26 +26,34 @@
             <div class="layui-card">
                 <div class="layui-card-header">plugs_http_monitor列表</div>
 
-                    <div style="margin: 10px 10px 10px 10px">
-                        <form class="layui-form layui-form-pane" action="">
-                            <div class="layui-form-item">
-                                <div class="layui-inline">
-                                    <label class="layui-form-label">订单号</label>
-                                    <div class="layui-input-inline">
-                                        <input type="text" name="request_sn" autocomplete="off" class="layui-input">
-                                    </div>
-                                </div>
-                                <div class="layui-inline">
-                                    <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                <div style="margin: 10px 10px 10px 10px">
+                    <form class="layui-form layui-form-pane" action="">
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">订单号</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="request_sn" autocomplete="off" class="layui-input">
                                 </div>
                             </div>
-                        </form>
-                    </div>
+                            <div class="layui-inline">
+                                <button type="submit" class="layui-btn layui-btn-primary" lay-submit
+                                        lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
 
 
                 <div class="layui-btn-group wechat_cross_btn_group">
                     <button class="layui-btn layui-btn-sm" id="clear" lay-text="清空">
                         一键清空
+                    </button>
+                    <button class="layui-btn layui-btn-sm" id="clear_m" lay-text="清空一个月前">
+                        清空一个月前
+                    </button>
+                    <button class="layui-btn layui-btn-sm" id="clear_on" lay-text="清空自动注入数据">
+                        清空自动注入数据
                     </button>
                 </div>
                 <div class="layui-card-body">
@@ -67,14 +75,14 @@
 <script src="__ADMIN__/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
 <script src="__ADMIN__/js/lay-config.js?v=2.0.4" charset="utf-8"></script>
 <script>
-    layui.use([ 'table', 'jquery','setter','view','form'], function () {
+    layui.use(['table', 'jquery', 'setter', 'view', 'form'], function () {
         let table = layui.table;
         let $ = layui.jquery;
         let setter = layui.setter;
         let view = layui.view;
         let form = layui.form;
 
-            table.render({
+        table.render({
             elem: '#lists'
             , url: "/index.php/plugs/http_monitor/api/get_list"
             , where: {
@@ -92,7 +100,7 @@
             , response: {
                 statusCode: 200
             }
-            , parseData: function(res){
+            , parseData: function (res) {
                 return {
                     "code": res.code,
                     "msg": res.msg,
@@ -118,7 +126,7 @@
         });
 
         //添加
-        $('#add_btn').click(function (){
+        $('#add_btn').click(function () {
             let url = "/admin/page/plugs_http_monitor/action.html";
             layer.open({
                 type: 2,
@@ -127,17 +135,43 @@
                 area: ['70%', '90%']
             });
         });
-        $("#clear").on("click", function(){
-            view.req({
-                url:"/index.php/plugs/http_monitor/clear",
-                data:{
-                },
-                success(res){
-                    $(".layui-laypage-btn").click();
-                },
-            });
+        $("#clear").on("click", function () {
+            clear('确定删除所有数据?', 1);
         });
+        $("#clear_m").on("click", function () {
+            clear('确定删除一个月前数据?', 2);
+        });
+        $("#clear_on").on("click", function () {
+            clear('确定删除?', 3);
+        });
+        //删除
+        function clear(confirm, type) {
+            let url = "/index.php/plugs/http_monitor/clear";
+            layer.confirm(confirm, {icon: 3, title: '提示'}, function (index) {
+                view.req({
+                    url: url,
+                    data: {
+                        type: type
+                    },
+                    type: "post",
+                    dataType: "json",
+                    success: function (res) {
+                        if (res.code === 200) {
+                            layer.msg(res.msg, {icon: 1, time: 2000}, function () {
+                                window.location.reload();
+                            });
+                        } else {
+                            layer.msg(res.msg, {icon: 2, time: 2000}, function () {
+                                window.location.reload();
+                            });
+                        }
+                    }
+                });
 
+                layer.close(index);
+            });
+
+        }
         // 监听工具条
         table.on('tool(lists)', function (obj) {
             let data = obj.data;
@@ -148,17 +182,17 @@
                     layer.open({
                         type: 2,
                         title: "查看响应",
-                        content: '/index.php/plugs/http_monitor/view_response?id='+data.id,
-                        area:['70%','90%']
+                        content: '/index.php/plugs/http_monitor/view_response?id=' + data.id,
+                        area: ['70%', '90%']
                     });
                     break;
                 case 'resend':
                     view.req({
-                        url:"/index.php/plugs/http_monitor/resend",
-                        data:{
-                            id:data.id
+                        url: "/index.php/plugs/http_monitor/resend",
+                        data: {
+                            id: data.id
                         },
-                        success(res){
+                        success(res) {
                             $(".layui-laypage-btn").click();
                         },
                     });
@@ -169,6 +203,10 @@
         });
         // 监听工具条结束
     });
+
+
+
+
 </script>
 </body>
 

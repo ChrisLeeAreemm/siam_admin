@@ -59,7 +59,14 @@ class AdminSystemController extends AdminBaseController
         return $this->send(ErrorCode::SUCCESS, $arr);
 
     }
-
+    
+    /**
+     * 根据权限获取菜单
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
     public function get_auth()
     {
         //获取权限列表
@@ -69,6 +76,14 @@ class AdminSystemController extends AdminBaseController
         $tree        = $menu_helper->list_to_tree($auth_list)->getTreeAuthMenu();
         return $tree;
     }
+    
+    /**
+     * 获取插件菜单
+     * @return array|false
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
     public function get_plugs()
     {
         $dir = app_path() . 'plugs\\';
