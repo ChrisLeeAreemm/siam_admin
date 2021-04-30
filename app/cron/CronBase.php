@@ -22,7 +22,7 @@ abstract class CronBase extends \Siam\AbstractInterface\CronBase
     {
         //检查状态
         $file        = runtime_path() . 'cron_status.php';
-        $cron_status = json_decode(file_get_contents($file));
+        $cron_status = json_decode(file_get_contents($file),true);
         $className   = basename(str_replace('\\', '/', get_class($this)));
         if (!in_array($className, $cron_status)) {
             return false;

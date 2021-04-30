@@ -38,7 +38,7 @@ class CronDocController extends PlugsBaseController
     public function switchStatus($class_name)
     {
         $file      = runtime_path() . 'cron_status.php';
-        $file_arr = json_decode(file_get_contents($file));
+        $file_arr = json_decode(file_get_contents($file),true);
         //存在则不改变
         if (!in_array($class_name, $file_arr)) {
             return false;
@@ -78,7 +78,7 @@ EOL;
             return $this->send(ErrorCode::SUCCESS, [], 'SUCCESS');
         }
 
-        $file_arr = json_decode(file_get_contents($file));
+        $file_arr = json_decode(file_get_contents($file),true);
         //开启
         if ($type == 1) {
             //存在则不改变
