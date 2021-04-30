@@ -5,7 +5,6 @@ namespace app\plugs\cronDoc\controller;
 
 use app\exception\ErrorCode;
 use app\plugs\PlugsBaseController;
-use think\helper\Str;
 
 class CronDocController extends PlugsBaseController
 {
@@ -38,6 +37,9 @@ class CronDocController extends PlugsBaseController
     public function switchStatus($class_name)
     {
         $file      = runtime_path() . 'cron_status.php';
+        if (!file_exists($file)) {
+            return false;
+        }
         $file_arr = json_decode(file_get_contents($file),true);
         //存在则不改变
         if (!in_array($class_name, $file_arr)) {
