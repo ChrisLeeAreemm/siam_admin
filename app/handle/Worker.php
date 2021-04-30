@@ -11,6 +11,11 @@ class Worker
 
     public function onWorkerInit()
     {
+        // 取消ob 直接输出到浏览器
+        Timer::add(1, function(){
+            ob_end_flush();
+        },[], false);
+
         // 数据库心跳
         Timer::add(5 , function(){
             $connect = Db::instance();
