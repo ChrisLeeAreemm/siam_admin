@@ -43,5 +43,6 @@ class Plugs extends PlugsBase
             return $this->pre_render_file(__DIR__."/view/index.html");
         });
         Route::any('plugs/cron-doc/api/get_list', 'app\plugs\cronDoc\controller\CronDocController@get_list');
+        Route::any('plugs/cron-doc/api/online_switch', 'app\plugs\cronDoc\controller\CronDocController@online_switch');
     }
 }
