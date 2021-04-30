@@ -79,62 +79,42 @@
 
             switch (layEvent) {
                 case 'open':
-                    layer.confirm('确认开启?', {icon: 3, title: '提示'}, function (index) {
-                        view.req({
-                            url: "/index.php/plugs/cron-doc/api/online_switch",
-                            data: {
-                                className: [data.class_name],
-                                type: 1
-                            },
-                            type: "post",
-                            dataType: "json",
-                            success: function (res) {
-                                if (res.code === 200) {
-                                    layer.msg(res.msg, {icon:1,time: 2000}, function () {
-                                        window.location.reload();
-                                    });
-                                } else {
-                                    layer.msg(res.msg, {icon:2,time: 2000}, function () {
-                                        window.location.reload();
-                                    });
-                                }
-                            }
-                        });
-
-                        layer.close(index);
-                    });
+                    online_switch('确认开启?',[data.class_name],1);
                     break;
                 case 'close':
-                    layer.confirm('确认关闭?', {icon: 3, title: '提示'}, function (index) {
-                        view.req({
-                            url: "/index.php/plugs/cron-doc/api/online_switch",
-                            data: {
-                                className: [data.class_name],
-                                type: 2
-                            },
-                            type: "post",
-                            dataType: "json",
-                            success: function (res) {
-                                if (res.code === 200) {
-                                    layer.msg(res.msg, {icon:1,time: 2000}, function () {
-                                        window.location.reload();
-                                    });
-                                } else {
-                                    layer.msg(res.msg, {icon:2,time: 2000}, function () {
-                                        window.location.reload();
-                                    });
-                                }
-                            }
-                        });
-
-                        layer.close(index);
-                    });
+                    online_switch('确认关闭?',[data.class_name],2);
                     break;
                 default:
                     break;
             }
         });
-        // 监听工具条结束
+        function online_switch(confirm,className,type){
+            // 监听工具条结束
+            layer.confirm(confirm, {icon: 3, title: '提示'}, function (index) {
+                view.req({
+                    url: "/index.php/plugs/cron-doc/api/online_switch",
+                    data: {
+                        className: className,
+                        type: type
+                    },
+                    type: "post",
+                    dataType: "json",
+                    success: function (res) {
+                        if (res.code === 200) {
+                            layer.msg(res.msg, {icon:1,time: 2000}, function () {
+                                window.location.reload();
+                            });
+                        } else {
+                            layer.msg(res.msg, {icon:2,time: 2000}, function () {
+                                window.location.reload();
+                            });
+                        }
+                    }
+                });
+
+                layer.close(index);
+            });
+        }
 
     });
 </script>
