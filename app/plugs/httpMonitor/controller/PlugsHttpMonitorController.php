@@ -3,7 +3,6 @@
 namespace app\plugs\httpMonitor\controller;
 
 use app\exception\ErrorCode;
-use app\plugs\httpMonitor\model\PlugsHttpMonitorModel;
 use app\plugs\httpMonitor\model\PlugsHttpMonitorModel as Model;
 use app\plugs\PlugsBaseController;
 use think\App;
@@ -140,14 +139,13 @@ class PlugsHttpMonitorController extends PlugsBaseController
         
         if ($type == 2) {
             $day = date('Y-m-d H:i:s', strtotime("-1 months"));
-            $del = PlugsHttpMonitorModel::where('create_time', '<=', $day)->delete();
+            $del = Model::where('create_time', '<=', $day)->delete();
             if (!$del) {
                 return $this->send(ErrorCode::DB_DATA_DOES_NOT_EXIST, [], '失败');
             }
-            
         }
         if ($type == 3) {
-            $del = PlugsHttpMonitorModel::whereNotNull('request_sn')->delete();
+            $del = Model::whereNull('request_sn')->delete();
             if (!$del) {
                 return $this->send(ErrorCode::DB_DATA_DOES_NOT_EXIST, [], '失败');
             }
