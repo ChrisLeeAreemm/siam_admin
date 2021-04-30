@@ -22,6 +22,10 @@ return [
     'file_monitor_interval' => 2, // 文件监控检测时间间隔（秒）
     'file_monitor_path'     => [], // 文件监控目录 默认监控application和config目录
 
+    'app_init' => function(){
+        (new \app\handle\Worker())->onWorkerInit();
+    },
+
     // 支持workerman的所有配置参数
     'name'                  => 'thinkphp',
     'count'                 => 4,

@@ -904,16 +904,16 @@
         },
         {
             "name": "topthink/think-worker",
-            "version": "v3.0.5",
+            "version": "v3.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/top-think/think-worker.git",
-                "reference": "dc0ac655a0a2efda073ec18e67668bc02d17cabe"
+                "reference": "21dc442aaa50594466ed3ed767af0a68b8b75364"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/top-think/think-worker/zipball/dc0ac655a0a2efda073ec18e67668bc02d17cabe",
-                "reference": "dc0ac655a0a2efda073ec18e67668bc02d17cabe",
+                "url": "https://api.github.com/repos/top-think/think-worker/zipball/21dc442aaa50594466ed3ed767af0a68b8b75364",
+                "reference": "21dc442aaa50594466ed3ed767af0a68b8b75364",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -957,7 +957,11 @@
                 }
             ],
             "description": "workerman extend for thinkphp6.0",
-            "time": "2020-04-30T13:39:47+00:00"
+            "support": {
+                "issues": "https://github.com/top-think/think-worker/issues",
+                "source": "https://github.com/top-think/think-worker/tree/v3.0.6"
+            },
+            "time": "2021-04-26T15:09:47+00:00"
         },
         {
             "name": "webmozart/assert",
@@ -1510,5 +1514,6 @@
         "ext-json": "*",
         "ext-mysqli": "*"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "2.0.0"
 }

@@ -3,16 +3,18 @@
 
 namespace app\handle;
 
+use think\facade\Db;
+use Workerman\Lib\Timer;
 
-use think\worker\Server;
-
-class Worker extends Server
+class Worker
 {
-    protected $socket = 'http://0.0.0.0:8443';
 
-    public function onWorkerStart()
+    public function onWorkerInit()
     {
-        // 定时检测cron
-        
+        // 数据库心跳
+        Timer::add(5 , function(){
+            $connect = Db::instance();
+            $connect->query("select 1");
+        });
     }
 }
