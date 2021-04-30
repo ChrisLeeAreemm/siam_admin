@@ -38,7 +38,7 @@ class CronDocController extends PlugsBaseController
     public function switchStatus($class_name)
     {
         $file      = runtime_path() . 'cron_status.php';
-        $file_arr = include($file);
+        $file_arr = json_decode(file_get_contents($file));
         //存在则不改变
         if (!in_array($class_name, $file_arr)) {
             return false;
@@ -49,7 +49,7 @@ class CronDocController extends PlugsBaseController
     /**
      * 在线开关
      * type 1 开启 2关闭
-     * @param array $className 类名 一维数组 ['classname']
+     * @param string $className 类名
      * @return bool|\think\response\Json
      */
     public function online_switch()
@@ -57,8 +57,7 @@ class CronDocController extends PlugsBaseController
         $this->validate(['className' => 'require', 'type' => 'require'], input());
         $type      = input('type');
         $file      = runtime_path() . 'cron_status.php';
-        $className = json_encode(input('className'));
-
+        $className = input('className');
 
         //不存在文件的情况下
         if (!file_exists($file)) {
@@ -66,12 +65,11 @@ class CronDocController extends PlugsBaseController
             if ($type === 2) {
                 return $this->send(ErrorCode::SUCCESS, [], 'SUCCESS');
             }
+            $className[] = $className;
+            $className = json_encode($className);
             //创建
             $content = <<<EOL
-<?php
-#start
-return $className;
-#end
+$className
 EOL;
             $write   = file_put_contents($file, $content);
             if (!$write) {
@@ -80,36 +78,30 @@ EOL;
             return $this->send(ErrorCode::SUCCESS, [], 'SUCCESS');
         }
 
-
-        $classKey = input('className')[0];
+        $file_arr = json_decode(file_get_contents($file));
         //开启
         if ($type == 1) {
-            $file_arr = include($file);
             //存在则不改变
-            if (in_array($classKey, $file_arr)) {
+            if (in_array($className, $file_arr)) {
                 return $this->send(ErrorCode::SUCCESS, [], 'SUCCESS');
             }
-            $file_arr[] = $classKey;
+            $file_arr[] = $className;
         }
         //关闭
         if ($type == 2) {
-            $file_arr = include($file);
-            if (!in_array($classKey, $file_arr)) {
+            if (!in_array($className, $file_arr)) {
                 return $this->send(ErrorCode::SUCCESS, [], 'SUCCESS');
             }
             //删除
             foreach ($file_arr as $key => $value) {
-                if ($value === $classKey) {
+                if ($value === $className) {
                     unset($file_arr[$key]);
                 }
             }
         }
         $file_arr = json_encode($file_arr);
         $content  = <<<EOL
-<?php
-#start
-return $file_arr;
-#end
+$file_arr
 EOL;
 
 
