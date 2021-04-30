@@ -17,37 +17,17 @@
         <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
             <legend>Cron Doc</legend>
         </fieldset>
-
-        <div id="table"></div>
+        <div id="table" lay-filter="table"></div>
     </div>
 </div>
 
-<script id="tpl_table" type="text/html">
-    <table class="layui-table">
-        <colgroup>
-            <col>
-            <col>
-            <col>
-        </colgroup>
-        <thead>
-        <tr>
-            <th>任务名</th>
-            <th>任务周期</th>
-            <th>下次执行</th>
-            <th>类名</th>
-        </tr>
-        </thead>
-        <tbody>
-            {{#  layui.each(d, function(index, item){ }}
-            <tr>
-                <td>{{ item.name }}</td>
-                <td>{{ item.run_expression }}</td>
-                <td>{{ item.next_run_time }}</td>
-                <td>{{ item.class_name }}</td>
-            </tr>
-            {{#  }); }}
-        </tbody>
-    </table>
+<script type="text/html" id="do">
+    {{# if(d.status === false) { }}
+    <a class="layui-btn layui-btn-xs" lay-event="open">开启</a>
+    {{# } else { }}
+    <a class="layui-btn layui-btn-xs" lay-event="close">关闭</a>
+    {{# } }}
+
 </script>
 
 <script src="__ADMIN__/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
@@ -56,23 +36,85 @@
 <script>
 
 
-    layui.use(['form', 'view', 'laytpl'], function () {
+    layui.use(['form', 'view', 'laytpl','table','setter'], function () {
         let form = layui.form
             , layer = layui.layer
             , view = layui.view
-            , $ = layui.jquery
-            , laytpl = layui.laytpl;
+            , $ = layui.jquery,
+            setter = layui.setter
 
-        view.req({
-            url:"../../plugs/cron-doc/api/get_list",
-            type:"post",
-            dataType:"json",
-            success(res){
-                laytpl(tpl_table.innerHTML).render(res.data.list, function(html){
-                    document.getElementById('table').innerHTML = html;
-                });
+
+    , table = layui.table;
+        table.render({
+            elem: '#table'
+            , url: "/index.php/plugs/cron-doc/api/get_list"
+            , where: {
+                access_token: layui.data(setter.tableName)[setter.request.tokenName]
             }
-        })
+            , cols: [[
+                {field: 'name', title: '任务名'},
+                {field: 'run_expression', title: '任务周期'},
+                {field: 'next_run_time', title: '下次执行'},
+                {field: 'class_name', title: '类名'},
+                {toolbar: '#do', title: '状态',width: 300}
+            ]]
+            , page: true
+            , response: {
+                statusCode: 200
+            }
+            , parseData: function(res){
+                return {
+                    "code": res.code,
+                    "msg": res.msg,
+                    "count": res.data.count,
+                    "data": res.data.list
+                };
+            }
+        });
+
+// 监听工具条
+        table.on('tool(table)', function (obj) {
+            let data = obj.data;
+            let layEvent = obj.event; //获得 lay-event 对应的值
+
+            switch (layEvent) {
+                case 'open':
+                    online_switch('确认开启?',data.class_name,1);
+                    break;
+                case 'close':
+                    online_switch('确认关闭?',data.class_name,2);
+                    break;
+                default:
+                    break;
+            }
+        });
+        function online_switch(confirm,className,type){
+            // 监听工具条结束
+            layer.confirm(confirm, {icon: 3, title: '提示'}, function (index) {
+                view.req({
+                    url: "/index.php/plugs/cron-doc/api/online_switch",
+                    data: {
+                        className: className,
+                        type: type
+                    },
+                    type: "post",
+                    dataType: "json",
+                    success: function (res) {
+                        if (res.code === 200) {
+                            layer.msg(res.msg, {icon:1,time: 2000}, function () {
+                                window.location.reload();
+                            });
+                        } else {
+                            layer.msg(res.msg, {icon:2,time: 2000}, function () {
+                                window.location.reload();
+                            });
+                        }
+                    }
+                });
+
+                layer.close(index);
+            });
+        }
 
     });
 </script>
