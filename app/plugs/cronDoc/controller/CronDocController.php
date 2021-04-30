@@ -34,4 +34,38 @@ class CronDocController extends PlugsBaseController
         return $this->send(ErrorCode::SUCCESS,['list'=>$return],'SUCCESS');
     }
 
+    /**
+     * 在线开关功能 传入类名数组
+     * @param array $className
+     * @return bool
+     */
+    public function OnLineSwitch(array $className): bool
+    {
+        $file      = runtime_path() . 'cron_status.php';
+        $className = json_encode($className);
+        if (!file_exists($file)) {
+
+            $content = <<<EOL
+<?php
+return
+##start
+
+##end
+;
+EOL;
+            $write   = file_put_contents($file, $content);
+            if (!$write) {
+                return false;
+            }
+        }
+        $content = file_get_contents($file);
+        //更新文件
+        $content = preg_replace('/##start.*##end/sm', $className, $content);
+        $write = file_put_contents($file, $content);
+        if (!$write) {
+            return false;
+        }
+        return true;
+    }
+
 }
