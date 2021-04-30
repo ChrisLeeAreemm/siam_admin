@@ -5,7 +5,6 @@ namespace app\plugs\cronDoc\controller;
 
 use app\exception\ErrorCode;
 use app\plugs\PlugsBaseController;
-use think\helper\Str;
 
 class CronDocController extends PlugsBaseController
 {
@@ -29,21 +28,25 @@ class CronDocController extends PlugsBaseController
                 'run_expression' => $class->run_period()->getExpression(),
                 'next_run_time'  => $class->run_period()->getNextRunDate()->format("Y-m-d H:i:s"),
                 'class_name'     => $class_name,
-                'status'         => $this->switchStatus($class_name),
+                'status'         => $this->get_status($class_name),
             ];
         }
         return $this->send(ErrorCode::SUCCESS,['list'=>$return],'SUCCESS');
     }
 
-    public function switchStatus($class_name)
+    /**
+     * 获取状态
+     * @param $class_name
+     * @return bool
+     */
+    public function get_status($class_name)
     {
         $file      = runtime_path() . 'cron_status.php';
-        $file_arr = json_decode(file_get_contents($file),true);
-        //存在则不改变
-        if (!in_array($class_name, $file_arr)) {
+        if (!file_exists($file)) {
             return false;
         }
-        return true;
+        $file_arr = json_decode(file_get_contents($file),true);
+        return in_array($class_name, $file_arr);
     }
 
     /**
@@ -65,8 +68,8 @@ class CronDocController extends PlugsBaseController
             if ($type === 2) {
                 return $this->send(ErrorCode::SUCCESS, [], 'SUCCESS');
             }
-            $className[] = $className;
-            $className = json_encode($className);
+            $arr[] = $className;
+            $className = json_encode($arr);
             //创建
             $content = <<<EOL
 $className
