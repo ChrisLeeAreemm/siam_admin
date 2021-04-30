@@ -39,18 +39,22 @@ class CronDocController extends PlugsBaseController
      * @param array $className 类名 一维数组 ['classname']
      * @return bool|\think\response\Json
      */
-    public function online_switch(array $className)
+    public function online_switch()
     {
+        $this->validate(['className'=>'require'],input());
         $file      = runtime_path() . 'cron_status.php';
+        $className = input('className/a');
         $className = json_encode($className);
         if (!file_exists($file)) {
-
             $content = <<<EOL
 <?php
 return
-##start
+EOL;
 
-##end
+            $content .= <<<EOL
+
+#start
+#end
 ;
 EOL;
             $write   = file_put_contents($file, $content);
@@ -60,7 +64,7 @@ EOL;
         }
         $content = file_get_contents($file);
         //更新文件
-        $content = preg_replace('/##start.*##end/sm', $className, $content);
+        $content = preg_replace('/#start.*#end/sm', $className, $content);
         $write   = file_put_contents($file, $content);
         if (!$write) {
             return $this->send(ErrorCode::FILE_WRITE_FAIL, [], 'FILE_WRITE_FAIL');
