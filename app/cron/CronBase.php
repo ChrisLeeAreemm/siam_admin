@@ -54,12 +54,11 @@ EOL;
      * 执行逻辑
      * @throws \Throwable
      */
-    public function run()
-    {
-        try {
+    public function run(){
+        try{
             $data = $this->before();
-            $res  = $this->do($data);
-        } catch (\Throwable $throwable) {
+            $res = $this->do($data);
+        }catch (\Throwable $throwable){
             $this->clearClock();
             throw $throwable;
         }
@@ -70,8 +69,8 @@ EOL;
 
     protected function clearClock()
     {
-        $lockName = static::$runtimePath . DIRECTORY_SEPARATOR . $this->rule() . ".txt";
-        if (file_exists($lockName)) {
+        $lockName = static::$runtimePath.DIRECTORY_SEPARATOR.$this->rule().".txt";
+        if (file_exists($lockName)){
             unlink($lockName);
         }
     }
