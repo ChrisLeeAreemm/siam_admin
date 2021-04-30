@@ -16,10 +16,29 @@ abstract class CronBase extends \Siam\AbstractInterface\CronBase
     abstract function run_period(): CronExpression;
 
     /**
+     * 检查运行状态
+     */
+    protected function needRun()
+    {
+        //检查状态
+        $file        = runtime_path() . 'cron_status.php';
+        $cron_status = json_decode(file_get_contents($file));
+        $className   = basename(str_replace('\\', '/', get_class($this)));
+        if (!in_array($className, $cron_status)) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * 执行逻辑
      * @throws \Throwable
      */
-    public function run(){
+    public function run()
+    {
+        if ($this->needRun() === false){
+            return false;
+        }
         try {
             $data = $this->before();
             $res  = $this->do($data);
@@ -34,8 +53,8 @@ abstract class CronBase extends \Siam\AbstractInterface\CronBase
 
     protected function clearClock()
     {
-        $lockName = static::$runtimePath.DIRECTORY_SEPARATOR.$this->rule().".txt";
-        if (file_exists($lockName)){
+        $lockName = static::$runtimePath . DIRECTORY_SEPARATOR . $this->rule() . ".txt";
+        if (file_exists($lockName)) {
             unlink($lockName);
         }
     }
