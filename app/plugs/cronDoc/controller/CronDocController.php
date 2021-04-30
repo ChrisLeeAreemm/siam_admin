@@ -67,8 +67,8 @@ class CronDocController extends PlugsBaseController
             if ($type === 2) {
                 return $this->send(ErrorCode::SUCCESS, [], 'SUCCESS');
             }
-            $className[] = $className;
-            $className = json_encode($className);
+            $arr[] = $className;
+            $className = json_encode($arr);
             //创建
             $content = <<<EOL
 $className
