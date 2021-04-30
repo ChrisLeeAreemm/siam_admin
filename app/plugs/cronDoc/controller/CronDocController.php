@@ -28,24 +28,25 @@ class CronDocController extends PlugsBaseController
                 'run_expression' => $class->run_period()->getExpression(),
                 'next_run_time'  => $class->run_period()->getNextRunDate()->format("Y-m-d H:i:s"),
                 'class_name'     => $class_name,
-                'status'         => $this->switchStatus($class_name),
+                'status'         => $this->get_status($class_name),
             ];
         }
         return $this->send(ErrorCode::SUCCESS,['list'=>$return],'SUCCESS');
     }
 
-    public function switchStatus($class_name)
+    /**
+     * 获取状态
+     * @param $class_name
+     * @return bool
+     */
+    public function get_status($class_name)
     {
         $file      = runtime_path() . 'cron_status.php';
         if (!file_exists($file)) {
             return false;
         }
         $file_arr = json_decode(file_get_contents($file),true);
-        //存在则不改变
-        if (!in_array($class_name, $file_arr)) {
-            return false;
-        }
-        return true;
+        return in_array($class_name, $file_arr);
     }
 
     /**
