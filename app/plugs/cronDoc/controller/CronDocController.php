@@ -39,7 +39,7 @@ class CronDocController extends PlugsBaseController
      * @param array $className 类名 一维数组 ['classname']
      * @return bool|\think\response\Json
      */
-    public function OnLineSwitch(array $className)
+    public function online_switch(array $className)
     {
         $file      = runtime_path() . 'cron_status.php';
         $className = json_encode($className);
