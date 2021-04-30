@@ -35,11 +35,11 @@ class CronDocController extends PlugsBaseController
     }
 
     /**
-     * 在线开关功能 传入类名数组
-     * @param array $className
-     * @return bool
+     * 在线开关
+     * @param array $className 类名 一维数组 ['classname']
+     * @return bool|\think\response\Json
      */
-    public function OnLineSwitch(array $className): bool
+    public function OnLineSwitch(array $className)
     {
         $file      = runtime_path() . 'cron_status.php';
         $className = json_encode($className);
@@ -55,17 +55,17 @@ return
 EOL;
             $write   = file_put_contents($file, $content);
             if (!$write) {
-                return false;
+                return $this->send(ErrorCode::FILE_WRITE_FAIL, [], 'FILE_WRITE_FAIL');
             }
         }
         $content = file_get_contents($file);
         //更新文件
         $content = preg_replace('/##start.*##end/sm', $className, $content);
-        $write = file_put_contents($file, $content);
+        $write   = file_put_contents($file, $content);
         if (!$write) {
-            return false;
+            return $this->send(ErrorCode::FILE_WRITE_FAIL, [], 'FILE_WRITE_FAIL');
         }
-        return true;
+        return $this->send(ErrorCode::SUCCESS, [], 'SUCCESS');
     }
 
 }
