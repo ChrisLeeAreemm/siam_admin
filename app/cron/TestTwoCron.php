@@ -6,7 +6,7 @@ namespace app\cron;
 
 use Cron\CronExpression;
 
-class TestCron extends CronBase
+class TestTwoCron extends CronBase
 {
 
     /**
@@ -15,7 +15,7 @@ class TestCron extends CronBase
      */
     function rule()
     {
-        return "测试";
+        return "测试2";
     }
 
     /**
@@ -43,7 +43,7 @@ class TestCron extends CronBase
      */
     function do($data = null)
     {
-        echo "111";
+        echo "测试2";
         return true;
     }
 

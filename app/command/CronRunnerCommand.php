@@ -69,7 +69,7 @@ class CronRunnerCommand extends Command
                         echo $class->run();
                         echo "\n=============\n";
                         $content = ob_get_contents();
-                        ob_clean();
+                        ob_end_clean();
                         $file_path = runtime_path("cron");
                         if (!is_dir($file_path)){
                             mkdir($file_path);
@@ -77,7 +77,7 @@ class CronRunnerCommand extends Command
                         $file_path .= $class->rule().".log";
                         file_put_contents($file_path, $content, FILE_APPEND);
                     }catch (\Throwable $throwable){
-                        var_dump($throwable);
+                        var_dump($throwable->getMessage());
                     }
                 });
                 echo "已注册 {$class->rule()}\n";
