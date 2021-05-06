@@ -3,9 +3,7 @@
 namespace app\controller\admin;
 
 use app\exception\ErrorCode;
-use app\model\AuthsModel;
 use app\model\RolesModel as Model;
-use app\model\SystemModel;
 use think\response\Json;
 
 class AdminRolesController extends AdminBaseController

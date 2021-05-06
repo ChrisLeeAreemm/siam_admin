@@ -24,7 +24,7 @@ class AuthsModel extends BaseModel
     /**
      * 常量权限类型 0菜单1按钮
      */
-    const MENU = 0;
+    const MENU   = 0;
     const BUTTON = 1;
 
     /**
@@ -47,24 +47,24 @@ class AuthsModel extends BaseModel
             ];
         }
 
-        if ($auth_type !== null){
+        if ($auth_type !== null) {
             $new_auth_type = [];
-            foreach ($auth_type as $auth_type_key => $auth_type_value) {
-                if (in_array($auth_type_value, $auth_type_default)){
+            foreach ($auth_type as $auth_type_value) {
+                if (in_array($auth_type_value, $auth_type_default)) {
                     $new_auth_type[] = $auth_type_value;
                 }
             }
             $auth_type = $new_auth_type;
-        }else{
+        } else {
             $auth_type = $auth_type_default;
         }
         $u_auth_ids = explode(',', UsersModel::find(['u_id' => $u_id])->u_auth);
 
-        $map[] = ['auth_type', 'in',$auth_type];
-        if ($u_id !== 1){
+        $map[] = ['auth_type', 'in', $auth_type];
+        if ($u_id !== 1) {
             $map = [
                 ['auth_id', 'in', $u_auth_ids],
-                ['auth_type', 'in',$auth_type],
+                ['auth_type', 'in', $auth_type],
             ];
         }
 

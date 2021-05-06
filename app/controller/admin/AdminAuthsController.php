@@ -5,7 +5,7 @@ namespace app\controller\admin;
 use app\common\MenuHelper;
 use app\exception\ErrorCode;
 use app\model\AuthsModel as Model;
-use app\model\SystemModel;
+use app\model\ConfigsModel;
 
 class AdminAuthsController extends AdminBaseController
 {
@@ -45,8 +45,8 @@ class AdminAuthsController extends AdminBaseController
         // 字符替换
         $order = str_replace('children', 'child', $roleOrder);
 
-        $SystemModel = SystemModel::find(1);
-        $res         = $SystemModel->force()->save(['auth_order' => $order]);
+        $configsModel = ConfigsModel::where('config_name', 'auth_order')->find();
+        $res         = $configsModel->force()->save(['config_value' => $order]);
         if ($res) {
             return $this::send(ErrorCode::SUCCESS, [], 'SUCCESS');
         }
@@ -105,13 +105,13 @@ html;
             return $this::send(ErrorCode::DB_EXCEPTION, [], 'ERROR');
         }
         // 如果是菜单还要更新排序
-        $system_info = SystemModel::find(['id' => 1])->toArray();
-        $authOrder   = json_decode($system_info['auth_order'], true);
+        $configs_info = ConfigsModel::where('config_name', 'auth_order')->find();
+        $authOrder   = json_decode($configs_info['config_value'], true);
         $authOrder[] = [
             'id' => $res->auth_id
         ];
-        $SystemModel = SystemModel::find(1);
-        $res         = $SystemModel->force()->save(['auth_order' => json_encode($authOrder)]);
+        $configsModel = ConfigsModel::where('config_name', 'auth_order')->find();
+        $res         = $configsModel->force()->save(['config_value' => json_encode($authOrder)]);
         if (!$res) {
             return $this::send(ErrorCode::DB_EXCEPTION, [], 'ERROR');
         }
