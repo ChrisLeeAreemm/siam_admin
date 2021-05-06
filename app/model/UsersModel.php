@@ -49,8 +49,8 @@ class UsersModel extends BaseModel
         $this->startTrans();
 
         if (!isset($data['u_account'])) {
-            $ConfigsModel      = new ConfigsModel();
-            $data['u_account'] = $ConfigsModel->getOneAccount();
+            $configsModel      = new ConfigsModel();
+            $data['u_account'] = $configsModel->getOneAccount();
         }
 
         $addRes = $this->save($data);

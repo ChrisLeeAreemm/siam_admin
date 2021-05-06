@@ -45,8 +45,8 @@ class AdminAuthsController extends AdminBaseController
         // 字符替换
         $order = str_replace('children', 'child', $roleOrder);
 
-        $ConfigsModel = ConfigsModel::find(2);
-        $res         = $ConfigsModel->force()->save(['config_value' => $order]);
+        $configsModel = ConfigsModel::where('config_name', 'auth_order')->find();
+        $res         = $configsModel->force()->save(['config_value' => $order]);
         if ($res) {
             return $this::send(ErrorCode::SUCCESS, [], 'SUCCESS');
         }
@@ -105,13 +105,13 @@ html;
             return $this::send(ErrorCode::DB_EXCEPTION, [], 'ERROR');
         }
         // 如果是菜单还要更新排序
-        $configs_info = ConfigsModel::find(2)->toArray();
+        $configs_info = ConfigsModel::where('config_name', 'auth_order')->find()->toArray();
         $authOrder   = json_decode($configs_info['config_value'], true);
         $authOrder[] = [
             'id' => $res->auth_id
         ];
-        $ConfigsModel = ConfigsModel::find(2);
-        $res         = $ConfigsModel->force()->save(['config_value' => json_encode($authOrder)]);
+        $configsModel = ConfigsModel::where('config_name', 'auth_order')->find();
+        $res         = $configsModel->force()->save(['config_value' => json_encode($authOrder)]);
         if (!$res) {
             return $this::send(ErrorCode::DB_EXCEPTION, [], 'ERROR');
         }

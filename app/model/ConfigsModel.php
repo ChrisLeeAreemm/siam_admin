@@ -32,11 +32,11 @@ class ConfigsModel extends BaseModel
     {
 
         try {
-            $info = $this->where([$this->pk => 1])->find();
+            $info         = $this->where('config_name', 'next_user_id')->find();
             $user_next_id = $info['config_value'] + 1;
-            $this->where([$this->pk => 1])->save(['config_value' => $user_next_id]);
+            $this->where('config_name', 'next_user_id')->save(['config_value' => $user_next_id]);
         } catch (\Exception $e) {
-            throw new Exception($e->getMessage(),ErrorCode::DB_EXCEPTION);
+            throw new Exception($e->getMessage(), ErrorCode::DB_EXCEPTION);
         }
 
         // 获取完还要随机拼接一个 防止并发

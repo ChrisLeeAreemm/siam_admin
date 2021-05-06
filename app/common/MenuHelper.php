@@ -28,8 +28,8 @@ class MenuHelper
 
         $this->auth_list = $newList;
 
-        $Configs     = ConfigsModel::where(['config_id' => 2])->field('config_value')->find()->toArray();
-        $order       = json_decode($Configs['config_value'], TRUE);
+        $configs     = ConfigsModel::where('config_name', 'auth_order')->field('config_value')->find()->toArray();
+        $order       = json_decode($configs['config_value'], TRUE);
         $this->order = $order;
         return $this;
     }
