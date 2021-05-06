@@ -28,7 +28,7 @@ class MenuHelper
 
         $this->auth_list = $newList;
 
-        $configs     = ConfigsModel::where('config_name', 'auth_order')->field('config_value')->find()->toArray();
+        $configs     = ConfigsModel::where('config_name', 'auth_order')->field('config_value')->find();
         $order       = json_decode($configs['config_value'], TRUE);
         $this->order = $order;
         return $this;

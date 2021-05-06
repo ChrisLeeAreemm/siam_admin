@@ -105,7 +105,7 @@ html;
             return $this::send(ErrorCode::DB_EXCEPTION, [], 'ERROR');
         }
         // 如果是菜单还要更新排序
-        $configs_info = ConfigsModel::where('config_name', 'auth_order')->find()->toArray();
+        $configs_info = ConfigsModel::where('config_name', 'auth_order')->find();
         $authOrder   = json_decode($configs_info['config_value'], true);
         $authOrder[] = [
             'id' => $res->auth_id
