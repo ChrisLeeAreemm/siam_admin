@@ -3,7 +3,7 @@
 
 namespace app\common;
 
-use app\model\SystemModel;
+use app\model\ConfigsModel;
 use think\helper\Str;
 
 class MenuHelper
@@ -22,14 +22,14 @@ class MenuHelper
     public function list_to_tree($list)
     {
         $newList = [];
-        foreach ($list as $key => $t) {
+        foreach ($list as $t) {
             $newList[$t['auth_id']] = $t;
         }
 
         $this->auth_list = $newList;
 
-        $System      = SystemModel::where(['id' => 1])->field('auth_order')->find()->toArray();
-        $order       = json_decode($System['auth_order'], TRUE);
+        $Configs     = ConfigsModel::where(['config_id' => 2])->field('config_value')->find()->toArray();
+        $order       = json_decode($Configs['config_value'], TRUE);
         $this->order = $order;
         return $this;
     }
@@ -69,7 +69,7 @@ class MenuHelper
             $order = $this->order;
         }
         $return = [];
-        foreach ($order as $key => $value) {
+        foreach ($order as $value) {
             // 未有权限
             if (empty($this->auth_list[$value['id']])) {
                 continue;
@@ -95,7 +95,7 @@ class MenuHelper
             $order = $this->order;
         }
         $return = [];
-        foreach ($order as $key => $value) {
+        foreach ($order as $value) {
             // 未有权限
             if (empty($this->auth_list[$value['id']])) {
                 continue;
@@ -134,7 +134,7 @@ class MenuHelper
         }
 
         $return = [];
-        foreach ($order as $key => $value) {
+        foreach ($order as $value) {
             // 未有权限
             if (empty($this->auth_list[$value['id']])) {
                 continue;

@@ -27,7 +27,7 @@ namespace app\model;
 class UsersModel extends BaseModel
 {
     protected $name = 'users';
-    protected $pk = 'u_id';
+    protected $pk   = 'u_id';
 
     /**
      * @relevance 关联方法标识
@@ -45,50 +45,27 @@ class UsersModel extends BaseModel
      */
     public function addUser(array $data)
     {
-        # 开启事务
+        //开启事务
         $this->startTrans();
 
         if (!isset($data['u_account'])) {
-            $System            = new SystemModel();
-            $data['u_account'] = $System->getOneAccount();
+            $ConfigsModel      = new ConfigsModel();
+            $data['u_account'] = $ConfigsModel->getOneAccount();
         }
 
         $addRes = $this->save($data);
 
         # 查询p_u_id的层级链，加上自己的id
         $pUIdWhere = ['u_id' => $data['p_u_id']];
-
-
-        $pUIdInfo = $this->where($pUIdWhere)->field('u_level_line,p_u_id')->find();
-
-
+        $pUIdInfo  = $this->where($pUIdWhere)->field('u_level_line,p_u_id')->find();
         $updateRes = $this->save(['u_level_line' => $pUIdInfo['u_level_line'] . '-' . $this->getAttr('u_id')]);
 
-        # 记录
-        // $recorder = [];
-
-        if ($addRes && $updateRes) {
-            # 如果记录器中有一条失败则回滚
-            // foreach ($recorder as $value){
-            //     if (!$value || $value == 0) {
-            //         try {
-            //             $this->rollback();
-            //         } catch (PDOException $e) {
-            //         }
-            //         return false;
-            //     }
-            // }
-            try {
-                $this->commit();
-            } catch (\PDOException $e) {
-            }
-            return true;
-        } else {
-            try {
-                $this->rollback();
-            } catch (\PDOException $e) {
-            }
+        if (!$addRes || !$updateRes) {
+            $this->rollback();
             return false;
         }
+        $this->commit();
+        return true;
+
     }
 }
