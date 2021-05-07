@@ -42,6 +42,26 @@ class AdminUsersController extends AdminBaseController
 
     }
 
+    /**
+     * 提供xmSelect的数据格式
+     * @return \think\response\Json
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function get_xms_list()
+    {
+        $result  = Model::order('u_id', 'DESC')->select();
+        $xmsData = [];
+        foreach ($result as $v) {
+            $xmsData[] = [
+                'name'     => $v['u_name'],
+                'value'    => $v['u_id'],
+            ];
+        }
+        return $this->send(ErrorCode::SUCCESS, ['lists' => $xmsData]);
+    }
+
     public function get_one()
     {
         $id     = input('u_id');
@@ -78,7 +98,7 @@ class AdminUsersController extends AdminBaseController
         $data      = [
             'u_name'      => $param['u_name'],
             'p_u_id'      => $this->who['u_id'],
-            'u_password'  => $param['u_password'],
+            'u_password'  => md5($param['u_password']),
             'role_id'     => implode(',', $role_id),
             'u_auth'      => implode(',', $auth),
             'create_time' => date('Y-m-d H:i:s'),

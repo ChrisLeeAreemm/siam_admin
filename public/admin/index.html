@@ -57,7 +57,9 @@
             </ul>
 
             <ul class="layui-nav layui-layout-right">
-
+                <li class="layui-nav-item" lay-unselect id="plugs_notice" style="display:none">
+                    <a href="javascript:;" layuimini-content-href="/plugs/notice/index.html" data-title="站内信"><i class="fa fa-envelope-o"></i></a>
+                </li>
                 <li class="layui-nav-item" lay-unselect>
                     <a href="javascript:;" data-refresh="刷新"><i class="fa fa-refresh"></i></a>
                 </li>
@@ -171,7 +173,17 @@
         view.req({
             url:"/admin/system/is_login"
         })
-
+        //判断站内信插件
+        view.req({
+                url: "/admin/PlugsStatus/check_status"+'?plugs_name=notice',
+                type: "get",
+                dataType: "json",
+                success: function (res) {
+                    if (res.code === 200 && res.data.plugs_status === 1) {
+                        $('#plugs_notice').show();
+                    }
+                }
+        })
         $('.login-out').on("click", function () {
             view.logout(function () {
                 window.location.href = 'login.html';
