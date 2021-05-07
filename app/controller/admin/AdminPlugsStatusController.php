@@ -76,9 +76,6 @@ class AdminPlugsStatusController extends AdminBaseController
         $this->validate(['plugs_name' => 'require'], input());
         $plugs_name = input('plugs_name');
         $result     = Model::field('plugs_status')->find($plugs_name);
-        if (!$result) {
-            return $this->send(ErrorCode::THIRD_PART_ERROR, [], '获取失败');
-        }
         return $this->send(ErrorCode::SUCCESS, $result);
     }
 
