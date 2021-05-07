@@ -95,7 +95,7 @@ class AdminRolesController extends AdminBaseController
         if (!$res) {
             return $this->send(ErrorCode::DB_EXCEPTION, [], '编辑失败');
         }
-        return $this->send(ErrorCode::SUCCESS);
+        return $this->send(ErrorCode::SUCCESS,[],'成功');
     }
 
     /**
