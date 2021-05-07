@@ -5,6 +5,7 @@ namespace app\plugs\cronDoc\controller;
 
 use app\exception\ErrorCode;
 use app\plugs\PlugsBaseController;
+use think\helper\Str;
 
 class CronDocController extends PlugsBaseController
 {
@@ -23,12 +24,15 @@ class CronDocController extends PlugsBaseController
             $class_namespace = $namespace.$class_name;
             /** @var \app\cron\CronBase $class */
             $class = new $class_namespace;
+            $url = Str::snake($class_name);
+
             $return[] = [
                 'name'           => $class->rule(),
                 'run_expression' => $class->run_period()->getExpression(),
                 'next_run_time'  => $class->run_period()->getNextRunDate()->format("Y-m-d H:i:s"),
                 'class_name'     => $class_name,
                 'status'         => $this->get_status($class_name),
+                'url'            => request()->domain(false)."/index.php/cron/{$url}/run",
             ];
         }
         return $this->send(ErrorCode::SUCCESS,['list'=>$return],'SUCCESS');
