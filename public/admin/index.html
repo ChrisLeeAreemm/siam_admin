@@ -173,14 +173,17 @@
         view.req({
             url:"/admin/system/is_login"
         })
-        //判断站内信插件
+        //判断插件
         view.req({
-                url: "/admin/PlugsStatus/check_status"+'?plugs_name=notice',
+                url: "/admin/PlugsStatus/check_status",
                 type: "get",
                 dataType: "json",
                 success: function (res) {
-                    if (res.code === 200 && res.data.plugs_status === 1) {
-                        $('#plugs_notice').show();
+                    for (let i=0;i<res.data.length;i++){
+                        if (res.data[i].plugs_status !== 1)continue;
+                        if (res.data[i].plugs_name === "notice"){
+                            $('#plugs_notice').show();
+                        }
                     }
                 }
         })

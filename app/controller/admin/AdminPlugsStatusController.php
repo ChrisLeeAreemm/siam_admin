@@ -64,18 +64,15 @@ class AdminPlugsStatusController extends AdminBaseController
     }
 
     /**
-     * 获取插件启动状态
+     * 获取插件状态
      * @return \think\response\Json
-     * @throws \app\exception\AuthException
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
     public function check_status()
     {
-        $this->validate(['plugs_name' => 'require'], input());
-        $plugs_name = input('plugs_name');
-        $result     = Model::field('plugs_status')->find($plugs_name);
+        $result     = Model::field('plugs_name,plugs_status')->select();
         return $this->send(ErrorCode::SUCCESS, $result);
     }
 
