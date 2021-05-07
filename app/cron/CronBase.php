@@ -8,6 +8,10 @@ use Cron\CronExpression;
 
 abstract class CronBase extends \Siam\AbstractInterface\CronBase
 {
+    /**
+     * @var string 运行模式 默认为cli
+     */
+    public $run_mode = 'cli';
 
     /**
      * 写明监控的运行周期(仅用于展示)
@@ -20,6 +24,8 @@ abstract class CronBase extends \Siam\AbstractInterface\CronBase
      */
     protected function needRun()
     {
+        if ($this->run_mode === 'url') return true;
+
         //检查状态
         $file        = runtime_path() . 'cron_status.php';
         $cron_status = json_decode(file_get_contents($file),true);

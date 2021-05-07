@@ -28,6 +28,7 @@
     <a class="layui-btn layui-btn-xs" lay-event="close">关闭</a>
     {{# } }}
 
+    <a class="layui-btn layui-btn-xs layui-btn-normal copy" data-clipboard-text="{{ d.url }}">复制url</a>
 </script>
 
 <script src="__ADMIN__/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
@@ -36,15 +37,25 @@
 <script>
 
 
-    layui.use(['form', 'view', 'laytpl','table','setter'], function () {
+    layui.use(['form', 'view', 'laytpl','table','setter','clipboard'], function () {
         let form = layui.form
             , layer = layui.layer
             , view = layui.view
             , $ = layui.jquery,
             setter = layui.setter
+            , table = layui.table;
 
+        let clipboard = layui.clipboard;
 
-    , table = layui.table;
+        let copy = new clipboard('.copy');
+        copy.on('success', function (e) {
+            layer.msg('复制成功', { icon: 1 });
+            e.clearSelection();
+        });
+        copy.on('error', function (e) {
+            layer.msg('复制失败', { icon: 2 });
+        });
+
         table.render({
             elem: '#table'
             , url: "/index.php/plugs/cron-doc/api/get_list"
