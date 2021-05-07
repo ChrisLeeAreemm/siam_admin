@@ -42,6 +42,26 @@ class AdminUsersController extends AdminBaseController
 
     }
 
+    /**
+     * 提供xmSelect的数据格式
+     * @return \think\response\Json
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function get_xms_list()
+    {
+        $result  = Model::order('u_id', 'DESC')->select();
+        $xmsData = [];
+        foreach ($result as $v) {
+            $xmsData[] = [
+                'name'     => $v['u_name'],
+                'value'    => $v['u_id'],
+            ];
+        }
+        return $this->send(ErrorCode::SUCCESS, ['lists' => $xmsData]);
+    }
+
     public function get_one()
     {
         $id     = input('u_id');
