@@ -78,6 +78,7 @@ html,
 #app,
 .layui-body {
     height: 100%;
+    padding-bottom: 0!important;
     background: #f3f3f3;
 }
 
