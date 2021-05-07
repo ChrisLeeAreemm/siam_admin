@@ -93,7 +93,7 @@
                 data: data.field,
                 type: "post",
                 success: function (res) {
-                    if (res.code == '200'){
+                    if (res.code === 200){
                         //关闭
                         layer.msg(res.msg, {icon: 1,time:1500},function(){
                             window.parent.location.href = '/admin/index.html';
