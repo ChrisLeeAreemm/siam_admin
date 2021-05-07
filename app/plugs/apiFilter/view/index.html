@@ -37,17 +37,21 @@
 <script>
 
 
-    layui.use(['form', 'view', 'laytpl', 'table'], function () {
+    layui.use(['form', 'view', 'laytpl', 'table','setter'], function () {
         let form = layui.form
             , layer = layui.layer
             , view = layui.view
             , $ = layui.jquery
             , laytpl = layui.laytpl
+            , setter = layui.setter
             , table = layui.table
         let get_list_url = '/index.php/plugs/api_filter/api/get_list';
         table.render({
             elem: '#table',
             url: get_list_url,
+            where: {
+                access_token: layui.data(setter.tableName)[setter.request.tokenName]
+            },
             cols: [[
                 {field: 'set_id', title: 'ID'},
                 {field: 'key', title: '配置key'},

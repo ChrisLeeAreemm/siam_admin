@@ -51,12 +51,13 @@
 <script>
 
 
-    layui.use(['form', 'view', 'laytpl'], function () {
+    layui.use(['form', 'view', 'laytpl','setter'], function () {
         let form = layui.form
             , layer = layui.layer
             , view = layui.view
             , $ = layui.jquery
             , laytpl = layui.laytpl
+            , setter = layui.setter
             , table = layui.table;
         let get_tables_url = '/index.php/plugs/db_helper/db_dict/api/get_tables';
         let get_dict_url = '/index.php/plugs/db_helper/db_dict/api/get_list';
@@ -81,7 +82,10 @@
             table.render({
                 elem: '#lists',
                 url: get_dict_url,
-                where: {table_name: table_name},
+                where: {
+                    table_name: table_name,
+                    access_token: layui.data(setter.tableName)[setter.request.tokenName]
+                },
                 cols: [[
                     {field: 'name',  title: '字段名', sort: true},
                     {field: 'type', title: '类型'},

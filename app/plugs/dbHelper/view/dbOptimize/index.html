@@ -33,12 +33,13 @@
 <script>
 
 
-    layui.use(['form', 'view', 'laytpl','table'], function () {
+    layui.use(['form', 'view', 'laytpl','table','setter'], function () {
         let form = layui.form
             , layer = layui.layer
             , view = layui.view
             , $ = layui.jquery
             , laytpl = layui.laytpl
+            , setter = layui.setter
             ,table = layui.table;
         let get_list_url = '/index.php/plugs/db_helper/db_optimize/api/get_list';
         let perform_optimize_url = '/index.php/plugs/db_helper/db_optimize/api/perform_optimize';
@@ -46,6 +47,9 @@
             elem: '#list',
             url: get_list_url,
             toolbar: '#optimize',
+            where: {
+                access_token: layui.data(setter.tableName)[setter.request.tokenName]
+            },
             cols: [[
                 {type: "checkbox", width: 50},
                 {field: 'Name',  title: '表名'},
@@ -80,7 +84,7 @@
                  type: "post",
                  data: {"data":JSON.stringify(data)},
                  success: function (res) {
-                     if (res.code == '200'){
+                     if (res.code === 200){
                          //关闭
                          layer.msg(res.msg, {icon: 1,time:1500},function (){
                              window.location.reload();
