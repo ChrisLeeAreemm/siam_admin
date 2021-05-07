@@ -98,7 +98,7 @@ class AdminUsersController extends AdminBaseController
         $data      = [
             'u_name'      => $param['u_name'],
             'p_u_id'      => $this->who['u_id'],
-            'u_password'  => $param['u_password'],
+            'u_password'  => md5($param['u_password']),
             'role_id'     => implode(',', $role_id),
             'u_auth'      => implode(',', $auth),
             'create_time' => date('Y-m-d H:i:s'),
