@@ -72,7 +72,7 @@ class AdminPlugsStatusController extends AdminBaseController
      */
     public function check_status()
     {
-        $result     = Model::field('plugs_name,plugs_status')->select();
+        $result     = Model::where('plugs_name','<>','base')->field('plugs_name,plugs_status')->select();
         return $this->send(ErrorCode::SUCCESS, $result);
     }
 
