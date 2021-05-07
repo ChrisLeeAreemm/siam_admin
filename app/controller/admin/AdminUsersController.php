@@ -123,7 +123,6 @@ class AdminUsersController extends AdminBaseController
         $param['update_time'] = date('Y-m-d H:i:s');
         $role_auth            = json_decode($param['role_auth'], true);
         $role_id              = [];
-        $auth                 = [];
 
         foreach ($param as $key => $val) {
             if (!Str::startsWith($key, 'u_role')) {
@@ -131,9 +130,7 @@ class AdminUsersController extends AdminBaseController
             }
             $role_id[] = $val;
         }
-        foreach ($role_auth as $value) {
-            $auth[] = $value['id'];
-        }
+        $auth = (new RolesModel())->recursion_roles_id($role_auth);
 
         $data  = [
             'u_name'      => $param['u_name'],
