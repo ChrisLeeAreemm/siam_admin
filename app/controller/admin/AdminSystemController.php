@@ -95,7 +95,7 @@ class AdminSystemController extends AdminBaseController
         //检索插件
         $namespace = '\app\plugs\\';
         $child     = [];
-        foreach ($arr as $key => $dirName) {
+        foreach ($arr as $dirName) {
             if (Str::contains($dirName, '.') == false && is_dir($dir . $dirName)) {
                 $Plugs      = $namespace . $dirName . '\Plugs';
                 /** @var \app\plugs\PlugsBase $plugs */
@@ -115,7 +115,7 @@ class AdminSystemController extends AdminBaseController
                 $temp_key = array_column($baseMenu,'title');  //键值
                 $baseMenu = array_combine($temp_key,$baseMenu);
                 // 未安装状态 ： 只显示 名称 + 安装项
-                if (!$plugsObj){
+                if (empty($plugsObj)){
                     $arr = $baseMenu['安装'];
                     $arr['href'] .= '?plugs_name='.$name;
                 }else{
@@ -145,11 +145,11 @@ class AdminSystemController extends AdminBaseController
                         array_push($plugs_menu, $one);
                     }
                 }
+                array_pop($plugs_menu);
                 array_push($plugs_menu,$arr);
-                if (isset($edit_arr)){
+                if (isset($edit_arr) && $arr['title'] !== '安装'){
                     array_push($plugs_menu,$edit_arr);
                 }
-
                 $child[] = [
                     'title'  => $name,
                     'href'   => '',
