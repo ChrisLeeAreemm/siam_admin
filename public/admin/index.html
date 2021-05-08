@@ -168,15 +168,16 @@
         })
 
         view.get_config();
-        setInterval(function(){
-            // 渲染nav中的插件
-            let localTable = layui.data(setter.tableName);
-            //更新缓存
-            for (let key in localTable.plugs_status) {
-                let temp = localTable.plugs_status[key];
-                switch (temp.plugs_name) {
-                    case 'notice':
-                        $('#plugs_notice').show();
+        // 渲染nav中的插件
+        let localTable = layui.data(setter.tableName);
+        //更新缓存
+        for (let key in localTable.plugs_status) {
+            let temp = localTable.plugs_status[key];
+            switch (temp.plugs_name) {
+                case 'notice':
+                    $('#plugs_notice').show();
+                    setInterval(function(){
+                        let localTable = layui.data(setter.tableName);
                         if (localTable.unread_count > 0){
                             notice_n = localTable.unread_count;
                             if (localTable.unread_count >= 99) {
@@ -187,13 +188,12 @@
                             $('#notice_n').hide();
                         }
                         notice_pop();
-                        break;
-                    default:
-                        break;
-                }
+                    },1000);
+                    break;
+                default:
+                    break;
             }
-        },1000);
-
+        }
 
 
 
