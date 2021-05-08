@@ -57,8 +57,9 @@
             </ul>
 
             <ul class="layui-nav layui-layout-right">
-                <li class="layui-nav-item" lay-unselect id="plugs_notice" style="display:none">
-                    <a href="javascript:;" layuimini-content-href="/plugs/notice/index.html" data-title="站内信"><i class="fa fa-envelope-o"></i></a>
+                <li class="layui-nav-item" lay-unselect id="plugs_notice" style="display:none;margin-right: 0.5rem">
+                    <a href="javascript:;" layuimini-content-href="/plugs/notice/index.html" data-title="站内信"><i class="fa fa-envelope-o">
+                        <span class="layui-badge" style="display:none;" id="notice_n"></span></i></a>
                 </li>
                 <li class="layui-nav-item" lay-unselect>
                     <a href="javascript:;" data-refresh="刷新"><i class="fa fa-refresh"></i></a>
@@ -173,17 +174,28 @@
         view.req({
             url:"/admin/system/is_login"
         })
-        //判断站内信插件
-        view.req({
-                url: "/admin/PlugsStatus/check_status"+'?plugs_name=notice',
-                type: "get",
-                dataType: "json",
-                success: function (res) {
-                    if (res.code === 200 && res.data.plugs_status === 1) {
-                        $('#plugs_notice').show();
+
+        // 渲染nav中的插件
+        var localTable = layui.data(setter.tableName);
+        for (let key in localTable.plugs_status) {
+            let temp = localTable.plugs_status[key];
+            if (temp.plugs_status === 0) continue;
+            switch (temp.plugs_name) {
+                case 'notice':
+                    $('#plugs_notice').show();
+                    if (localTable.unread_count === 0) continue;
+                    if (localTable.unread_count >= 99) {
+                        notice_n = '99+';
                     }
-                }
-        })
+                    $('#notice_n').show().html(notice_n);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+
+
         $('.login-out').on("click", function () {
             view.logout(function () {
                 window.location.href = 'login.html';

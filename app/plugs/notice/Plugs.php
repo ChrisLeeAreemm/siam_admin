@@ -89,5 +89,6 @@ class Plugs extends PlugsBase
         Route::any('plugs/notice/api/get_list', 'app\plugs\notice\controller\NoticeController@get_list');
         Route::any('plugs/notice/api/send_notice', 'app\plugs\notice\controller\NoticeController@send_notice');
         Route::any('plugs/notice/api/read_notice', 'app\plugs\notice\controller\NoticeController@read_notice');
+        Route::any('plugs/notice/api/get_unread_count', 'app\plugs\notice\controller\NoticeController@get_unread_count');
     }
 }

@@ -145,7 +145,6 @@ class AdminSystemController extends AdminBaseController
                         array_push($plugs_menu, $one);
                     }
                 }
-                array_pop($plugs_menu);
                 array_push($plugs_menu,$arr);
                 if (isset($edit_arr) && $arr['title'] !== '安装'){
                     array_push($plugs_menu,$edit_arr);
