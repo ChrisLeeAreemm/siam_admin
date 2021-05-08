@@ -183,11 +183,13 @@
             switch (temp.plugs_name) {
                 case 'notice':
                     $('#plugs_notice').show();
-                    if (localTable.unread_count === 0) continue;
-                    if (localTable.unread_count >= 99) {
-                        notice_n = '99+';
+                    if (localTable.unread_count !== 0){
+                        if (localTable.unread_count >= 99) {
+                            notice_n = '99+';
+                        }
+                        $('#notice_n').show().html(notice_n);
                     }
-                    $('#notice_n').show().html(notice_n);
+
                     break;
                 default:
                     break;
