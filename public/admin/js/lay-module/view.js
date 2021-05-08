@@ -6,22 +6,38 @@ layui.define(['laytpl', 'layer', 'jquery', 'setter'], function (exports) {
     var view = {
         //清除 token，并跳转到登入页
         logout: function (callback) {
-            //清空本地记录的 token
-            layui.data(setter.tableName, {
-                key: setter.request.tokenName
-                , remove: true
-            });
+            //清空本地记录
+            layui.data(setter.tableName, null);
 
             //跳转到登入页
             //location.hash = '/user/login';
             callback && callback();
         },
-        //login成功后，写入 access_token
+
+        //login成功后，写入缓存 ， 写入 access_token , 获取config
         login: function (token) {
+
             layui.data(setter.tableName, {
                 key: setter.request.tokenName
                 , value: token
             });
+
+            view.req({
+               url: "/admin/users/get_config",
+                success: function (res) {
+                   for (let key in res.data){
+                       let temp = res.data[key];
+                       layui.data(setter.tableName, {
+                           key: key
+                           , value: temp
+                       });
+                   }
+
+                }
+            });
+
+
+
         },
 
         //获取参数
