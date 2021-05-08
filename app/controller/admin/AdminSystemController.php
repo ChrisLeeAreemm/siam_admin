@@ -101,10 +101,6 @@ class AdminSystemController extends AdminBaseController
                 /** @var \app\plugs\PlugsBase $plugs */
                 $plugs = new $Plugs();
                 $name       = $plugs->get_config()->getName();
-                //过滤base,不需要独立显示
-                if ($name == 'base') {
-                    continue;
-                }
 
                 //组装菜单  读取插件的状态，显示对应的按钮和名称
                 $plugsObj = PlugsStatusModel::find($name);
@@ -149,6 +145,17 @@ class AdminSystemController extends AdminBaseController
                 if (isset($edit_arr) && $arr['title'] !== '安装'){
                     array_push($plugs_menu,$edit_arr);
                 }
+
+                // base插件是强制的
+                if ($name=='base'){
+                    $fillter_menu = ['安装', '停用', '启用', '编辑'];
+                    foreach ($plugs_menu as $key=>$plugs_menu_one){
+                        if (in_array($plugs_menu_one['title'], $fillter_menu) ){
+                            unset($plugs_menu[$key]);
+                        }
+                    }
+                }
+
                 $child[] = [
                     'title'  => $name,
                     'href'   => '',

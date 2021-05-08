@@ -3,6 +3,7 @@
 namespace app\plugs\base;
 
 
+use app\plugs\base\service\PlugsCommandStatus;
 use app\plugs\PlugsBase;
 use app\plugs\PlugsConfig;
 use think\facade\Route;
@@ -18,8 +19,8 @@ class Plugs extends PlugsBase
         $config->setHandleModule(["admin","plugs"]);// 只有admin,plugs模块才会执行初始化
         $config->setMenu([
             [
-                'title'  => "base",
-                'href'   => "/plugs/base/index",
+                'title'  => "command运行状态",
+                'href'   => "/plugs/base/command_status",
                 'icon'   => "fa fa-tachometer",
                 'target' => '_self',
             ],
@@ -70,6 +71,9 @@ class Plugs extends PlugsBase
             Route::get('plugs/base/install', 'PlugsBaseController@install');
             Route::get('plugs/base/status', 'PlugsBaseController@status');
             Route::post('plugs/base/edit_plugs', 'PlugsBaseController@edit_plugs');
+            Route::any('plugs/base/command_status', function(){
+                halt(PlugsCommandStatus::get_command_list());// TODO 做成列表
+            });
         })->prefix('\app\plugs\base\controller\\');
         
     }

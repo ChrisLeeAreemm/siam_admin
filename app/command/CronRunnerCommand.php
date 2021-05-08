@@ -3,13 +3,14 @@
 
 namespace app\command;
 
+use app\plugs\base\service\PlugsCommandStatus;
 use think\console\Command;
 use think\console\Input;
 use think\console\input\Argument;
 use think\console\input\Option;
 use think\console\Output;
-use think\facade\Log;
 use Workerman\Crontab\Crontab;
+use Workerman\Lib\Timer;
 use Workerman\Worker;
 
 class CronRunnerCommand extends Command
@@ -59,7 +60,7 @@ class CronRunnerCommand extends Command
                 $class_namespace = $namespace.$class_name;
                 /** @var \app\cron\CronBase $class */
                 $class = new $class_namespace;
-
+                // FEATURE 把任务和cron id 记录保存起来，然后定时器定时扫描文件 看看是否更改
                 new Crontab("0 {$class->run_period()}", function() use($class){
                     try{
                         // 保存到对应的日志文件中
@@ -82,6 +83,12 @@ class CronRunnerCommand extends Command
                 });
                 echo "已注册 {$class->rule()}\n";
             }
+
+            // 定时器 任务心跳包
+            // FEATURE 扫描文件 看看运行规则是否更改
+            Timer::add(1,function (){
+                PlugsCommandStatus::ping('cron');
+            });
         };
 
 

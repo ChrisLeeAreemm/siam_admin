@@ -4,6 +4,7 @@
 namespace app\plugs\apiFilter\service;
 
 use app\plugs\apiFilter\model\PlugsApiFilterSettingModel;
+use app\plugs\base\service\PlugsCommandStatus;
 use think\console\Command;
 use think\console\Input;
 use think\console\input\Argument;
@@ -54,6 +55,7 @@ class ApiFilterCommand extends Command
             // 定时器 1秒一次限流检测
             Timer::add(1,function (){
                 ApiAccessContain::getInstance()->reset();
+                PlugsCommandStatus::ping('api-filter');
             });
 
         };

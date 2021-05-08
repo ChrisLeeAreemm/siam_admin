@@ -5,6 +5,7 @@ namespace app\plugs\apiFilter;
 use app\exception\ErrorCode;
 use app\plugs\apiFilter\model\PlugsApiFilterSettingModel;
 use app\plugs\apiFilter\service\ApiAccessContain;
+use app\plugs\base\service\PlugsCommandStatus;
 use app\plugs\base\service\PlugsDatabaseHelper;
 use app\facade\SiamApp;
 use app\plugs\apiFilter\service\ApiFilterCommand;
@@ -72,6 +73,7 @@ class Plugs extends PlugsBase
         Route::any('plugs/api_filter/api/get_one', 'app\plugs\apiFilter\controller\ApiFilterController@get_one');
         Route::any('plugs/api_filter/api/delete', 'app\plugs\apiFilter\controller\ApiFilterController@delete');
 
+        PlugsCommandStatus::register('api-filter', "api限流统计", 'php think api-fitler');
         // 注入自定义命令行
         $console = SiamApp::getInstance()->getConsole();
         if ($console) {
