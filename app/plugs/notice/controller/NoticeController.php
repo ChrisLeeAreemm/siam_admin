@@ -69,7 +69,7 @@ class NoticeController extends PlugsBaseController
         $data['notice_title']    = input('notice_title');
         $data['notice_content']  = input('notice_content');
         $data['notice_sender']   = $this->who->u_id;
-        $data['notice_receiver'] = '0';
+        $data['notice_receiver'] = PlugsNoticeModel::NOTICE_RECEIVER_ALL;
         if (input('select')){
             $data['notice_receiver'] = json_encode(explode(',',input('select')));
         }
@@ -126,7 +126,7 @@ class NoticeController extends PlugsBaseController
 
     private function build_where($where = [])
     {
-        $where['notice_receiver'] = 0;
+        $where['notice_receiver'] = PlugsNoticeModel::NOTICE_RECEIVER_ALL;
         return $where;
     }
 
