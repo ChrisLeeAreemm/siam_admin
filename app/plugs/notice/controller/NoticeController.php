@@ -102,33 +102,6 @@ class NoticeController extends PlugsBaseController
         return $this->send(ErrorCode::SUCCESS, $notice, 'SUCCESS');
 
     }
-    
-    /**
-     * 获取未读数量
-     * @return \think\response\Json
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\DbException
-     * @throws \think\db\exception\ModelNotFoundException
-     */
-    public function get_unread_count()
-    {
-        $where   = $this->build_where();
-        $whereOr = $this->build_whereOr();
-        $result  = PlugsNoticeModel::where($where)->whereOr($whereOr)->select();
-        $count   = 0;
-        foreach ($result as $v){
-            //未读数量
-            $where_s = [
-                'u_id'      => $this->who->u_id,
-                'notice_id' => $v['notice_id']
-            ];
-            $is_read = PlugsNoticeReadModel::where($where_s)->find();
-            if (!$is_read) {
-                $count++;
-            }
-        }
-        return $this->send(ErrorCode::SUCCESS, ['count'=>$count]);
-    }
 
     private function build_where($where = [])
     {
