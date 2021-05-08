@@ -21,25 +21,26 @@ layui.define(['laytpl', 'layer', 'jquery', 'setter'], function (exports) {
                 key: setter.request.tokenName
                 , value: token
             });
-
-            view.req({
-               url: "/admin/users/get_config",
-                success: function (res) {
-                   for (let key in res.data){
-                       let temp = res.data[key];
-                       layui.data(setter.tableName, {
-                           key: key
-                           , value: temp
-                       });
-                   }
-
-                }
-            });
-
-
+            view.get_config();
 
         },
 
+        //获取用户配置信息缓存
+        get_config : function () {
+            view.req({
+                url: "/admin/users/get_config",
+                success: function (res) {
+                    for (let key in res.data){
+                        let temp = res.data[key];
+                        layui.data(setter.tableName, {
+                            key: key
+                            , value: temp
+                        });
+                    }
+
+                }
+            });
+        },
         //获取参数
         getQueryletiable: function(letiable) {
         let query = window.location.search.substring(1);
