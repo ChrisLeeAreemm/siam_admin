@@ -119,7 +119,8 @@ class NoticeController extends PlugsBaseController
                 return $this->send(ErrorCode::DB_EXCEPTION, [], 'SAVE_READ_FAIL');
             }
         }
-        return $this->send(ErrorCode::SUCCESS, $notice, 'SUCCESS');
+
+        return $this->send(ErrorCode::SUCCESS, ['notice'=>$notice], 'SUCCESS');
 
     }
 
