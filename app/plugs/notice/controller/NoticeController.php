@@ -118,11 +118,9 @@ class NoticeController extends PlugsBaseController
             if (!$save) {
                 return $this->send(ErrorCode::DB_EXCEPTION, [], 'SAVE_READ_FAIL');
             }
-
-            $unread_count = 1; //已读
         }
 
-        return $this->send(ErrorCode::SUCCESS, ['notice'=>$notice,'unread_count'=>$unread_count??0], 'SUCCESS');
+        return $this->send(ErrorCode::SUCCESS, ['notice'=>$notice], 'SUCCESS');
 
     }
 
