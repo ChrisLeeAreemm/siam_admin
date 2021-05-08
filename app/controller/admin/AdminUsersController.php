@@ -3,10 +3,11 @@
 namespace app\controller\admin;
 
 use app\exception\ErrorCode;
+use app\model\PlugsStatusModel;
 use app\model\RolesModel;
-use app\model\UsersModel;
 use app\model\UsersModel as Model;
-use app\plugs\apiFilter\model\PlugsApiFilterSettingModel;
+use app\plugs\notice\model\PlugsNoticeModel;
+use app\plugs\notice\model\PlugsNoticeReadModel;
 use Siam\JWT;
 use think\helper\Str;
 
@@ -62,6 +63,34 @@ class AdminUsersController extends AdminBaseController
         return $this->send(ErrorCode::SUCCESS, ['lists' => $xmsData]);
     }
 
+    /**
+     * 获取用户登陆配置
+     * @return \think\response\Json
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function get_config()
+    {
+
+        // - 应读站内信
+        $where['notice_receiver'] = 0;
+        $whereOr[]                = ['notice_receiver', 'like', "%\"{$this->who->u_id}\"%"];
+        $notice                   = PlugsNoticeModel::where($where)->whereOr($whereOr)->count();
+        $is_read                  = PlugsNoticeReadModel::where('u_id', '=', $this->who->u_id)->count();
+        $result['unread_count']   = $notice - $is_read;
+
+        // - 所有插件状态
+        $result['plugs_status'] = PlugsStatusModel::where('plugs_name', '<>', 'base')->field('plugs_name,plugs_status')->select();
+
+        // - 个人权限
+        $user = Model::field('u_auth')->where('u_id','=',$this->who->u_id)->find();
+        $result['u_auth'] = $user->u_auth;
+
+        return $this->send(ErrorCode::SUCCESS, $result);
+
+    }
+
     public function get_one()
     {
         $id     = input('u_id');
@@ -103,7 +132,7 @@ class AdminUsersController extends AdminBaseController
             'u_auth'      => implode(',', $auth),
             'create_time' => date('Y-m-d H:i:s'),
         ];
-        $userModel = new UsersModel();
+        $userModel = new Model();
         $start     = $userModel->addUser($data);
 
         if (!$start) {
@@ -171,7 +200,7 @@ class AdminUsersController extends AdminBaseController
         $where = [
             'u_account' => input('u_account'),
         ];
-        $user  = UsersModel::where($where)->find();
+        $user  = Model::where($where)->find();
         if (!$user) return $this->send(ErrorCode::DB_DATA_DOES_NOT_EXIST, [], '用户信息不存在');
 
         if ($user['u_password'] !== md5($password)) {
