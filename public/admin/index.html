@@ -184,6 +184,7 @@
                 case 'notice':
                     $('#plugs_notice').show();
                     if (localTable.unread_count != 0){
+                        notice_n = localTable.unread_count;
                         if (localTable.unread_count >= 99) {
                             notice_n = '99+';
                         }
