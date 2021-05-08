@@ -168,8 +168,10 @@
         })
 
         // 渲染nav中的插件
-        view.get_config();
+
         let localTable = layui.data(setter.tableName);
+        view.get_config()
+        //更新缓存
         for (let key in localTable.plugs_status) {
             let temp = localTable.plugs_status[key];
             if (temp.plugs_status === 0) continue;

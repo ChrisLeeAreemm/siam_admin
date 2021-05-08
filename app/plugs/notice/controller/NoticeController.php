@@ -119,7 +119,14 @@ class NoticeController extends PlugsBaseController
                 return $this->send(ErrorCode::DB_EXCEPTION, [], 'SAVE_READ_FAIL');
             }
         }
-        return $this->send(ErrorCode::SUCCESS, $notice, 'SUCCESS');
+        //更新阅读数据
+        $where_receiver['notice_receiver'] = PlugsNoticeModel::NOTICE_RECEIVER_ALL;
+        $whereOr[]                         = ['notice_receiver', 'like', "%\"{$this->who->u_id}\"%"];
+        $count                             = PlugsNoticeModel::where($where_receiver)->whereOr($whereOr)->count();
+        $is_read                           = PlugsNoticeReadModel::where('u_id', '=', $this->who->u_id)->count();
+        $unread_count                      = $count - $is_read;
+
+        return $this->send(ErrorCode::SUCCESS, ['notice'=>$notice,'unread_count'=>$unread_count], 'SUCCESS');
 
     }
 
