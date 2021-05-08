@@ -173,7 +173,8 @@
         if (localTable.plugs_status.notice !== undefined && localTable.plugs_status.notice.status == 1){
             $('#plugs_notice').show();
             // 全部弹框
-            for (let i = 0; i <= layui.data(setter.tableName).force_notice.length; i++) {
+            let pop_length = layui.data(setter.tableName).force_notice.length;
+            for (let i = 0; i <= pop_length; i++) {
                 notice_pop();
             }
             setInterval(function(){
