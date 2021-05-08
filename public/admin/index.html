@@ -167,30 +167,35 @@
             url:"/admin/system/is_login"
         })
 
+        view.get_config();
         // 渲染nav中的插件
-
         let localTable = layui.data(setter.tableName);
-        view.get_config()
         //更新缓存
         for (let key in localTable.plugs_status) {
             let temp = localTable.plugs_status[key];
-            if (temp.plugs_status === 0) continue;
             switch (temp.plugs_name) {
                 case 'notice':
                     $('#plugs_notice').show();
-                    if (localTable.unread_count > 0){
-                        notice_n = localTable.unread_count;
-                        if (localTable.unread_count >= 99) {
-                            notice_n = '99+';
+                    setInterval(function(){
+                        let localTable = layui.data(setter.tableName);
+                        if (localTable.unread_count > 0){
+                            notice_n = localTable.unread_count;
+                            if (localTable.unread_count >= 99) {
+                                notice_n = '99+';
+                            }
+                            $('#notice_n').show().html(notice_n);
+                        }else{
+                            $('#notice_n').hide();
                         }
-                        $('#notice_n').show().html(notice_n);
-                    }
-                    notice_pop();
+                        notice_pop();
+                    },1000);
                     break;
                 default:
                     break;
             }
         }
+
+
 
 
 
@@ -208,6 +213,7 @@
             if (localTable.force_notice.length <= 0) return false;
             //取出一个
             let temp = localTable.force_notice.shift();
+
             //覆盖值
             layui.data(setter.tableName, {
                 key: 'force_notice',
@@ -238,7 +244,6 @@
                 content: html,
                 yes:function(index){
                     layer.close(index);
-                    notice_pop()
                 },
             });
         }
@@ -248,6 +253,11 @@
             view.req({
                 url:"plugs/notice/api/read_notice?notice_id="+notice_id,
             })
+            //更新缓存
+            layui.data(setter.tableName, {
+                key: 'unread_count',
+                value:layui.data(setter.tableName).unread_count-1
+            });
         }
     });
 </script>
