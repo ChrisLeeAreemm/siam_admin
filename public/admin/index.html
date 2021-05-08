@@ -174,35 +174,28 @@
         view.req({
             url:"/admin/system/is_login"
         })
-        //渲染nav中的插件
-        view.req({
-                url: "/admin/PlugsStatus/check_status",
-                type: "get",
-                dataType: "json",
-                success: function (res) {
-                    for (let i=0;i<res.data.length;i++){
-                        if (res.data[i].plugs_status !== 1)continue;
-                        // 判断notice插件内容
-                        switch (res.data[i].plugs_name) {
-                            case 'notice':
-                                $('#plugs_notice').show();
-                                view.req({
-                                    url: "/plugs/notice/api/get_unread_count",
-                                    success: function (res) {
-                                        let notice_n = res.data.count;
-                                        if (res.data.count >= 99) {
-                                            notice_n = '99+';
-                                        }
-                                        $('#notice_n').show().html(notice_n);
-                                    }
-                                })
-                                break;
-                            default:
-                                break;
-                        }
+
+        // 渲染nav中的插件
+        var localTable = layui.data(setter.tableName);
+        for (let key in localTable.plugs_status) {
+            let temp = localTable.plugs_status[key];
+            if (temp.plugs_status === 0) continue;
+            switch (temp.plugs_name) {
+                case 'notice':
+                    $('#plugs_notice').show();
+                    if (localTable.unread_count === 0) continue;
+                    if (localTable.unread_count >= 99) {
+                        notice_n = '99+';
                     }
-                }
-        })
+                    $('#notice_n').show().html(notice_n);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+
+
         $('.login-out').on("click", function () {
             view.logout(function () {
                 window.location.href = 'login.html';
