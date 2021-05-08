@@ -72,11 +72,14 @@
             "create_time": res.data.notice.create_time,
             "notice_content": res.data.notice.notice_content,
           });
-          //更新缓存
-          layui.data(setter.tableName, {
-            key: 'unread_count',
-            value: res.data.unread_count
-          });
+          if (res.data.unread_count === 1){
+            //更新缓存
+            layui.data(setter.tableName, {
+              key: 'unread_count',
+              value:layui.data(setter.tableName).unread_count-1
+            });
+          }
+
         }
       }
     })

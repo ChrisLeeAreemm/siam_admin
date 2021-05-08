@@ -106,6 +106,7 @@ class NoticeController extends PlugsBaseController
         ];
         $is_read = PlugsNoticeReadModel::where($where)->find();
         //未读，写入已读表
+        $unread_count = 0; // 0表示数量无更改
         if (!$is_read){
             $data = [
                 'u_id'        => $this->who->u_id,
@@ -118,13 +119,9 @@ class NoticeController extends PlugsBaseController
             if (!$save) {
                 return $this->send(ErrorCode::DB_EXCEPTION, [], 'SAVE_READ_FAIL');
             }
+
+            $unread_count = 1; //已读
         }
-        //更新阅读数据
-        $where_receiver['notice_receiver'] = PlugsNoticeModel::NOTICE_RECEIVER_ALL;
-        $whereOr[]                         = ['notice_receiver', 'like', "%\"{$this->who->u_id}\"%"];
-        $count                             = PlugsNoticeModel::where($where_receiver)->whereOr($whereOr)->count();
-        $is_read                           = PlugsNoticeReadModel::where('u_id', '=', $this->who->u_id)->count();
-        $unread_count                      = $count - $is_read;
 
         return $this->send(ErrorCode::SUCCESS, ['notice'=>$notice,'unread_count'=>$unread_count], 'SUCCESS');
 
