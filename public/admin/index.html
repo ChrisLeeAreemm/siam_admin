@@ -170,29 +170,22 @@
 
         // 渲染nav中的插件
         let localTable = layui.data(setter.tableName);
-        //更新缓存
-        for (let key in localTable.plugs_status) {
-            let temp = localTable.plugs_status[key];
-            switch (temp.plugs_name) {
-                case 'notice':
-                    $('#plugs_notice').show();
-                    setInterval(function(){
-                        let localTable = layui.data(setter.tableName);
-                        if (localTable.unread_count > 0){
-                            notice_n = localTable.unread_count;
-                            if (localTable.unread_count >= 99) {
-                                notice_n = '99+';
-                            }
-                            $('#notice_n').show().html(notice_n);
-                        }else{
-                            $('#notice_n').hide();
-                        }
-                        notice_pop();
-                    },1000);
-                    break;
-                default:
-                    break;
+        if (localTable.plugs_status.notice !== undefined && localTable.plugs_status.notice.status == 1){
+            $('#plugs_notice').show();
+            // 全部弹框
+            for (let i = 0; i <= layui.data(setter.tableName).force_notice.length; i++) {
+                notice_pop();
             }
+            setInterval(function(){
+                let localTable = layui.data(setter.tableName);
+                if (localTable.unread_count > 0){
+                    let notice_n = localTable.unread_count;
+                    if (localTable.unread_count >= 99) {
+                        notice_n = '99+';
+                    }
+                    $('#notice_n').show().html(notice_n);
+                }
+            },1000);
         }
 
 
