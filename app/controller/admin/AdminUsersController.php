@@ -81,7 +81,13 @@ class AdminUsersController extends AdminBaseController
         $result['unread_count']   = $notice - $is_read;
 
         // - 所有插件状态
-        $result['plugs_status'] = PlugsStatusModel::where('plugs_name', '<>', 'base')->field('plugs_name,plugs_status')->select();
+        $plugs_status = PlugsStatusModel::where('plugs_name', '<>', 'base')->field('plugs_name,plugs_status')->select();
+        if ($plugs_status){
+            foreach ($plugs_status as $v){
+                $result['plugs_status'][$v['plugs_name']]['status'] = $v['plugs_status'];
+            }
+        }
+
         // - 所有插件状态
 
         // - 个人权限
