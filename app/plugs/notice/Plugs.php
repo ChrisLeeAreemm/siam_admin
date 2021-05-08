@@ -53,6 +53,7 @@ class Plugs extends PlugsBase
             $table->text('notice_content')->setColumnComment("消息内容");
             $table->int('notice_sender')->setColumnComment("发送者");
             $table->varchar('notice_receiver',255)->setDefaultValue(0)->setColumnComment("接受者:0-通知所有用户、其他数字通知单用户");
+            $table->tinyint('notice_type',3)->setDefaultValue(0)->setColumnComment("消息类型 0-普通 1-强制");
             $table->datetime("create_time")->setColumnComment("创建时间");
             $table->datetime("update_time")->setColumnComment("更新时间");
         }));
@@ -89,6 +90,5 @@ class Plugs extends PlugsBase
         Route::any('plugs/notice/api/get_list', 'app\plugs\notice\controller\NoticeController@get_list');
         Route::any('plugs/notice/api/send_notice', 'app\plugs\notice\controller\NoticeController@send_notice');
         Route::any('plugs/notice/api/read_notice', 'app\plugs\notice\controller\NoticeController@read_notice');
-        Route::any('plugs/notice/api/get_unread_count', 'app\plugs\notice\controller\NoticeController@get_unread_count');
     }
 }

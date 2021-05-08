@@ -163,20 +163,12 @@
         };
         miniAdmin.render(options);
 
-        // 百度统计代码，只统计指定域名
-        miniTongji.render({
-            specific: true,
-            domains: [
-                // '99php.cn',
-            ],
-        });
-
         view.req({
             url:"/admin/system/is_login"
         })
 
         // 渲染nav中的插件
-        var localTable = layui.data(setter.tableName);
+        let localTable = layui.data(setter.tableName);
         for (let key in localTable.plugs_status) {
             let temp = localTable.plugs_status[key];
             if (temp.plugs_status === 0) continue;
@@ -190,7 +182,7 @@
                         }
                         $('#notice_n').show().html(notice_n);
                     }
-
+                    notice_pop();
                     break;
                 default:
                     break;
@@ -204,6 +196,56 @@
                 window.location.href = 'login.html';
             });
         });
+
+
+        function notice_pop()
+        {
+            // 获取缓存信息
+            let localTable = layui.data(setter.tableName);
+            if (localTable.force_notice.length <= 0) return false;
+            //取出一个
+            let temp = localTable.force_notice.shift();
+            //覆盖值
+            layui.data(setter.tableName, {
+                key: 'force_notice',
+                value: localTable.force_notice
+            });
+            //阅读标记
+            read_notice(temp.notice_id);
+
+            //弹窗
+            var title = temp.notice_title,
+                noticeTime = temp.create_time,
+                content = temp.notice_content;
+
+            var html = '<div style="padding:15px 20px; text-align:justify; line-height: 22px;border-bottom:1px solid #e2e2e2;background-color: #2f4056;color: #ffffff">\n' +
+                '<div style="text-align: center;margin-bottom: 20px;font-weight: bold;border-bottom:1px solid #718fb5;padding-bottom: 5px"><h4 class="text-danger">' + title + '</h4></div>\n' +
+                '<div style="font-size: 12px">' + content + '</div>\n' +
+                '</div>\n';
+
+            layer.open({
+                type: 1,
+                title: '通知' + '<span style="float: right;right: 1px;font-size: 12px;color: #b1b3b9;margin-top: 1px">' + noticeTime + '</span>',
+                area: '300px;',
+                shade: 0.8,
+                btnAlign: 'c',
+                moveType: 1,
+                closeBtn:0,
+                btn:['确认'],
+                content: html,
+                yes:function(index){
+                    layer.close(index);
+                    notice_pop()
+                },
+            });
+        }
+
+        function read_notice(notice_id)
+        {
+            view.req({
+                url:"plugs/notice/api/read_notice?notice_id="+notice_id,
+            })
+        }
     });
 </script>
 </body>

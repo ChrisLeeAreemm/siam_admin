@@ -64,7 +64,7 @@ class AdminUsersController extends AdminBaseController
     }
 
     /**
-     * 获取用户登陆配置
+     * 获取用户登录配置
      * @return \think\response\Json
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
@@ -74,7 +74,7 @@ class AdminUsersController extends AdminBaseController
     {
 
         // - 应读站内信
-        $where['notice_receiver'] = 0;
+        $where['notice_receiver'] = PlugsNoticeModel::NOTICE_RECEIVER_ALL;
         $whereOr[]                = ['notice_receiver', 'like', "%\"{$this->who->u_id}\"%"];
         $notice                   = PlugsNoticeModel::where($where)->whereOr($whereOr)->count();
         $is_read                  = PlugsNoticeReadModel::where('u_id', '=', $this->who->u_id)->count();
@@ -82,10 +82,49 @@ class AdminUsersController extends AdminBaseController
 
         // - 所有插件状态
         $result['plugs_status'] = PlugsStatusModel::where('plugs_name', '<>', 'base')->field('plugs_name,plugs_status')->select();
+        // - 所有插件状态
 
         // - 个人权限
-        $user = Model::field('u_auth')->where('u_id','=',$this->who->u_id)->find();
+        $user             = Model::field('u_auth')->where('u_id', '=', $this->who->u_id)->find();
         $result['u_auth'] = $user->u_auth;
+        // - 个人权限
+
+        // - 未读的强制阅读通知列表
+
+        //7天内
+        $day            = date('Y-m-d H:i:s', strtotime("-7 day"));
+        $where_receiver = [
+            ['notice_receiver', '=', PlugsNoticeModel::NOTICE_RECEIVER_ALL],
+        ];
+        $where_force    = [
+            ['notice_type', '=', PlugsNoticeModel::NOTICE_TYPE_FORCE],
+            ['create_time', '>=', $day]
+        ];
+        //获取符合的数据
+        $force_notice = PlugsNoticeModel::where([$where_force])->where(function ($query) use ($whereOr, $where_receiver) {
+            $query->where($where_receiver)->whereOr($whereOr);
+        })->select();
+
+        $notice_ids   = [];
+        //取出ID数组
+        foreach ($force_notice as $v) {
+            $notice_ids[] = $v['notice_id'];
+        }
+
+        //对比取出未读数据
+        $read_notice = PlugsNoticeReadModel::where('u_id', '=', $this->who->u_id)->whereIn('notice_id', implode(',', $notice_ids))->select();
+        if ($read_notice) {
+            foreach ($force_notice as $key => $value) {
+                foreach ($read_notice as $vo) {
+                    if ($value['notice_id'] !== $vo['notice_id']) continue;
+                    //把已读的从数据中中删除
+                    unset($force_notice[$key]);
+                }
+            }
+            unset($read_notice);
+        }
+        $result['force_notice'] = array_values($force_notice->toArray());
+        // - 未读的强制阅读通知列表
 
         return $this->send(ErrorCode::SUCCESS, $result);
 

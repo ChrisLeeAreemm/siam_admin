@@ -22,18 +22,38 @@ class NoticeController extends PlugsBaseController
         $where   = $this->build_where();
         $whereOr = $this->build_whereOr();
         $result  = PlugsNoticeModel::with(['users'])->where($where)->whereOr($whereOr)->page($page, $limit)->order('notice_id', 'desc')->select();
-        foreach ($result as $v){
-            //检查阅读记录
-            $where_s = [
-                'u_id'      => $this->who->u_id,
-                'notice_id' => $v['notice_id']
-            ];
-            $is_read = PlugsNoticeReadModel::where($where_s)->find();
-            $v['read_status'] = '已读';
-            if (!$is_read) {
+        $notice_ids   = [];
+
+        //取出ID数组
+        foreach ($result as $v) {
+            $notice_ids[] = $v['notice_id'];
+        }
+
+        //对比取出已读数据
+        $read_notice = PlugsNoticeReadModel::where('u_id', '=', $this->who->u_id)->whereIn('notice_id', implode(',', $notice_ids))->select();
+
+        //释放
+        unset($notice_ids);
+
+        if ($read_notice->isEmpty()) { //空数据则全部未读
+            foreach ($result as $v){
                 $v['read_status'] = '未读';
             }
+        }else{
+            //有数据，进行区分
+            foreach ($result as $v) {
+                $v['read_status'] = '未读';
+                foreach ($read_notice as $vo) {
+                    if ($v['notice_id'] === $vo['notice_id']) {
+                        $v['read_status'] = '已读';
+                    }
+                }
+            }
         }
+
+        //释放
+        unset($read_notice);
+
         $count  = PlugsNoticeModel::count();
         return $this->send(ErrorCode::SUCCESS, ['lists' => $result, 'count' => $count]);
     }
