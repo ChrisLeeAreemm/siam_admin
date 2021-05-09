@@ -54,7 +54,7 @@
 
         table.render({
             elem: '#lists'
-            , url: "/admin/users/get_list"
+            , url: "/index.php/admin/users/get_list"
             , where: {
                 access_token: layui.data(setter.tableName)[setter.request.tokenName]
             }
@@ -100,7 +100,7 @@
                 case 'del':
                     layer.confirm('确认删除?', {icon: 3, title: '提示'}, function (index) {
                         view.req({
-                            url: "/admin/users/delete",
+                            url: "/index.php/admin/users/delete",
                             data: {
                                 u_id: data.u_id
                             },

@@ -64,7 +64,7 @@
         if(set_id){
             //获取信息
             view.req({
-                url: get_one_url,
+                url: '/index.php/'+get_one_url,
                 data: {set_id:set_id},
                 type: "get",
                 dataType: "json",
@@ -87,7 +87,7 @@
                 shade: 0.5
             });
             view.req({
-                url: submit_url,
+                url: '/index.php/'+submit_url,
                 data: data.field,
                 type: "post",
                 dataType: "json",

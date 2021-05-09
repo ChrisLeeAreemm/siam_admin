@@ -36,7 +36,7 @@
         //监听提交
         form.on('submit(install)', function (data) {
             view.req({
-                url: "/plugs/base/install",
+                url: "/index.php/plugs/base/install",
                 data: {"plugs_name":plugs_name},
                 type: "get",
                 success: function (res) {
