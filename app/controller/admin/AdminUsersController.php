@@ -237,7 +237,9 @@ class AdminUsersController extends AdminBaseController
             'u_auth'      => implode(',', $auth),
             'update_time' => date('Y-m-d H:i:s'),
         ];
-        
+        if ($users->u_password !== md5($param['u_password']) && !empty($param['u_password'])){
+            $data['u_password'] = md5($param['u_password']);
+        }
         $res   = $users->save($data);
         if (!$res) {
             //TODO 增加错误代码 DATA_CHANGE_FAILED 数据修改失败
