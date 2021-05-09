@@ -81,7 +81,7 @@
     if(auth_id){
       //获取信息
       view.req({
-        url: '/index.php/'+get_one_url,
+        url: get_one_url,
         data: {auth_id:auth_id},
         type: "get",
         dataType: "json",
@@ -106,7 +106,7 @@
         shade: 0.5
       });
       view.req({
-        url: '/index.php/'+submit_url,
+        url: submit_url,
         data: data.field,
         type: "post",
         dataType: "json",

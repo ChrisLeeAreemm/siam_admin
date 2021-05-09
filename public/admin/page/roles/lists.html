@@ -54,7 +54,7 @@
 
         table.render({
             elem: '#lists'
-            , url: "/index.php/admin/roles/get_list"
+            , url: "/admin/roles/get_list"
             , where: {
                 access_token: layui.data(setter.tableName)[setter.request.tokenName]
             }
@@ -97,7 +97,7 @@
                 case 'del':
                     layer.confirm('确认删除?', {icon: 3, title: '提示'}, function (index) {
                         view.req({
-                            url: "/index.php/admin/roles/delete",
+                            url: "/admin/roles/delete",
                             data: {
                                 role_id: data.role_id
                             },

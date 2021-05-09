@@ -403,7 +403,7 @@
 
         $(document).ready(function () {
             view.req({
-                url: "/index.php/admin/auths/get_list",
+                url: "/admin/auths/get_list",
                 type: "get",
                 success: function (res) {
                     if (res.code === 200) {
@@ -421,7 +421,7 @@
 
         $("#save_order").click(function () {
             view.req({
-                url: "/index.php/admin/auths/order_update",
+                url: "/admin/auths/order_update",
                 data: {
                     roleOrder: roleOrder
                 },
@@ -442,7 +442,7 @@
         });
         form.on('submit(add_role)', function (data) {
             view.req({
-                url: "/index.php/admin/auths/add",
+                url: "/admin/auths/add",
                 data: data.field,
                 type: "post",
                 dataType: "json",
@@ -469,7 +469,7 @@
             })
         };
         window.delAuth = function (auth_id){
-            let url = "/index.php/admin/auths/delete";
+            let url = "/admin/auths/delete";
             layer.confirm('确认删除?', {icon: 3, title: '提示'}, function (index) {
                 view.req({
                     url: url,

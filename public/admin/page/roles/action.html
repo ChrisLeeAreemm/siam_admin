@@ -65,7 +65,7 @@
         let role_id = view.getQueryletiable('role_id');
         //获取权限结构
         view.req({
-            url: "/index.php/admin/auths/get_roles_tree",
+            url: "/admin/auths/get_roles_tree",
             type: "get",
             dataType: "json",
             success: function (res) {
@@ -84,7 +84,7 @@
         if (role_id) {
             //获取信息
             view.req({
-                url: '/index.php/' + get_one_url,
+                url: get_one_url,
                 data: {role_id: role_id},
                 type: "get",
                 dataType: "json",
@@ -111,7 +111,7 @@
             //获得选中的节点
             let checkData = window.JSON.stringify(tree.getChecked('rolesTree'));
             view.req({
-                url: '/index.php/' + submit_url,
+                url: submit_url,
                 data: {
                     role_id: data.field.role_id,
                     role_name: data.field.role_name,

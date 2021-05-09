@@ -44,7 +44,7 @@
         //监听提交
         form.on('submit(status)', function (data) {
             view.req({
-                url: "/index.php/plugs/base/status",
+                url: "/plugs/base/status",
                 data: {"plugs_name":plugs_name,"status":status},
                 type: "get",
                 success: function (res) {
