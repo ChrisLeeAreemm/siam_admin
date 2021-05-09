@@ -54,7 +54,7 @@ class NoticeController extends PlugsBaseController
         //释放
         unset($read_notice);
 
-        $count  = PlugsNoticeModel::count();
+        $count  = PlugsNoticeModel::where($where)->whereOr($whereOr)->count();
         return $this->send(ErrorCode::SUCCESS, ['lists' => $result, 'count' => $count]);
     }
 
@@ -70,6 +70,7 @@ class NoticeController extends PlugsBaseController
         $data['notice_content']  = input('notice_content');
         $data['notice_sender']   = $this->who->u_id;
         $data['notice_receiver'] = PlugsNoticeModel::NOTICE_RECEIVER_ALL;
+        $data['notice_type']     = input('notice_type');
         if (input('select')){
             $data['notice_receiver'] = json_encode(explode(',',input('select')));
         }
