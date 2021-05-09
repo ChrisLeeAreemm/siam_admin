@@ -160,7 +160,7 @@ class AdminUsersController extends AdminBaseController
     public function add()
     {
         $param     = input('data');
-        
+        //判断是否存在
         $account_exist = Model::where('u_account', $param['u_account'])->count();
         if ($account_exist){
             //TODO 添加一个错误代码 数据已存在
@@ -212,6 +212,12 @@ class AdminUsersController extends AdminBaseController
         if (!$users){
             return $this->send(ErrorCode::DB_DATA_DOES_NOT_EXIST, [], 'DB_DATA_DOES_NOT_EXIST');
         }
+        //判断是否存在
+        $account_exist = Model::where('u_account', $param['u_account'])->find();
+        if ($account_exist && $account_exist['u_id'] != $param['u_id']) {
+            //TODO 添加一个错误代码 数据已存在
+            return $this->send(ErrorCode::DATA_ALREADY_EXISTS, [], '该账号已存在');
+        }
         
         $role_auth            = json_decode($param['role_auth'], true);
         $role_id              = [];
@@ -225,14 +231,12 @@ class AdminUsersController extends AdminBaseController
 
         $data  = [
             'u_name'      => $param['u_name'],
+            'u_password'  => md5($param['u_password']),
             'u_account'   => $param['u_account'],
             'role_id'     => implode(',', $role_id),
             'u_auth'      => implode(',', $auth),
             'update_time' => date('Y-m-d H:i:s'),
         ];
-        if ($users->u_password !== md5($param['u_password']) && !empty($param['u_password'])){
-            $data['u_password'] = md5($param['u_password']);
-        }
         
         $res   = $users->save($data);
         if (!$res) {
