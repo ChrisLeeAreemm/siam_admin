@@ -48,6 +48,9 @@ class ErrorCode
     const THIRD_PART_FAIL = '505';// 第三方服务失败
     const DB_DATA_DOES_NOT_EXIST = '530';// 数据库数据不存在
     const DB_EXCEPTION = '531';// 数据库异常(最基础的值try起来的db所有异常都可以用该值)
+    const DB_DATA_ALREADY_EXIST = '532';// 数据库数据已存在
+    const DB_DATA_ADD_FAILE = '533';// 数据库新增失败
+    const DB_DATA_UPDATE_FAILE = '534';// 数据库更新失败
     const FILE_EXIST = '540';// 文件已存在
     const FILE_NOT_EXIST = '541';// 文件不存在
     const FILE_WRITE_FAIL = '542';// 文件写入失败
