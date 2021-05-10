@@ -147,7 +147,7 @@ class AdminUsersController extends AdminBaseController
         $id     = input('u_id');
         $result = Model::find($id);
         if (!$result) {
-            return $this->send(ErrorCode::THIRD_PART_ERROR, [], '获取失败');
+            return $this->send(ErrorCode::DB_DATA_DOES_NOT_EXIST, [], '获取失败');
         }
         $result['u_auth']  = explode(',', $result['u_auth']);
         $result['role_id'] = explode(',', $result['role_id']);
@@ -163,7 +163,6 @@ class AdminUsersController extends AdminBaseController
         //判断是否存在
         $account_exist = Model::where('u_account', $param['u_account'])->count();
         if ($account_exist){
-            //TODO 添加一个错误代码 数据已存在
             return $this->send(ErrorCode::DATA_ALREADY_EXISTS, [], '该账号已存在');
         }
         
@@ -194,7 +193,6 @@ class AdminUsersController extends AdminBaseController
         $start     = $userModel->addUser($data);
 
         if (!$start) {
-            //TODO 增加数据 DATA_ADD_FAILED 数据新增失败
             return $this->send(ErrorCode::DATA_ADD_FAILED, [], '新增失败');
         }
         return $this->send(ErrorCode::SUCCESS, [], '成功');
@@ -215,7 +213,6 @@ class AdminUsersController extends AdminBaseController
         //判断是否存在
         $account_exist = Model::where('u_account', $param['u_account'])->find();
         if ($account_exist && $account_exist['u_id'] != $param['u_id']) {
-            //TODO 添加一个错误代码 数据已存在
             return $this->send(ErrorCode::DATA_ALREADY_EXISTS, [], '该账号已存在');
         }
         
@@ -237,12 +234,11 @@ class AdminUsersController extends AdminBaseController
             'u_auth'      => implode(',', $auth),
             'update_time' => date('Y-m-d H:i:s'),
         ];
-        if ($users->u_password !== md5($param['u_password']) && !empty($param['u_password'])){
+        if ($users->u_password !== $param['u_password'] && !empty($param['u_password'])){
             $data['u_password'] = md5($param['u_password']);
         }
         $res   = $users->save($data);
         if (!$res) {
-            //TODO 增加错误代码 DATA_CHANGE_FAILED 数据修改失败
             return $this->send(ErrorCode::DATA_CHANGE_FAILED, [], '编辑失败');
         }
         return $this->send(ErrorCode::SUCCESS, [], '成功');
