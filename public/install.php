@@ -44,14 +44,14 @@ if(@$_GET['c']=='success'){
            $link->select_db($data['DB_NAME']);
        }
         // TODO 导入sql数据并创建表
-//        $sql_file = file_get_contents('./install/siam_admin.sql');
-//        $sql_array=preg_split("/;[\r\n]+/", str_replace('siam_',$data['DB_PREFIX'],$sql_file));
-//        foreach ($sql_array as $k => $v) {
-//            if (!empty($v)) {
-//                $link->query($v);
-//            }
-//        }
-//        $link->close();
+       $sql_file = file_get_contents('./install/siam_admin.sql');
+       $sql_array=preg_split("/;[\r\n]+/", str_replace('siam_',$data['DB_PREFIX'],$sql_file));
+       foreach ($sql_array as $k => $v) {
+           if (!empty($v)) {
+               $link->query($v);
+           }
+       }
+       $link->close();
         // TODO 写入.env
         $app_name = $data['APP_NAME'];
         $api      = $data['API'];
