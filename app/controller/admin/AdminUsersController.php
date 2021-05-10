@@ -165,7 +165,7 @@ class AdminUsersController extends AdminBaseController
         //判断是否存在
         $account_exist = Model::where('u_account', $param['u_account'])->count();
         if ($account_exist){
-            return $this->send(ErrorCode::DATA_ALREADY_EXISTS, [], '该账号已存在');
+            return $this->send(ErrorCode::DB_DATA_ALREADY_EXIST, [], '该账号已存在');
         }
         
         $role_auth = json_decode($param['role_auth'], true);
@@ -195,7 +195,7 @@ class AdminUsersController extends AdminBaseController
         $start     = $userModel->addUser($data);
 
         if (!$start) {
-            return $this->send(ErrorCode::DATA_ADD_FAILED, [], '新增失败');
+            return $this->send(ErrorCode::DB_DATA_ADD_FAILE, [], '新增失败');
         }
         return $this->send(ErrorCode::SUCCESS, [], '成功');
     }
@@ -215,7 +215,7 @@ class AdminUsersController extends AdminBaseController
         //判断是否存在
         $account_exist = Model::where('u_account', $param['u_account'])->find();
         if ($account_exist && $account_exist['u_id'] != $param['u_id']) {
-            return $this->send(ErrorCode::DATA_ALREADY_EXISTS, [], '该账号已存在');
+            return $this->send(ErrorCode::DB_DATA_ALREADY_EXIST, [], '该账号已存在');
         }
         
         $role_auth            = json_decode($param['role_auth'], true);
@@ -241,7 +241,7 @@ class AdminUsersController extends AdminBaseController
         }
         $res   = $users->save($data);
         if (!$res) {
-            return $this->send(ErrorCode::DATA_CHANGE_FAILED, [], '编辑失败');
+            return $this->send(ErrorCode::DB_DATA_UPDATE_FAILE, [], '编辑失败');
         }
         return $this->send(ErrorCode::SUCCESS, [], '成功');
     }
