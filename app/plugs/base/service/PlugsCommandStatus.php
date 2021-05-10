@@ -48,7 +48,7 @@ class PlugsCommandStatus
     public static function online($command_name)
     {
         $key = CacheTag::PLUGS_COMMAND_RUN_STATUS . '_' . $command_name;
-        $ping = Cache::tag(CacheTag::PLUGS_COMMAND_RUN_STATUS)->get($key);
+        $ping = Cache::get($key);
         if (!$ping) return false;
         if ((time() - $ping) <= 10 ) return true;
 
