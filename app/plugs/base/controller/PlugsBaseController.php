@@ -180,7 +180,15 @@ class PlugsBaseController extends BaseController
      */
     function command_status()
     {
-        return $this->send(ErrorCode::SUCCESS, PlugsCommandStatus::get_command_list());
+        $command_list = PlugsCommandStatus::get_command_list();
+        foreach ($command_list as &$value){
+            $value['online'] = 'offline';
+            if (PlugsCommandStatus::online($value['command_name']) === true){
+                $value['online'] = 'online';
+            }
+
+        }
+        return $this->send(ErrorCode::SUCCESS,$command_list);
     }
 
     function auth()

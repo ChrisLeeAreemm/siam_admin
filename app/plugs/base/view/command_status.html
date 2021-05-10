@@ -21,6 +21,13 @@
   </div>
 
 </div>
+<script type="text/html" id="onlineTpl">
+  {{#  if(d.online === 'online'){ }}
+  <span style="color: #5FB878;">{{ d.online }}</span>
+  {{#  } else { }}
+  <span style="color: #FF5722;">{{ d.online }}</span>
+  {{#  } }}
+</script>
 <script src="__ADMIN__/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
 <script src="__ADMIN__/js/lay-config.js?v=2.0.4" charset="utf-8"></script>
 <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
@@ -42,6 +49,7 @@
         {field: 'command_title', title: '标题'},
         {field: 'command_name', title: '命令名'},
         {field: 'command', title: '命令'},
+        {field: 'online', title: '状态',templet: '#onlineTpl'},
       ]]
       , response: {
         statusCode: 200
