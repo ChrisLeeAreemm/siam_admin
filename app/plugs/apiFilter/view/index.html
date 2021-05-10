@@ -45,7 +45,7 @@
             , laytpl = layui.laytpl
             , setter = layui.setter
             , table = layui.table
-        let get_list_url = '/index.php/plugs/api_filter/api/get_list';
+        let get_list_url = '/plugs/api_filter/api/get_list';
         table.render({
             elem: '#table',
             url: get_list_url,
@@ -82,7 +82,7 @@
                 type: 2,
                 title: "添加",
                 content: url,
-                area: ['70%', '90%']
+                area: ['70%', '80%']
             });
         });
 
@@ -95,14 +95,14 @@
                 case 'del':
                     layer.confirm('确认删除?', {icon: 3, title: '提示'}, function (index) {
                         view.req({
-                            url: "/index.php/plugs/api_filter/api/delete",
+                            url: "/plugs/api_filter/api/delete",
                             data: {
                                 set_id: data.set_id
                             },
                             type: "post",
                             dataType: "json",
                             success: function (res) {
-                                if (res.code == '200') {
+                                if (res.code === 200) {
                                     layer.msg(res.msg,{icon:1,time: 1500},function () {
                                         window.location.reload();
                                     });
@@ -118,12 +118,12 @@
                     });
                     break;
                 case 'edit':
-                    let url = "/admin/page/plugs/apiFilter/action.html?set_id="+data.set_id;
+                    let url = "/plugs/api_filter/action.html?set_id="+data.set_id;
                     layer.open({
                         type: 2,
                         title: "编辑",
                         content: url,
-                        area:['70%','90%']
+                        area:['70%','80%']
                     });
                     break;
                 default:

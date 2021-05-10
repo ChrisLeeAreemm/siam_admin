@@ -35,7 +35,7 @@ class Plugs extends PlugsBase
                 'href'   => "/plugs/api_filter/index",
                 'icon'   => "fa fa-tachometer",
                 'target' => '_self',
-            ],
+            ]
         ]);
         return $config;
     }
@@ -66,6 +66,9 @@ class Plugs extends PlugsBase
         // 在这里注入路由[api] 等事件
         Route::get('plugs/api_filter/index', function () {
             return $this->pre_render_file(__DIR__ . "/view/index.html");
+        });
+        Route::get('plugs/api_filter/action', function () {
+            return $this->pre_render_file(__DIR__ . "/view/action.html");
         });
         Route::any('plugs/api_filter/api/get_list', 'app\plugs\apiFilter\controller\ApiFilterController@get_list');
         Route::any('plugs/api_filter/api/add', 'app\plugs\apiFilter\controller\ApiFilterController@add');
