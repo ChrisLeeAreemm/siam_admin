@@ -81,7 +81,7 @@
 
             switch (layEvent) {
                 case 'check':
-                    let url = "/plugs/exception_logger/api/check_exception?id=" + data.id;
+                    let url = "/plugs/exception_logger/api/check_exception?id=" + data.id+'&access_token='+layui.data(setter.tableName)[setter.request.tokenName];
                     layer.open({
                         type: 2,
                         title: "异常还原",
