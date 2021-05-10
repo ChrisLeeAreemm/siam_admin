@@ -20,7 +20,7 @@ class Plugs extends PlugsBase
         $config->setMenu([
             [
                 'title'  => "command运行状态",
-                'href'   => "/plugs/base/command_status",
+                'href'   => "/plugs/base/command_status.html",
                 'icon'   => "fa fa-tachometer",
                 'target' => '_self',
             ],
@@ -75,13 +75,15 @@ class Plugs extends PlugsBase
         Route::get('plugs/base/edit', function () {
             return $this->pre_render_file(__DIR__ . "/view/edit.html");
         });
+        Route::get('plugs/base/command_status', function () {
+            return $this->pre_render_file(__DIR__ . "/view/command_status.html");
+        });
+
         Route::group(function () {
             Route::get('plugs/base/api/install', 'PlugsBaseController@install');
             Route::get('plugs/base/api/status', 'PlugsBaseController@status');
             Route::post('plugs/base/api/edit_plugs', 'PlugsBaseController@edit_plugs');
-            Route::any('plugs/base/command_status', function(){
-                halt(PlugsCommandStatus::get_command_list());// TODO 做成列表
-            });
+            Route::get('plugs/base/api/command_status', 'PlugsBaseController@command_status');
         })->prefix('\app\plugs\base\controller\\');
         
     }

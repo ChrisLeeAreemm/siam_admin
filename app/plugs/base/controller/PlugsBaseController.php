@@ -4,6 +4,7 @@ namespace app\plugs\base\controller;
 
 use app\exception\ErrorCode;
 use app\model\PlugsStatusModel;
+use app\plugs\base\service\PlugsCommandStatus;
 use app\plugs\PlugsBaseController as BaseController;
 use think\Facade\Db;
 use think\helper\Str;
@@ -171,6 +172,15 @@ class PlugsBaseController extends BaseController
 
         return $this->send(ErrorCode::SUCCESS, [], '更新成功');
 
+    }
+
+    /**
+     * 命令状态
+     * @return Json
+     */
+    function command_status()
+    {
+        return $this->send(ErrorCode::SUCCESS, PlugsCommandStatus::get_command_list());
     }
 
     function auth()
