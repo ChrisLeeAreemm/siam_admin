@@ -71,8 +71,13 @@ class NoticeController extends PlugsBaseController
         $data['notice_sender']   = $this->who->u_id;
         $data['notice_receiver'] = PlugsNoticeModel::NOTICE_RECEIVER_ALL;
         $data['notice_type']     = input('notice_type');
-        if (input('select')){
-            $data['notice_receiver'] = json_encode(explode(',',input('select')));
+        $up['up']                = 1;
+        if (input('select')) {
+            $select_arr              = explode(',', input('select'));
+            $data['notice_receiver'] = json_encode($select_arr);
+            if (!in_array($this->who->u_id, $select_arr)) {
+                $up['up'] = 0;
+            }
         }
         $data['create_time']     = $data['update_time'] = date('Y-m-d H:i:s');
         // 写入站内信表
@@ -80,7 +85,7 @@ class NoticeController extends PlugsBaseController
         if (!$notice){
             return $this->send(ErrorCode::DB_EXCEPTION,[],'NOTICE_CREATE_FAIL');
         }
-        return $this->send(ErrorCode::SUCCESS,[],'SUCCESS');
+        return $this->send(ErrorCode::SUCCESS,$up,'SUCCESS');
 
     }
 
