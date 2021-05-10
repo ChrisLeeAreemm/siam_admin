@@ -2,6 +2,7 @@
 
 namespace app\controller\admin;
 
+use app\event\EventTag;
 use app\exception\ErrorCode;
 use app\model\PlugsStatusModel;
 use app\model\RolesModel;
@@ -9,6 +10,7 @@ use app\model\UsersModel as Model;
 use app\plugs\notice\model\PlugsNoticeModel;
 use app\plugs\notice\model\PlugsNoticeReadModel;
 use Siam\JWT;
+use think\facade\Event;
 use think\helper\Str;
 
 class AdminUsersController extends AdminBaseController
@@ -285,9 +287,17 @@ class AdminUsersController extends AdminBaseController
         $jwtData  = $user->toArray();
         $jwtToken = $jwt->setIss('SiamAdmin')->setSecretKey('siam_admin_key')
             ->setSub("SiamAdmin")->setWith($jwtData)->make();
+        Event::trigger(EventTag::REGISTER_TOKEN);
 
         return $this->send(ErrorCode::SUCCESS, [
             'token' => $jwtToken
         ], 'LOGIN_SUCCESS');
+    }
+
+    public function logout()
+    {
+        // TODO 完善该接口，前端接入
+        $token = input('access_token');
+        Event::trigger(EventTag::DESTORY_TOKEN, $token);
     }
 }

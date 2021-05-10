@@ -56,5 +56,13 @@ return [
         ],
 
         // 更多的数据库配置信息
+        'siam.sqlite' => [
+            // 数据库类型
+            'type' => 'sqlite',
+            // 数据库名
+            'database' => runtime_path('database').'siam.admin.sqlite',
+            // 监听SQL
+            'trigger_sql' => true
+        ]
     ],
 ];
