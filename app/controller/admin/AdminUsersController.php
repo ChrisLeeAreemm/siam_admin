@@ -40,7 +40,9 @@ class AdminUsersController extends AdminBaseController
             $roles_arr = explode(',', $value['role_id']);
             $role = [];
             foreach ($roles_arr as $v) {
-                $role[] = $role_map[$v];
+                if (isset($role_map[$v])){
+                    $role[] = $role_map[$v];
+                }
             }
             $value['role_id'] = implode(',', $role);
         }
