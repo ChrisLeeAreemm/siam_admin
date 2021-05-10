@@ -26,25 +26,25 @@ class Plugs extends PlugsBase
             ],
             [
                 'title'  => '安装',
-                'href'   => 'page/plugs/base/install.html',
+                'href'   => '/plugs/base/install.html',
                 'icon'   => "fa fa-wrench",
                 'target' => '_self',
             ],
             [
                 'title'  => '停用',
-                'href'   => 'page/plugs/base/status.html',
+                'href'   => '/plugs/base/status.html',
                 'icon'   => "fa fa-unlock-alt",
                 'target' => '_self',
             ],
             [
                 'title'  => '启用',
-                'href'   => 'page/plugs/base/status.html',
+                'href'   => '/plugs/base/status.html',
                 'icon'   => "fa fa-unlock",
                 'target' => '_self',
             ],
             [
                 'title'  => '编辑',
-                'href'   => 'page/plugs/base/edit.html',
+                'href'   => '/plugs/base/edit.html',
                 'icon'   => "fa fa-edit",
                 'target' => '_self',
             ]
@@ -66,11 +66,19 @@ class Plugs extends PlugsBase
     {
         
         // 在这里注入路由[api] 等事件
-    
+        Route::get('plugs/base/install', function () {
+            return $this->pre_render_file(__DIR__ . "/view/install.html");
+        });
+        Route::get('plugs/base/status', function () {
+            return $this->pre_render_file(__DIR__ . "/view/status.html");
+        });
+        Route::get('plugs/base/edit', function () {
+            return $this->pre_render_file(__DIR__ . "/view/edit.html");
+        });
         Route::group(function () {
-            Route::get('plugs/base/install', 'PlugsBaseController@install');
-            Route::get('plugs/base/status', 'PlugsBaseController@status');
-            Route::post('plugs/base/edit_plugs', 'PlugsBaseController@edit_plugs');
+            Route::get('plugs/base/api/install', 'PlugsBaseController@install');
+            Route::get('plugs/base/api/status', 'PlugsBaseController@status');
+            Route::post('plugs/base/api/edit_plugs', 'PlugsBaseController@edit_plugs');
             Route::any('plugs/base/command_status', function(){
                 halt(PlugsCommandStatus::get_command_list());// TODO 做成列表
             });
