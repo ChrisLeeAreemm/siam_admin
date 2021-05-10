@@ -170,7 +170,7 @@
 
         // 渲染nav中的插件
         let localTable = layui.data(setter.tableName);
-        if (localTable.plugs_status.notice !== undefined && localTable.plugs_status.notice.status === 1){
+        if (localTable.plugs_status && localTable.plugs_status.notice !== undefined && localTable.plugs_status.notice.status === 1){
             $('#plugs_notice').show();
             // 全部弹框
             let pop_length = layui.data(setter.tableName).force_notice.length;
