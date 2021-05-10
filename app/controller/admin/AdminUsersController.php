@@ -21,26 +21,34 @@ class AdminUsersController extends AdminBaseController
      */
     public function get_list()
     {
-
+    
         $page  = input('page', 1);
         $limit = input('limit', 10);
-
-        $result = Model::page($page, $limit)->order('u_id', 'DESC')->select()->toArray();
-
+    
+        $result = Model::page($page, $limit)->order('u_id', 'DESC')->select();
+        
+        //角色列表
+        $roles_list = RolesModel::field('role_id,role_name')->select();
+        $role_map   = [];
+        foreach ($roles_list as $value) {
+            $role_map[$value['role_id']] = $value['role_name'];
+        }
+        
+        //转换角色文字
         foreach ($result as &$value) {
-            $arr = explode(',', $value['role_id']);
-            $res = RolesModel::field('role_name')->select($arr)->toArray();
-            foreach ($res as $vo) {
-                $role[] = $vo['role_name'];
+            //用户角色数组
+            $roles_arr = explode(',', $value['role_id']);
+            $role = [];
+            foreach ($roles_arr as $v) {
+                if (isset($role_map[$v])){
+                    $role[] = $role_map[$v];
+                }
             }
             $value['role_id'] = implode(',', $role);
         }
-
-
+        
         $count = Model::count();
         return $this->send(ErrorCode::SUCCESS, ['lists' => $result, 'count' => $count]);
-
-
     }
 
     /**
@@ -141,7 +149,7 @@ class AdminUsersController extends AdminBaseController
         $id     = input('u_id');
         $result = Model::find($id);
         if (!$result) {
-            return $this->send(ErrorCode::THIRD_PART_ERROR, [], '获取失败');
+            return $this->send(ErrorCode::DB_DATA_DOES_NOT_EXIST, [], '获取失败');
         }
         $result['u_auth']  = explode(',', $result['u_auth']);
         $result['role_id'] = explode(',', $result['role_id']);
@@ -153,8 +161,13 @@ class AdminUsersController extends AdminBaseController
      */
     public function add()
     {
-
         $param     = input('data');
+        //判断是否存在
+        $account_exist = Model::where('u_account', $param['u_account'])->count();
+        if ($account_exist){
+            return $this->send(ErrorCode::DATA_ALREADY_EXISTS, [], '该账号已存在');
+        }
+        
         $role_auth = json_decode($param['role_auth'], true);
         $role_id   = [];
         $auth      = [];
@@ -171,6 +184,7 @@ class AdminUsersController extends AdminBaseController
 
         $data      = [
             'u_name'      => $param['u_name'],
+            'u_account'   => $param['u_account'],
             'p_u_id'      => $this->who['u_id'],
             'u_password'  => md5($param['u_password']),
             'role_id'     => implode(',', $role_id),
@@ -181,7 +195,7 @@ class AdminUsersController extends AdminBaseController
         $start     = $userModel->addUser($data);
 
         if (!$start) {
-            return $this->send(ErrorCode::THIRD_PART_ERROR, [], '新增失败');
+            return $this->send(ErrorCode::DATA_ADD_FAILED, [], '新增失败');
         }
         return $this->send(ErrorCode::SUCCESS, [], '成功');
     }
@@ -193,11 +207,19 @@ class AdminUsersController extends AdminBaseController
     {
         $param = input('data');
         $this->validate(['u_id' => 'require'], $param);
-
-        $param['update_time'] = date('Y-m-d H:i:s');
+    
+        $users = Model::find($param['u_id']);
+        if (!$users){
+            return $this->send(ErrorCode::DB_DATA_DOES_NOT_EXIST, [], 'DB_DATA_DOES_NOT_EXIST');
+        }
+        //判断是否存在
+        $account_exist = Model::where('u_account', $param['u_account'])->find();
+        if ($account_exist && $account_exist['u_id'] != $param['u_id']) {
+            return $this->send(ErrorCode::DATA_ALREADY_EXISTS, [], '该账号已存在');
+        }
+        
         $role_auth            = json_decode($param['role_auth'], true);
         $role_id              = [];
-
         foreach ($param as $key => $val) {
             if (!Str::startsWith($key, 'u_role')) {
                 continue;
@@ -208,15 +230,18 @@ class AdminUsersController extends AdminBaseController
 
         $data  = [
             'u_name'      => $param['u_name'],
+            'u_password'  => md5($param['u_password']),
+            'u_account'   => $param['u_account'],
             'role_id'     => implode(',', $role_id),
             'u_auth'      => implode(',', $auth),
             'update_time' => date('Y-m-d H:i:s'),
         ];
-        $start = Model::find($param['u_id']);
-        $res   = $start->save($data);
-
+        if ($users->u_password !== $param['u_password'] && !empty($param['u_password'])){
+            $data['u_password'] = md5($param['u_password']);
+        }
+        $res   = $users->save($data);
         if (!$res) {
-            return $this->send(ErrorCode::THIRD_PART_ERROR, [], '编辑失败');
+            return $this->send(ErrorCode::DATA_CHANGE_FAILED, [], '编辑失败');
         }
         return $this->send(ErrorCode::SUCCESS, [], '成功');
     }

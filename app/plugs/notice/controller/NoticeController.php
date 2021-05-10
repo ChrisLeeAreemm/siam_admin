@@ -54,7 +54,7 @@ class NoticeController extends PlugsBaseController
         //释放
         unset($read_notice);
 
-        $count  = PlugsNoticeModel::count();
+        $count  = PlugsNoticeModel::where($where)->whereOr($whereOr)->count();
         return $this->send(ErrorCode::SUCCESS, ['lists' => $result, 'count' => $count]);
     }
 
@@ -69,9 +69,15 @@ class NoticeController extends PlugsBaseController
         $data['notice_title']    = input('notice_title');
         $data['notice_content']  = input('notice_content');
         $data['notice_sender']   = $this->who->u_id;
-        $data['notice_receiver'] = '0';
-        if (input('select')){
-            $data['notice_receiver'] = json_encode(explode(',',input('select')));
+        $data['notice_receiver'] = PlugsNoticeModel::NOTICE_RECEIVER_ALL;
+        $data['notice_type']     = input('notice_type');
+        $up['up']                = 1;
+        if (input('select')) {
+            $select_arr              = explode(',', input('select'));
+            $data['notice_receiver'] = json_encode($select_arr);
+            if (!in_array($this->who->u_id, $select_arr)) {
+                $up['up'] = 0;
+            }
         }
         $data['create_time']     = $data['update_time'] = date('Y-m-d H:i:s');
         // 写入站内信表
@@ -79,7 +85,7 @@ class NoticeController extends PlugsBaseController
         if (!$notice){
             return $this->send(ErrorCode::DB_EXCEPTION,[],'NOTICE_CREATE_FAIL');
         }
-        return $this->send(ErrorCode::SUCCESS,[],'SUCCESS');
+        return $this->send(ErrorCode::SUCCESS,$up,'SUCCESS');
 
     }
 
@@ -126,7 +132,7 @@ class NoticeController extends PlugsBaseController
 
     private function build_where($where = [])
     {
-        $where['notice_receiver'] = 0;
+        $where['notice_receiver'] = PlugsNoticeModel::NOTICE_RECEIVER_ALL;
         return $where;
     }
 

@@ -31,7 +31,15 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">用户名</label>
                         <div class="layui-input-block">
-                            <input type="text" name="u_name" lay-verify="" autocomplete="off" placeholder=""
+                            <input type="text" name="u_name" lay-verify="required" autocomplete="off" placeholder=""
+                                   class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">登录账号</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="u_account" lay-verify="required" autocomplete="off" placeholder=""
                                    class="layui-input">
                         </div>
                     </div>
@@ -39,7 +47,7 @@
                     <div class="layui-form-item " id="u_password">
                         <label class="layui-form-label">密码</label>
                         <div class="layui-input-block">
-                            <input type="text" name="u_password" lay-verify="" autocomplete="off" placeholder=""
+                            <input type="password" name="u_password" lay-verify="required" autocomplete="off" placeholder=""
                                    class="layui-input">
                         </div>
                     </div>
@@ -71,7 +79,7 @@
 
     </div>
 </div>
-</div>
+
 
 
 <script src="../../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
@@ -88,7 +96,7 @@
         let u_id = view.getQueryletiable('u_id');
         //获取权限结构
         view.req({
-            url: "/index.php/admin/auths/get_roles_tree",
+            url: "/admin/auths/get_roles_tree",
             type: "get",
             dataType: "json",
             success: function (res) {
@@ -104,7 +112,7 @@
             }
         })
         view.req({
-            url: '/index.php/admin/roles/get_list',
+            url: '/admin/roles/get_list',
             type: "get",
             success: function (res) {
                 //获取返回的数据
@@ -121,13 +129,12 @@
         if (u_id) {
             //获取信息
             view.req({
-                url: '/index.php/' + get_one_url,
+                url: get_one_url,
                 data: {u_id: u_id},
                 type: "get",
                 dataType: "json",
                 success: function (res) {
                     if (res.code === 200) {
-                        console.log(res);
                         // 初始化赋值
                         form.val("user", {
                             "u_id": res.data.lists.u_id,
@@ -136,7 +143,6 @@
                             "u_account": res.data.lists.u_account,
                             "u_status": res.data.lists.u_status,
                         });
-                        $('#u_password').remove();
                         tree.setChecked('rolesTree', res.data.lists.u_auth); //批量勾选
                         //checked
                         let value = res.data.lists.role_id;
@@ -157,7 +163,7 @@
             });
             data.field.role_auth = window.JSON.stringify(tree.getChecked('rolesTree'))
             view.req({
-                url: '/index.php/' + submit_url,
+                url: submit_url,
                 data: {
                     data: data.field,
                 },
@@ -166,11 +172,11 @@
                 success: function (res) {
                     layer.close(load);
                     if (res.code === 200) {
-                        layer.msg(res.msg, {time: 2000}, function () {
+                        layer.msg(res.msg, {icon:1,time: 1500}, function () {
                             window.location.reload();
                         });
                     } else {
-                        layer.msg(res.msg, {time: 2000}, function () {
+                        layer.msg(res.msg, {icon:2,time: 1500}, function () {
                             window.location.reload();
                         });
                     }

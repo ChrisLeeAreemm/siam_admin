@@ -35,7 +35,7 @@
 <script>
 
 
-    layui.use(['form', 'view', 'laytpl', 'table', 'echarts'], function () {
+    layui.use(['form', 'view', 'laytpl', 'table', 'echarts','setter'], function () {
         let form = layui.form
             , layer = layui.layer
             , view = layui.view
@@ -43,12 +43,16 @@
             , laytpl = layui.laytpl
             , table = layui.table
             , echarts = layui.echarts
+            , setter = layui.setter;
 
-        let get_list_url = '/index.php/plugs/exception_logger/api/get_list';
+        let get_list_url = '/plugs/exception_logger/api/get_list';
 
         table.render({
             elem: '#list',
             url: get_list_url,
+            where: {
+            access_token: layui.data(setter.tableName)[setter.request.tokenName]
+            },
             cols: [[
                 {field: 'id', title: 'ID'},
                 {field: 'exception_class', title: '异常类名(异常类型)'},
@@ -77,7 +81,7 @@
 
             switch (layEvent) {
                 case 'check':
-                    let url = "/index.php/plugs/exception_logger/api/check_exception?id=" + data.id;
+                    let url = "/plugs/exception_logger/api/check_exception?id=" + data.id;
                     layer.open({
                         type: 2,
                         title: "异常还原",
@@ -96,7 +100,7 @@
          */
         var echartsRecords = echarts.init(document.getElementById('echarts-records'), 'walden');
         view.req({
-            url: '/index.php/plugs/exception_logger/api/echarts_data',
+            url: '/plugs/exception_logger/api/echarts_data',
             type: "get",
             success: function (res) {
                 var optionRecords = {
@@ -147,7 +151,7 @@
         });
 
         function clear(confirm, type) {
-            let url = "/index.php/plugs/exception_logger/api/delete";
+            let url = "/plugs/exception_logger/api/delete";
             layer.confirm(confirm, {icon: 3, title: '提示'}, function (index) {
                 view.req({
                     url: url,
