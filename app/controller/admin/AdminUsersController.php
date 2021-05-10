@@ -100,10 +100,11 @@ class AdminUsersController extends AdminBaseController
 
         // - 所有插件状态
 
-        // - 个人权限
-        $user             = Model::field('u_auth')->where('u_id', '=', $this->who->u_id)->find();
-        $result['u_auth'] = $user->u_auth;
-        // - 个人权限
+        // - 个人信息
+        $user             = Model::field('u_name,u_auth')->where('u_id', '=', $this->who->u_id)->find();
+        $result['u_auth'] = $user->u_auth; //权限
+        $result['u_name'] = $user->u_name; //用户名
+        // - 个人信息
 
         // - 未读的强制阅读通知列表
 
