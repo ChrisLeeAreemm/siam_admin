@@ -7,8 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <link rel="stylesheet" href="../../../lib/layui-v2.6.3/css/layui.css" media="all">
-    <link rel="stylesheet" href="../../../css/public.css" media="all">
+    <link rel="stylesheet" href="__ADMIN__/lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="__ADMIN__/css/public.css" media="all">
 </head>
 <body>
 
@@ -49,8 +49,8 @@
 </div>
 
 
-<script src="../../../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
-<script src="../../../js/lay-config.js?v=2.0.4" charset="utf-8"></script>
+<script src="__ADMIN__/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+<script src="__ADMIN__/js/lay-config.js?v=2.0.4" charset="utf-8"></script>
 <script>
     layui.use(['form', 'layer','view','setter'], function () {
         let form = layui.form;
@@ -64,12 +64,12 @@
         if(set_id){
             //获取信息
             view.req({
-                url: '/index.php/'+get_one_url,
+                url: get_one_url,
                 data: {set_id:set_id},
                 type: "get",
                 dataType: "json",
                 success:function (res){
-                    if (res.code == "200"){
+                    if (res.code === 200){
                         // 初始化赋值
                         form.val("user", {
                             "set_id" :res.data.lists.set_id,
@@ -87,18 +87,18 @@
                 shade: 0.5
             });
             view.req({
-                url: '/index.php/'+submit_url,
+                url: submit_url,
                 data: data.field,
                 type: "post",
                 dataType: "json",
                 success: function (res) {
                     layer.close(load);
-                    if (res.code === '200') {
-                        layer.msg(res.msg,{time: 2000},function () {
+                    if (res.code === 200) {
+                        layer.msg(res.msg,{time: 1500},function () {
                             window.location.reload();
                         });
                     } else {
-                        layer.msg(res.msg,{time: 2000},function () {
+                        layer.msg(res.msg,{time: 1500},function () {
                             window.location.reload();
                         });
                     }
