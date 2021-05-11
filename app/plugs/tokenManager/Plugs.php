@@ -3,7 +3,6 @@
 namespace app\plugs\tokenManager;
 
 
-use app\event\EventTag;
 use app\plugs\PlugsBase;
 use app\plugs\PlugsConfig;
 use think\facade\Event;
@@ -59,6 +58,7 @@ EOF;
         Route::any('plugs/token_manager/api/get_list', 'app\plugs\tokenManager\controller\TokenManagerController@get_list');
         Route::any('plugs/token_manager/api/outline', 'app\plugs\tokenManager\controller\TokenManagerController@outline');
         Route::any('plugs/token_manager/api/single_sign', 'app\plugs\tokenManager\controller\TokenManagerController@single_sign');
+        Route::any('plugs/token_manager/api/get_single_sign', 'app\plugs\tokenManager\controller\TokenManagerController@get_single_sign');
 
 
         // 绑定事件  接管token 注册、注销、验证

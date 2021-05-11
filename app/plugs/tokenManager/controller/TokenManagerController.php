@@ -49,4 +49,9 @@ class TokenManagerController extends PlugsBaseController
         return $this->send(ErrorCode::SUCCESS, [], 'SUCCESS');
     }
 
+    public function get_single_sign()
+    {
+        return $this->send(ErrorCode::SUCCESS, ['type'=>Cache::get('single_sign')], 'SUCCESS');
+    }
+
 }

@@ -17,11 +17,11 @@
         <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
             <legend>tokenManager</legend>
         </fieldset>
-        <div class="layui-form">
-        <div class="layui-form-item">
+        <div class="layui-form" >
+        <div class="layui-form-item" lay-filter="single_sign">
             <label class="layui-form-label">单点登录</label>
             <div class="layui-input-block">
-                <input type="checkbox" name="single_sign" lay-skin="switch" lay-text="ON|OFF" id="single_sign" lay-filter="single_sign">
+                <input type="checkbox" name="single_sign" lay-skin="switch" lay-text="ON|OFF" id="single_sign">
             </div>
         </div>
         </div>
@@ -73,6 +73,18 @@
                 };
             }
         });
+
+        view.req({
+            url:'/plugs/token_manager/api/get_single_sign',
+            success:function (res){
+                if (res.data.type === 'true'){
+                    //给表单赋值
+                    $('#single_sign').prop('checked',true);
+                    layui.form.render();
+                }
+            }
+        })
+
         table.on('tool(table)', function (obj) {
             let data = obj.data;
             let layEvent = obj.event; //获得 lay-event 对应的值
