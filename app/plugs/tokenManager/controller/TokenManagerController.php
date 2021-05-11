@@ -31,6 +31,8 @@ class TokenManagerController extends PlugsBaseController
         foreach ($user as $value){
             $user_map[$value['u_id']] = $value['u_name'];
         }
+        unset($user);
+
         $result = $result->toArray();
         foreach ($result as $key=>$value){
             if (isset($user_map[$value['user_identify']])){
@@ -38,6 +40,7 @@ class TokenManagerController extends PlugsBaseController
             }
         }
         unset($user_map);
+
         return $this->send(ErrorCode::SUCCESS,['list'=>$result],'SUCCESS');
     }
 
