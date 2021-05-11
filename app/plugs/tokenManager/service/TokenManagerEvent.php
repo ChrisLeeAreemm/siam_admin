@@ -44,7 +44,7 @@ class TokenManagerEvent
     // 注册token
     public function register_token($params)
     {
-        //单点登录,删除之前的登录Token
+        //单点登录,删除之前的登录用户
         if (Cache::get('single_sign') == true){
             $this->destory_user($params['u_id']);
         }
