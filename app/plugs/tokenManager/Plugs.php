@@ -37,6 +37,7 @@ class Plugs extends PlugsBase
         $sql =<<<EOF
       CREATE TABLE token_manager
       (id INTEGER PRIMARY KEY   NOT NULL,
+      user_identify INTEGER   NOT NULL,
       token           TEXT    NOT NULL,
       create_time           INTEGER     NOT NULL
       );

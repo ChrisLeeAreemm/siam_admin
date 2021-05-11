@@ -197,9 +197,18 @@
 
 
         $('.login-out').on("click", function () {
-            view.logout(function () {
-                window.location.href = 'login.html';
-            });
+            view.req({
+                url:"/admin/users/logout",
+                type: "get",
+                success :function (res) {
+                    if (res.code === 200){
+                        view.logout(function () {
+                            window.location.href = 'login.html';
+                        });
+                    }
+                }
+            })
+
         });
 
 

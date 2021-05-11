@@ -288,7 +288,7 @@ class AdminUsersController extends AdminBaseController
         $jwtData  = $user->toArray();
         $jwtToken = $jwt->setIss('SiamAdmin')->setSecretKey('siam_admin_key')
             ->setSub("SiamAdmin")->setWith($jwtData)->make();
-        Event::trigger(EventTag::REGISTER_TOKEN,$jwtToken);
+        Event::trigger(EventTag::REGISTER_TOKEN,['u_id'=>$user['u_id'],'token'=>$jwtToken]);
 
         return $this->send(ErrorCode::SUCCESS, [
             'token' => $jwtToken
@@ -297,8 +297,8 @@ class AdminUsersController extends AdminBaseController
 
     public function logout()
     {
-        // TODO 完善该接口，前端接入
         $token = input('access_token');
         Event::trigger(EventTag::DESTORY_TOKEN, $token);
+        return $this->send(ErrorCode::SUCCESS,[], 'LOGOUT_SUCCESS');
     }
 }

@@ -10,7 +10,7 @@ use app\facade\SQLiteFacade;
 use think\Exception;
 use think\Event;
 
-// TODO 不用redis  用sqlite   封装在 app\facade\SQLiteFacade 中
+
 class TokenManagerEvent
 {
     // TOKEN_MANAGER_[token]   值为注册时间
@@ -35,11 +35,12 @@ class TokenManagerEvent
     }
 
     // 注册token
-    public function register_token($token)
+    public function register_token($params)
     {
         $this->builder->table(self::TABLE_NAME)->insert([
-            'token'       => $token,
-            'create_time' => time()
+            'user_identify' => $params['u_id'],
+            'token'         => $params['token'],
+            'create_time'   => time()
         ]);
     }
 
