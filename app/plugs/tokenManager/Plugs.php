@@ -39,7 +39,7 @@ class Plugs extends PlugsBase
       (id INTEGER PRIMARY KEY   NOT NULL,
       user_identify INTEGER   NOT NULL,
       token           TEXT    NOT NULL,
-      create_time           INTEGER     NOT NULL
+      create_time           TEXT     NOT NULL
       );
 EOF;
         $sqlite->query($sql);
@@ -60,6 +60,8 @@ EOF;
             return $this->pre_render_file(__DIR__ . "/view/index.html");
         });
         Route::any('plugs/token_manager/api/get_list', 'app\plugs\tokenManager\controller\TokenManagerController@get_list');
+        Route::any('plugs/token_manager/api/outline', 'app\plugs\tokenManager\controller\TokenManagerController@outline');
+        Route::any('plugs/token_manager/api/single_sign', 'app\plugs\tokenManager\controller\TokenManagerController@single_sign');
 
 
         // 绑定事件  接管token 注册、注销、验证
