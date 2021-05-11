@@ -18,10 +18,10 @@
             <legend>tokenManager</legend>
         </fieldset>
         <div class="layui-form" >
-        <div class="layui-form-item" lay-filter="single_sign">
+        <div class="layui-form-item">
             <label class="layui-form-label">单点登录</label>
             <div class="layui-input-block">
-                <input type="checkbox" name="single_sign" lay-skin="switch" lay-text="ON|OFF" id="single_sign">
+                <input type="checkbox" name="single_sign" lay-skin="switch" lay-text="ON|OFF" id="single_sign" lay-filter="single_sign">
             </div>
         </div>
         </div>
@@ -118,6 +118,7 @@
             }
         })
         form.on('switch(single_sign)', function(data){
+            console.log(data.elem.checked);
                 view.req({
                     url: "/plugs/token_manager/api/single_sign",
                     data: {
