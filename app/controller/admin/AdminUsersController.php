@@ -288,7 +288,7 @@ class AdminUsersController extends AdminBaseController
         $jwtData  = $user->toArray();
         $jwtToken = $jwt->setIss('SiamAdmin')->setSecretKey('siam_admin_key')
             ->setSub("SiamAdmin")->setWith($jwtData)->make();
-        Event::trigger(EventTag::REGISTER_TOKEN);
+        Event::trigger(EventTag::REGISTER_TOKEN,$jwtToken);
 
         return $this->send(ErrorCode::SUCCESS, [
             'token' => $jwtToken

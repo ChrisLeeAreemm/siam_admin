@@ -4,11 +4,11 @@ namespace app\plugs\tokenManager;
 
 
 use app\event\EventTag;
-use app\plugs\errorCode\controller\TokenManagerController;
 use app\plugs\PlugsBase;
 use app\plugs\PlugsConfig;
 use think\facade\Event;
 use think\facade\Route;
+use app\facade\SQLiteFacade;
 
 class Plugs extends PlugsBase
 {
@@ -32,6 +32,20 @@ class Plugs extends PlugsBase
 
     public function install()
     {
+
+        $sqlite  = SQLiteFacade::connect();
+        $sql =<<<EOF
+      CREATE TABLE token_manager
+      (id INTEGER PRIMARY KEY   NOT NULL,
+      token           TEXT    NOT NULL,
+      create_time           INTEGER     NOT NULL
+      );
+EOF;
+        $sqlite->query($sql);
+
+
+
+
     }
 
     public function remove()

@@ -5,7 +5,10 @@ namespace app\plugs\tokenManager\service;
 
 
 use app\event\EventTag;
-use think\facade\Event;
+use app\exception\ErrorCode;
+use app\facade\SQLiteFacade;
+use think\Exception;
+use think\Event;
 
 // TODO 不用redis  用sqlite   封装在 app\facade\SQLiteFacade 中
 class TokenManagerEvent
@@ -13,33 +16,48 @@ class TokenManagerEvent
     // TOKEN_MANAGER_[token]   值为注册时间
     const TABLE_NAME = 'token_manager';
 
+    protected $builder;
+
+    public function __construct()
+    {
+        $sqlite        = SQLiteFacade::connect();
+        $this->builder = SQLiteFacade::builder($sqlite);
+    }
     // token生成规则 暂时用不到
     public function create_token()
     {
 
     }
-    // TODO 销毁token
+    // 销毁token
     public function destory_token($token)
     {
-        // 删除redis
+        $this->builder->table(self::TABLE_NAME)->where('token', $token)->delete();
     }
-    // TODO 注册token
+
+    // 注册token
     public function register_token($token)
     {
-        // 添加到redis
+        $this->builder->table(self::TABLE_NAME)->insert([
+            'token'       => $token,
+            'create_time' => time()
+        ]);
     }
-    // TODO 验证token
+
+    // 验证token
     public function auth_token($token)
     {
-        // 是否在redis中
+        $has = $this->builder->table(self::TABLE_NAME)->where('token',$token)->find();
+        if (!$has){
+            throw new Exception('AUTH_TOKEN_ERROR',ErrorCode::AUTH_TOKEN_ERROR);
+        }
     }
 
     public function subscribe(Event $event)
     {
-        $event->listen(EventTag::CREATE_TOKEN, [$this,'create_token']);
-        $event->listen(EventTag::DESTORY_TOKEN, [$this,'destory_token']);
-        $event->listen(EventTag::REGISTER_TOKEN, [$this,'register_token']);
-        $event->listen(EventTag::AUTH_TOKEN, [$this,'auth_token']);
+        $event->listen(EventTag::CREATE_TOKEN, [$this, 'create_token']);
+        $event->listen(EventTag::DESTORY_TOKEN, [$this, 'destory_token']);
+        $event->listen(EventTag::REGISTER_TOKEN, [$this, 'register_token']);
+        $event->listen(EventTag::AUTH_TOKEN, [$this, 'auth_token']);
     }
 
 }
