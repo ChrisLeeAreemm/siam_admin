@@ -40,8 +40,8 @@ class TokenManagerController extends PlugsBaseController
             }
         }
         unset($user_map);
-
-        return $this->send(ErrorCode::SUCCESS,['list'=>$result],'SUCCESS');
+        $count = $builder->table(TokenManagerEvent::TABLE_NAME)->page($page, $limit)->count();
+        return $this->send(ErrorCode::SUCCESS,['list'=>$result,'count'=>$count],'SUCCESS');
     }
 
     /**
