@@ -5,6 +5,7 @@ namespace app\plugs\tokenManager\controller;
 
 use app\exception\ErrorCode;
 use app\facade\SQLiteFacade;
+use app\model\UsersModel;
 use app\plugs\PlugsBaseController;
 use app\plugs\tokenManager\service\TokenManagerEvent;
 use think\facade\Cache;
@@ -19,6 +20,24 @@ class TokenManagerController extends PlugsBaseController
         $page    = input('page', 1);
         $limit   = input('limit', 10);
         $result  = $builder->table(TokenManagerEvent::TABLE_NAME)->page($page, $limit)->order('id', 'desc')->select();
+        $user_ids = [];
+        foreach ($result as $value){
+            $user_ids[] = $value['user_identify'];
+        }
+
+        $user = UsersModel::field('u_id,u_name')->whereIn('u_id',array_unique($user_ids))->select();
+        unset($user_ids);
+
+        foreach ($user as $value){
+            $user_map[$value['u_id']] = $value['u_name'];
+        }
+        $result = $result->toArray();
+        foreach ($result as $key=>$value){
+            if (isset($user_map[$value['user_identify']])){
+                $result[$key]['u_name'] = $user_map[$value['user_identify']];
+            }
+        }
+        unset($user_map);
         return $this->send(ErrorCode::SUCCESS,['list'=>$result],'SUCCESS');
     }
 
