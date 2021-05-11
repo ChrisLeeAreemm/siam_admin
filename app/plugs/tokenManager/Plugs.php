@@ -44,9 +44,6 @@ class Plugs extends PlugsBase
 EOF;
         $sqlite->query($sql);
 
-
-
-
     }
 
     public function remove()
