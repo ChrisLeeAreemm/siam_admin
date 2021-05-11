@@ -103,7 +103,7 @@
                             type: "post",
                             dataType: "json",
                             success: function (res) {
-                                if (res.code == '200') {
+                                if (res.code === 200) {
                                     layer.msg(res.msg,{icon:1,time: 1500},function () {
                                         window.location.reload();
                                     });

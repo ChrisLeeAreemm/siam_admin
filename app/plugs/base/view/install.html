@@ -41,7 +41,7 @@
                 type: "get",
                 success: function (res) {
                     let index = layer.load(1);
-                    if (res.code == '200'){
+                    if (res.code === 200){
                         //关闭
                         layer.close(index);
                         layer.msg(res.msg, {icon: 1,time:1500},function(){

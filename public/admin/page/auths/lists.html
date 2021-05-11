@@ -428,7 +428,7 @@
                 type: "post",
                 dataType: "json",
                 success: function (res) {
-                    if (res.code === '200') {
+                    if (res.code === 200) {
                         layer.msg(res.msg, {time: 1500}, function () {
                             window.location.reload();
                         });
@@ -447,7 +447,7 @@
                 type: "post",
                 dataType: "json",
                 success: function (res) {
-                    if (res.code === '200') {
+                    if (res.code === 200) {
                         layer.msg(res.msg, {time: 1500}, function () {
                             window.location.reload();
                         });

@@ -173,7 +173,7 @@ class AdminSystemController extends AdminBaseController
         $id     = input('u_id');
         $result = Model::find($id);
         if (!$result){
-            return $this->send(ErrorCode::THIRD_PART_ERROR,[],'获取失败');
+            return $this->send(ErrorCode::DB_DATA_DOES_NOT_EXIST,[],'获取失败');
         }
         return $this->send(ErrorCode::SUCCESS,['lists'=>$result]);
     }
@@ -190,7 +190,7 @@ class AdminSystemController extends AdminBaseController
         $start = Model::create($param);
 
         if (!$start) {
-            return $this->send(ErrorCode::THIRD_PART_ERROR,[],'新增失败');
+            return $this->send(ErrorCode::DB_DATA_ADD_FAILE,[],'新增失败');
         }
         return $this->send(ErrorCode::SUCCESS);
     }
@@ -205,7 +205,7 @@ class AdminSystemController extends AdminBaseController
         $res   = $start->save($param);
 
         if (!$res){
-            return $this->send(ErrorCode::THIRD_PART_ERROR,[],'编辑失败');
+            return $this->send(ErrorCode::DB_DATA_UPDATE_FAILE,[],'编辑失败');
 
         }
         return $this->send(ErrorCode::SUCCESS);

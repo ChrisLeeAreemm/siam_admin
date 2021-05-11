@@ -112,7 +112,7 @@
         dataType: "json",
         success: function (res) {
           layer.close(load);
-          if (res.code === '200') {
+          if (res.code === 200) {
             layer.msg("成功",{time: 2000},function () {
               window.location.reload();
             });
