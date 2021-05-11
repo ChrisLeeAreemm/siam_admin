@@ -1,42 +1,5 @@
 # 组件
 
-## 基础组件（base）
-
-
-
-用于组件模块的基本功能，监听所有组件的状态，提供安装，启动，停用，编辑，command状态监控，base组件默认安装启动
-
-### 如何安装一个组件
-
-后台组件管理中每一个未安装的组件都会有<安装>按钮
-
-![](img\image-20210510160842585.png)
-
-### 启动
-
-安装后组件状态默认未启动，需要选择启动
-
-### 停用
-
-停用组件
-
-### 编辑
-
-对相应的组件设置运行模块,设置的组件只有在允许的模块下才会运行,下图中 规定了 apiFilter 组件的运行模块
-
-<img src="img\image-20210510172112377.png" alt="image-20210510172112377"  />
-
-### command状态监控
-
-监控workerman运行在线状态，查看组件命令
-
-![image-20210510172340331](img\image-20210510172340331.png)
-
-规范：所有组件的自定义命令（workerman类）都需要向base管理器发送心跳包
-
-------
-
-
 
 ## Api限流器（apiFilter）
 
@@ -82,63 +45,23 @@ adasd
 
 ### 声明一个定时任务
 
-```php
-app
- --cron 目录下
- //创建一个定时任务类 xxxCron.php ，继承同级目录中的 CronBase.php
- <?php
-namespace app\cron;
-use Cron\CronExpression;
-class TestCron extends CronBase
-{
+-  app
+-- cron 目录，为定时任务存放目录
+   
+创建一个定时任务类，继承同级目录中的 CronBase
 
-    /**
-     * 写明监控任务名
-     * @return mixed
-     */
-    function rule()
-    {
-        return "测试";
-    }
-
-   	.....more code 完整代码参照TestCron.php
-}
- 
- 
-```
+可以参考系统自带的两个测试任务 TestCron 、 TestTwoCron
 
 **声明完成后在组件首页列表刷新，会自动识别到新增的定时任务**
 
 ![](img\image-20210510173829883.png)
 
-### 运行组件命令
 
-```bash
-
-打开终端，进入项目目录下执行命令
-
-php think cron
-
-//启动成功
-convert start
------------------------ WORKERMAN -----------------------------
-Workerman version:3.5.31          PHP version:7.3.4
------------------------- WORKERS -------------------------------
-worker               listen                              processes status
-none                 none                                1         [ok]
-已注册 测试
-已注册 测试3
-已注册 测试2
-
-```
-
-查看执行记录
+### 查看执行记录
 
 ```
 任务执行的Log文件路径 ： app\runtime\cron\xxx.log
 ```
-
-
 
 ### 在线启动/关闭 任务
 
@@ -148,8 +71,14 @@ none                 none                                1         [ok]
 
 在列表<状态>一栏中，可以点击复制url ，获取任务执行的url
 
-------
+### 如何运行定时任务
 
+有两种方式
+
+- 使用SiamAdmin内置的 cron runner ，开启命令为`php think cron`
+- 使用系统级的定时任务，访问任务url
+
+------
 
 
 ## 数据库助手（dbHelper）
@@ -185,6 +114,8 @@ none                 none                                1         [ok]
 ### 还原查看
 
 还原带有Trace的异常页面，默认使用TP异常模板
+
+用于实现：对外屏蔽错误细节，对内还原错误细节 便于调试排查原因
 
 ------
 
