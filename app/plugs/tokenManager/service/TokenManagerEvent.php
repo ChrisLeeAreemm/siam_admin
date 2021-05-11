@@ -40,7 +40,7 @@ class TokenManagerEvent
     {
         //单点登录,删除之前的登录Token
         if (Cache::get('single_sign') == true){
-            $this->builder->where('user_identify', $params['u_id'])->delete();
+            $this->destory_token($params['token']);
         }
         $this->builder->table(self::TABLE_NAME)->insert([
             'user_identify' => $params['u_id'],

@@ -30,14 +30,9 @@ class TokenManagerController extends PlugsBaseController
      */
     public function outline()
     {
-        $this->validate(['user_identify' => 'require'], input());
-        $user_identify = input('user_identify');
-        $sqlite        = SQLiteFacade::connect();
-        $builder       = SQLiteFacade::builder($sqlite);
-        $result        = $builder->table(TokenManagerEvent::TABLE_NAME)->where('user_identify', $user_identify)->delete();
-        if (!$result) {
-            return $this->send(ErrorCode::DB_EXCEPTION, [], 'DB_EXCEPTION');
-        }
+        $this->validate(['token' => 'require'], input());
+        $token = input('token');
+        (new TokenManagerEvent)->destory_token($token);
         return $this->send(ErrorCode::SUCCESS, [], 'SUCCESS');
     }
 
