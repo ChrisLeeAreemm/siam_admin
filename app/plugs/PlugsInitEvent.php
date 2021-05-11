@@ -75,8 +75,6 @@ class PlugsInitEvent
 
             $PlugsClass = __NAMESPACE__ . '\\' . $dirName . '\Plugs';
             $plugs      = new $PlugsClass();
-            //获取插件数据
-            $name     = $plugs->get_config()->getName();
             //对应模块启动
             $module = $plugs->get_config()->getHandleModule();
             if (!in_array($now_module, $module)) {

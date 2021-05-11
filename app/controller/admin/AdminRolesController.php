@@ -40,7 +40,7 @@ class AdminRolesController extends AdminBaseController
         $id     = input('role_id');
         $result = Model::find($id);
         if (!$result) {
-            return $this->send(ErrorCode::THIRD_PART_ERROR, [], '获取失败');
+            return $this->send(ErrorCode::DB_DATA_DOES_NOT_EXIST, [], '获取失败');
         }
         $result['role_auth'] = explode(',', $result['role_auth']);
         return $this->send(ErrorCode::SUCCESS, ['lists' => $result]);
@@ -62,7 +62,7 @@ class AdminRolesController extends AdminBaseController
         $start              = Model::create($param);
 
         if (!$start) {
-            return $this->send(ErrorCode::THIRD_PART_ERROR, [], '新增失败');
+            return $this->send(ErrorCode::DB_DATA_ADD_FAILE, [], '新增失败');
         }
         return $this->send(ErrorCode::SUCCESS, [], '成功');
     }
@@ -89,7 +89,7 @@ class AdminRolesController extends AdminBaseController
         $res                = $start->save($param);
 
         if (!$res) {
-            return $this->send(ErrorCode::DB_EXCEPTION, [], '编辑失败');
+            return $this->send(ErrorCode::DB_DATA_UPDATE_FAILE, [], '编辑失败');
         }
         return $this->send(ErrorCode::SUCCESS,[],'成功');
     }

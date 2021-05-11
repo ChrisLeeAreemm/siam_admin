@@ -47,10 +47,11 @@ class AdminAuthsController extends AdminBaseController
 
         $configsModel = ConfigsModel::where('config_name', 'auth_order')->find();
         $res         = $configsModel->force()->save(['config_value' => $order]);
-        if ($res) {
-            return $this::send(ErrorCode::SUCCESS, [], 'SUCCESS');
+        if (!$res) {
+            return $this::send(ErrorCode::DB_DATA_UPDATE_FAILE, [], 'ERROR');
         }
-        return $this::send(ErrorCode::DB_EXCEPTION, [], 'ERROR');
+        return $this::send(ErrorCode::SUCCESS, [], 'SUCCESS');
+
     }
 
 
@@ -88,7 +89,7 @@ html;
         $id     = input('auth_id');
         $result = Model::find($id);
         if (!$result) {
-            return $this->send(ErrorCode::THIRD_PART_ERROR, [], '获取失败');
+            return $this->send(ErrorCode::DB_DATA_DOES_NOT_EXIST, [], '获取失败');
         }
         return $this->send(ErrorCode::SUCCESS, ['lists' => $result]);
     }
@@ -102,7 +103,7 @@ html;
         $param['create_time'] = $param['update_time'] = date('Y-m-d H:i:s');
         $res   = Model::create($param);
         if (!$res) {
-            return $this::send(ErrorCode::DB_EXCEPTION, [], 'ERROR');
+            return $this::send(ErrorCode::DB_DATA_ADD_FAILE, [], 'ERROR');
         }
         // 如果是菜单还要更新排序
         $configs_info = ConfigsModel::where('config_name', 'auth_order')->find();
@@ -113,7 +114,7 @@ html;
         $configsModel = ConfigsModel::where('config_name', 'auth_order')->find();
         $res         = $configsModel->force()->save(['config_value' => json_encode($authOrder)]);
         if (!$res) {
-            return $this::send(ErrorCode::DB_EXCEPTION, [], 'ERROR');
+            return $this::send(ErrorCode::DB_DATA_UPDATE_FAILE, [], 'ERROR');
         }
         return $this::send(ErrorCode::SUCCESS, [], 'SUCCESS');
 
@@ -130,7 +131,7 @@ html;
         $res   = $start->save($param);
 
         if (!$res) {
-            return $this->send(ErrorCode::THIRD_PART_ERROR, [], '编辑失败');
+            return $this->send(ErrorCode::DB_DATA_UPDATE_FAILE, [], '编辑失败');
 
         }
         return $this->send(ErrorCode::SUCCESS,[],'成功');
@@ -146,7 +147,6 @@ html;
         $result = Model::destroy($id);
         if (!$result){
             return $this->send(ErrorCode::DB_EXCEPTION, [], '失败');
-
         }
         return $this->send(ErrorCode::SUCCESS, [], '成功');
 
