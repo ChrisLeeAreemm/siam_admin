@@ -35,12 +35,18 @@ class TokenManagerEvent
         $this->builder->where('token', $token)->delete();
     }
 
+    // 销毁用户
+    public function destory_user($user_identify)
+    {
+        $this->builder->where('user_identify', $user_identify)->delete();
+    }
+
     // 注册token
     public function register_token($params)
     {
         //单点登录,删除之前的登录Token
         if (Cache::get('single_sign') == true){
-            $this->destory_token($params['token']);
+            $this->destory_user($params['u_id']);
         }
         $this->builder->table(self::TABLE_NAME)->insert([
             'user_identify' => $params['u_id'],
