@@ -167,6 +167,13 @@
             url:"/admin/system/is_login",
         })
 
+
+        $('.login-out').on("click", function () {
+            view.logout(function () {
+                window.location.href = 'login.html';
+            });
+        });
+
         $('#user_name').text(layui.data(setter.tableName).u_name);
 
         // 渲染nav中的插件
@@ -191,26 +198,6 @@
                 }
             },1000);
         }
-
-
-
-
-
-        $('.login-out').on("click", function () {
-            view.req({
-                url:"/admin/users/logout",
-                type: "get",
-                success :function (res) {
-                    if (res.code === 200){
-                        view.logout(function () {
-                            window.location.href = 'login.html';
-                        });
-                    }
-                }
-            })
-
-        });
-
 
         function notice_pop()
         {
