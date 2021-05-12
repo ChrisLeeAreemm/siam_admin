@@ -7,9 +7,14 @@ layui.define(['laytpl', 'layer', 'jquery', 'setter'], function (exports) {
         //清除 token，并跳转到登入页
         logout: function (callback) {
             // //注销Token管理器
-            view.req({
-                url:"/admin/users/logout",
-            })
+            let token = layui.data(setter.tableName, {
+                key: setter.request.tokenName
+            });
+            if (!!token){
+                view.req({
+                    url:"/admin/users/logout",
+                })
+            }
 
             //清空本地记录
             layui.data(setter.tableName, null);
