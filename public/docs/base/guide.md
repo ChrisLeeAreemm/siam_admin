@@ -61,11 +61,34 @@ $order->customer_info = json_encode($customer_info, 256);
 
 > easyswoole是作者加入的另一个框架开发维护
 
+## 模块规范
+
+SiamAdmin默认使用的是  `[模块名]/[控制器]/[方法]`  这种路由格式
+
+路由处理者为` app/handle/RouterDispatch.php `
+
+!> 你也可以使用自定义路由的方式来使用，但此时关于插件的`运行模块`，就会失效了~ 插件的运行模块解析逻辑是通过url 第一个占位来解析。相关逻辑为 `app/plugs/PlugsInitEvent.php`
+
+```php 
+// 不开启插件模块
+$siam_plugs = env("app.siam_plugs");
+if (!$siam_plugs) return false;
+
+if ($module === null){
+    $path_info = request()->pathinfo();
+    $path_info = explode('/', $path_info);
+    SiamApp::getInstance()->setModule($path_info[0]);
+    $module = $path_info[0];
+}
+```
+
 
 ## 控制器规范
 
 - 每个模块的控制器，都需要继承所在模块的Base控制器，才能实现统一的权限认证、代码封装使用
 - 命名规则为：`模块名+控制器名+Controller` 后缀。如AdminUserController
+- 控制器可以声明属性，鉴权白名单，将不校验token，如用户控制器的登录方法 `protected $white = ['login'];`
+
 
 ## 模型规范
 

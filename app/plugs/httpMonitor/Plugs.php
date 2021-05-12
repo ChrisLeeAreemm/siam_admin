@@ -9,10 +9,8 @@ use app\plugs\httpMonitor\service\ResponseMonitor;
 use app\plugs\PlugsBase;
 use app\plugs\PlugsConfig;
 use EasySwoole\DDL\Blueprint\Create\Table;
-use EasySwoole\DDL\DDLBuilder;
 use EasySwoole\DDL\Enum\Character;
 use EasySwoole\DDL\Enum\Engine;
-use think\facade\Db;
 use think\facade\Event;
 use think\facade\Route;
 

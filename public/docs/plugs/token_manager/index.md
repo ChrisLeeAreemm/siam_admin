@@ -1,5 +1,12 @@
-# Token管理器（TokenManage）
+# token管理器
 
->我们在系统中以JWT形式全局封装了access_token,用于用户验证。\
-在我们封装的前端任何对接口的请求,都必须带上access_token
+当开启token管理器时，将会在登录接口执行token管理器方法
 
+- 登录向管理器注册
+- 退出向管理器注销
+- 登录鉴权向管理器认证
+
+可以达到：强制用户下线、单点登录、统计在线数量等等功能
+![img.png](img.png)
+
+!> feature: 实现对外tcp接口，作为一个token管理平台

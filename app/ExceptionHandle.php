@@ -2,6 +2,7 @@
 
 namespace app;
 
+use app\exception\AuthException;
 use app\exception\BaseException;
 use app\model\PlugsStatusModel;
 use app\plugs\base\service\PlugsBaseHelper;
@@ -25,11 +26,12 @@ class ExceptionHandle extends Handle
      * @var array
      */
     protected $ignoreReport = [
-        HttpException::class,
+        // HttpException::class,
         HttpResponseException::class,
-        ModelNotFoundException::class,
-        DataNotFoundException::class,
+        // ModelNotFoundException::class,
+        // DataNotFoundException::class,
         ValidateException::class,
+        AuthException::class,
     ];
 
     /**
@@ -57,7 +59,7 @@ class ExceptionHandle extends Handle
     {
         // 添加自定义异常处理机制
         // 是否安装异常记录插件，是则插入
-        if (PlugsBaseHelper::isInstall("exceptionLogger")) {
+        if (PlugsBaseHelper::isInstall("exceptionLogger") && !in_array(get_class($e), $this->ignoreReport)) {
             $plugs_status = PlugsBaseHelper::getPlugsStatus("exceptionLogger");
             if ($plugs_status['plugs_status'] == PlugsStatusModel::PLUGS_STATUS_ON) {
                 //序列化保存
@@ -94,13 +96,19 @@ class ExceptionHandle extends Handle
         }
 
 
-        if ($e instanceof BaseException) {
+        if (in_array(get_class($e), $this->ignoreReport)) {
+            if (method_exists($e, 'get_return')){
+                $return_data = $e->get_return();
+            }else{
+                $return_data = [];
+            }
             return json([
                 'code' => $e->getCode(),
-                'data' => (object) $e->get_return(),
+                'data' => (object) $return_data,
                 'msg'  => $e->getMessage(),
             ]);
         }
+
         if ($e instanceof ValidateException) {
             return json([
                 'code' => $e->getCode(),

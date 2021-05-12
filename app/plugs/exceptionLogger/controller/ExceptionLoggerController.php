@@ -7,7 +7,9 @@ use app\exception\ErrorCode;
 use app\plugs\exceptionLogger\model\PlugsExceptionLoggerModel;
 use app\plugs\PlugsBaseController;
 use think\Exception;
+use think\facade\App;
 use think\facade\Db;
+use think\facade\Env;
 
 class ExceptionLoggerController extends PlugsBaseController
 {
@@ -48,6 +50,7 @@ class ExceptionLoggerController extends PlugsBaseController
         if (!$result) {
             return $this->send(ErrorCode::DB_DATA_DOES_NOT_EXIST, [], '数据不存在');
         }
+        App::debug(true);
         return $this->renderContent(json_decode($result->exception_data, true));
     }
     
@@ -111,10 +114,7 @@ class ExceptionLoggerController extends PlugsBaseController
         
         if ($type == 2) {
             $day = date('Ymd', strtotime("-7 day"));
-            $del = PlugsExceptionLoggerModel::where('exception_date', '<=', $day)->delete();
-            if (!$del) {
-                return $this->send(ErrorCode::DB_EXCEPTION, [], '失败');
-            }
+            PlugsExceptionLoggerModel::where('exception_date', '<=', $day)->delete();
         }
         return $this->send(ErrorCode::SUCCESS, [], '成功');
     }
