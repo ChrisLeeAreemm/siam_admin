@@ -5,6 +5,7 @@ namespace app\plugs\tokenManager\service;
 
 
 use app\event\EventTag;
+use app\exception\AuthException;
 use app\exception\ErrorCode;
 use app\facade\SQLiteFacade;
 use think\Exception;
@@ -60,7 +61,7 @@ class TokenManagerEvent
     {
         $has = $this->builder->where('token',$token)->find();
         if (!$has){
-            throw new Exception('AUTH_TOKEN_ERROR',ErrorCode::AUTH_TOKEN_ERROR);
+            throw new AuthException('AUTH_NEED_LOGIN_AGAIN',ErrorCode::AUTH_NEED_LOGIN_AGAIN);
         }
     }
 
