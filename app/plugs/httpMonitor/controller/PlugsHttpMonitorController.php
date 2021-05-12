@@ -96,6 +96,8 @@ class PlugsHttpMonitorController extends PlugsBaseController
         $model = Model::find($id);
         if ($model->request_sn) {
             return $model->response_content;
+        } else if (!$model->response_content){
+            return "没有响应内容，可能是发生了异常没有正确结束~";
         } else {
             /** @var Response $response */
             $response = unserialize($model->response_content);

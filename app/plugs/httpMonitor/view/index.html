@@ -27,7 +27,7 @@
                 <div class="layui-card-header">plugs_http_monitor列表</div>
 
                 <div style="margin: 10px 10px 10px 10px">
-                    <form class="layui-form layui-form-pane" action="">
+                    <form class="layui-form layui-form-pane" action="" lay-filter="filter">
                         <div class="layui-form-item">
                             <div class="layui-inline">
                                 <label class="layui-form-label">订单号</label>
@@ -82,12 +82,16 @@
         let view = layui.view;
         let form = layui.form;
 
+        function build_where(){
+            return {
+                access_token: layui.data(setter.tableName)[setter.request.tokenName],
+                request_sn: form.val('filter').request_sn
+            }
+        }
         table.render({
             elem: '#lists'
             , url: "/index.php/plugs/http_monitor/api/get_list"
-            , where: {
-                access_token: layui.data(setter.tableName)[setter.request.tokenName]
-            }
+            , where: build_where()
             , cols: [[
                 {field: 'id', title: '自增ID'},
                 {field: 'path', title: '请求地址'},
@@ -118,9 +122,7 @@
                 page: {
                     curr: 1
                 }
-                , where: {
-                    request_sn: data.field.request_sn
-                }
+                , where: build_where()
             }, 'data');
             return false;
         });
@@ -182,7 +184,7 @@
                     layer.open({
                         type: 2,
                         title: "查看响应",
-                        content: '/index.php/plugs/http_monitor/view_response?id=' + data.id,
+                        content: '/index.php/plugs/http_monitor/view_response?id=' + data.id +'&access_token=' +layui.data(setter.tableName)[setter.request.tokenName],
                         area: ['70%', '90%']
                     });
                     break;

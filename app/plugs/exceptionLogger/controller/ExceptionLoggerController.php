@@ -7,7 +7,9 @@ use app\exception\ErrorCode;
 use app\plugs\exceptionLogger\model\PlugsExceptionLoggerModel;
 use app\plugs\PlugsBaseController;
 use think\Exception;
+use think\facade\App;
 use think\facade\Db;
+use think\facade\Env;
 
 class ExceptionLoggerController extends PlugsBaseController
 {
@@ -48,6 +50,7 @@ class ExceptionLoggerController extends PlugsBaseController
         if (!$result) {
             return $this->send(ErrorCode::DB_DATA_DOES_NOT_EXIST, [], '数据不存在');
         }
+        App::debug(true);
         return $this->renderContent(json_decode($result->exception_data, true));
     }
     
