@@ -28,6 +28,7 @@ Siam Admin 2.0
 - php think run (开发阶段)
 - 安装数据库 http://127.0.0.1:8000/index.php 运行向导
 - 后台首页 http://127.0.0.1:8000/admin/index.html
+- 文档 http://127.0.0.1:8000/docs/
 
 ## 其他事项
 

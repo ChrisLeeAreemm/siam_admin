@@ -114,10 +114,7 @@ class ExceptionLoggerController extends PlugsBaseController
         
         if ($type == 2) {
             $day = date('Ymd', strtotime("-7 day"));
-            $del = PlugsExceptionLoggerModel::where('exception_date', '<=', $day)->delete();
-            if (!$del) {
-                return $this->send(ErrorCode::DB_EXCEPTION, [], '失败');
-            }
+            PlugsExceptionLoggerModel::where('exception_date', '<=', $day)->delete();
         }
         return $this->send(ErrorCode::SUCCESS, [], '成功');
     }
