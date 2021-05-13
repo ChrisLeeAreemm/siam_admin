@@ -3,6 +3,9 @@ namespace app\model;
 use think\Collection;
 use think\Model;
 use think\db\BaseQuery as BaseQueryMapper;
+use think\Paginator as PaginatorMapper;
+use think\Collection as CollectionMapper;
+
 /**
  * Class BaseModel
  * @package app\model
