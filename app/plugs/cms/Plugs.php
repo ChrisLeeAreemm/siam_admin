@@ -32,17 +32,17 @@ class Plugs extends PlugsBase
 
     public function install()
     {
-        //文章
+        // TODO 文章
         PlugsDatabaseHelper::run(PlugsDatabaseHelper::create_ddl("plugs_cms_article", function (Table $table){
 
         }));
 
-        //文章分类
+        // TODO 文章分类
         PlugsDatabaseHelper::run(PlugsDatabaseHelper::create_ddl("plugs_cms_article_category", function (Table $table){
 
         }));
 
-        //文章脚本
+        // TODO 文章脚本
         PlugsDatabaseHelper::run(PlugsDatabaseHelper::create_ddl("plugs_cms_article_script", function (Table $table){
 
         }));
