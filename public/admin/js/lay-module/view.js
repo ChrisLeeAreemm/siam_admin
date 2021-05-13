@@ -181,6 +181,52 @@ layui.define(['laytpl', 'layer', 'jquery', 'setter'], function (exports) {
             ,id: 'SiamAdminError'
         }, options))
     };
+    // 更新权限节点dom
+    view.renderAuth = function(dom){
+        dom.find("[data-siam-auth]").each(function (i) {
+            let auth = $(this).attr('data-siam-auth');
+            if (view.vifAuth(auth) === false){
+                $(this).remove();
+            }
+        })
+    };
+    // 引入view将会自动执行一次，其他的在需要等待渲染完成之后再调用一次，如table中
+    // ,done(){
+    //     view.renderAuth($("body"));
+    // }
+    view.vifAuth = function(auth){
+        let temAuthList = [];
+        let tempData = layui.data(setter.tableName,{
+            key: "has_auth"
+        });
+        if (tempData !== null ){
+            $.each(tempData, function(index, auth){
+                temAuthList.push(auth.auth_rules);
+            });
+        }
+        let reverse = false;
+
+        // 判断第一个是否为 !
+        if (auth[0] === '!'){
+            reverse = true;
+            auth = auth.substr(1);
+        }
+        // reverse = true  证明取反  比如!test  有test权限则隐藏 没有test权限则显示
+        if (reverse){
+            if ( $.inArray(auth, temAuthList) !== -1 ){
+                return false;
+            }
+        }else{
+            if ( !($.inArray(auth, temAuthList) !== -1)  ){
+                return false;
+            }
+        }
+        return true;
+    };
+    view.renderAuth($("body"));
+
+
+
     //对外接口
     exports('view', view);
 });
