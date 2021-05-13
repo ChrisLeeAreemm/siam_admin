@@ -1,6 +1,8 @@
 * [简介](/)
 * [框架规范说明](base/guide.md)
 * [基本功能](base/index.md)
+* * [用户体系架构说明](base/user_guide.md)
+* * [用户权限说明](base/user_auth_guide.md)
 * [插件介绍](plugs/index.md)
 * * [Base插件](plugs/base/index.md)
 * * [CURD插件](plugs/curd/index.md)
