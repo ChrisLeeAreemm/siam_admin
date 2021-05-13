@@ -2,8 +2,10 @@
 
 namespace app\controller\admin;
 
+use app\common\UserAuthHelper;
 use app\event\EventTag;
 use app\exception\ErrorCode;
+use app\model\AuthsModel;
 use app\model\PlugsStatusModel;
 use app\model\RolesModel;
 use app\model\UsersModel as Model;
@@ -101,8 +103,9 @@ class AdminUsersController extends AdminBaseController
         // - 所有插件状态
 
         // - 个人信息
+        /** @var \app\model\UsersModel $user */
         $user             = Model::field('u_name,u_auth')->where('u_id', '=', $this->who->u_id)->find();
-        $result['u_auth'] = $user->u_auth; //权限
+        $result['u_auth'] = UserAuthHelper::get_list_by_user($user); //权限
         $result['u_name'] = $user->u_name; //用户名
         // - 个人信息
 
