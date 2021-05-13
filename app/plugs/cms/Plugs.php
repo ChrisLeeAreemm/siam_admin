@@ -5,6 +5,10 @@ namespace app\plugs\cms;
 use app\plugs\PlugsBase;
 use app\plugs\PlugsConfig;
 use think\facade\Route;
+use app\plugs\base\service\PlugsDatabaseHelper;
+use EasySwoole\DDL\Blueprint\Create\Table;
+use EasySwoole\DDL\Enum\Character;
+use EasySwoole\DDL\Enum\Engine;
 
 class Plugs extends PlugsBase
 {
@@ -28,7 +32,20 @@ class Plugs extends PlugsBase
 
     public function install()
     {
+        //文章
+        PlugsDatabaseHelper::run(PlugsDatabaseHelper::create_ddl("plugs_cms_article", function (Table $table){
 
+        }));
+
+        //文章分类
+        PlugsDatabaseHelper::run(PlugsDatabaseHelper::create_ddl("plugs_cms_article_category", function (Table $table){
+
+        }));
+
+        //文章脚本
+        PlugsDatabaseHelper::run(PlugsDatabaseHelper::create_ddl("plugs_cms_article_script", function (Table $table){
+
+        }));
     }
 
     public function remove()
