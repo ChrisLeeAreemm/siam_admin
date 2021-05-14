@@ -17,7 +17,7 @@
         {
             "name": "yunwuxin",
             "email": "448901948@qq.com"
-        }        
+        }
     ],
     "require": {
         "php": ">=7.1",
@@ -30,7 +30,7 @@
         "ext-mysqli": "*",
         "easyswoole/ddl": "1.0.10",
         "topthink/think-worker": "3.0.6",
-        "workerman/crontab": "1.0.1",
+        "workerman/crontab": "1.0.1"
     },
     "require-dev": {
         "symfony/var-dumper": "^4.2",
