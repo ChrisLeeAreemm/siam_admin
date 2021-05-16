@@ -54,7 +54,7 @@ class Plugs extends PlugsBase
             $table->setTableCharset(Character::UTF8MB4_GENERAL_CI);      //设置表字符集
             $table->setTableEngine(Engine::INNODB);                      //设置表引擎
             $table->int('article_category_id')->setIsUnsigned()->setIsAutoIncrement()->setIsPrimaryKey()->setColumnComment('ID');
-            $table->varchar('article_category_name', 255)->setColumnComment("文章分类名");
+            $table->char('article_category_name', 50)->setColumnComment("文章分类名");
             $table->datetime("update_time")->setColumnComment("更新时间");
             $table->datetime("create_time")->setColumnComment("创建时间");
         }));
@@ -65,8 +65,8 @@ class Plugs extends PlugsBase
             $table->setTableCharset(Character::UTF8MB4_GENERAL_CI);      //设置表字符集
             $table->setTableEngine(Engine::INNODB);                      //设置表引擎
             $table->int('article_script_id')->setIsUnsigned()->setIsAutoIncrement()->setIsPrimaryKey()->setColumnComment('ID');
-            $table->varchar('article_script_name', 255)->setColumnComment("脚本名");
-            $table->varchar('article_script_content', 255)->setColumnComment("脚本内容");
+            $table->char('article_script_name', 50)->setColumnComment("脚本名");
+            $table->text('article_script_content')->setColumnComment("脚本内容");
             $table->datetime("update_time")->setColumnComment("更新时间");
             $table->datetime("create_time")->setColumnComment("创建时间");
         }));
