@@ -26,6 +26,24 @@ class Plugs extends PlugsBase
                 'icon'   => "fa fa-tachometer",
                 'target' => '_self',
             ],
+            [
+                'title'  => "article",
+                'href'   => "/plugs/cms/article",
+                'icon'   => "fa fa-tachometer",
+                'target' => '_self',
+            ],
+            [
+                'title'  => "article_category",
+                'href'   => "/plugs/cms/article_category",
+                'icon'   => "fa fa-tachometer",
+                'target' => '_self',
+            ],
+            [
+                'title'  => "article_script",
+                'href'   => "/plugs/cms/article_script",
+                'icon'   => "fa fa-tachometer",
+                'target' => '_self',
+            ],
         ]);
         return $config;
     }
@@ -83,6 +101,17 @@ class Plugs extends PlugsBase
         Route::get('plugs/cms/index', function () {
             return $this->pre_render_file(__DIR__ . "/view/index.html");
         });
+        Route::get('plugs/cms/article', function () {
+            return $this->pre_render_file(__DIR__ . "/view/article.html");
+        });
+        Route::get('plugs/cms/article_category', function () {
+            return $this->pre_render_file(__DIR__ . "/view/article_category.html");
+        });
+        Route::get('plugs/cms/article_script', function () {
+            return $this->pre_render_file(__DIR__ . "/view/article_script.html");
+        });
+        
+        
         Route::any('plugs/cms/api/get_list', 'app\plugs\cms\controller\CmsController@get_list');
     }
 }
