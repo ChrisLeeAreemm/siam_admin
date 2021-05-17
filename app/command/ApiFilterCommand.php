@@ -54,7 +54,7 @@ class ApiFilterCommand extends Command
                 ApiAccessContain::getInstance()->updateSetting();
             });
             // 定时器 1秒一次限流检测
-            Timer::add(60,function (){
+            Timer::add(1,function (){
                 ApiAccessContain::getInstance()->reset();
                 PlugsCommandStatus::ping('api-filter');
             });
