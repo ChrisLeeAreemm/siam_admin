@@ -19,7 +19,7 @@ class Plugs extends PlugsBase
         $config->setHandleModule(["admin", "plugs"]);// 只有admin模块才会执行初始化
         $config->setMenu([
             [
-                'title'  => "cronDoc",
+                'title'  => "定时任务",
                 'href'   => "/plugs/cron-doc/index",
                 'icon'   => "fa fa-book",
                 'target' => '_self',
