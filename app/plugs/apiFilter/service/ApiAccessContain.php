@@ -62,7 +62,7 @@ class ApiAccessContain
             'lastAccessTime' => time(),
         ];
         if (!$info) {
-            $arr['count']  = 1;
+            $arr['count']  = -1;
             $arr['number'] = -1;
             return $arr;
         }
