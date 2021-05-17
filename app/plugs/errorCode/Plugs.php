@@ -18,7 +18,7 @@ class Plugs extends PlugsBase
         $config->setHandleModule(["plugs"]);// 只有plugs模块才会执行初始化
         $config->setMenu([
             [
-                'title'  => "errorCode",
+                'title'  => "状态码列表",
                 'href'   => "/plugs/error-code/index",
                 'icon'   => "fa fa-book",
                 'target' => '_self',
