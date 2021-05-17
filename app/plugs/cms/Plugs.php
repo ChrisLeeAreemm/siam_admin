@@ -59,7 +59,7 @@ class Plugs extends PlugsBase
             $table->varchar('article_title', 255)->setColumnComment("文章标题");
             $table->text('article_content')->setColumnComment("文章内容");
             $table->int('article_category_id')->setDefaultValue(0)->setColumnComment("文章分类ID");
-            $table->int('article_script_id')->setDefaultValue(0)->setColumnComment("文章脚本ID");
+            $table->varchar('article_script_list',255)->setDefaultValue(0)->setColumnComment("文章脚本ids");
             $table->int('article_author_id')->setColumnComment("作者ID");
             $table->tinyint('article_status',3)->setDefaultValue(0)->setColumnComment("文章状态 0:草稿 1：发布");
             $table->datetime("update_time")->setColumnComment("更新时间");

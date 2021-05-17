@@ -15,7 +15,7 @@ use app\model\UsersModel;
  * @property mixed article_title	文章标题
  * @property mixed article_content	文章内容
  * @property mixed article_category_id	文章分类ID
- * @property mixed article_script_id	文章脚本ID
+ * @property mixed article_script_list	文章脚本ids
  * @property mixed article_author_id	作者ID
  * @property mixed article_status	文章状态 0:草稿 1：发布
  * @property mixed update_time	更新时间
