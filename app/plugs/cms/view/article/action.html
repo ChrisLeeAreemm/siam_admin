@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>{:lang('action')}</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" href="__ADMIN__/lib/layui-v2.6.3/css/layui.css" media="all">
+  <link rel="stylesheet" href="__ADMIN__/css/public.css" media="all">
+</head>
+<body>
+<div class="layui-card">
+  <div class="layui-card-body">
+<div class="layui-form" lay-filter="formTable" style="padding: 0">
+  <div class="layui-form-item">
+    <div class="layui-input-block">
+      <input type="hidden" name="article_id" class="layui-input">
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">文章标题</label>
+    <div class="layui-input-block">
+      <input type="text" name="article_title" lay-verify="required" autocomplete="off"  class="layui-input">
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">文章分类</label>
+    <div class="layui-input-block">
+      <select name="article_category_id" lay-verify="required" lay-filter="article_category_id" id="article_category_id">
+      </select>
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">文章内容</label>
+    <div class="layui-input-block">
+      <div id="wangEditor"></div>
+      <textarea style="display:none;" name="article_content" class="layui-textarea" id="article_content"></textarea>
+    </div>
+  </div>
+
+
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">文章脚本</label>
+    <div class="layui-input-block">
+      <div name="article_script" id="article_script">
+    </div>
+  </div>
+
+    <div class="layui-form-item">
+      <label class="layui-form-label">文章状态</label>
+      <div class="layui-input-block">
+        <input type="radio" name="article_status" value="1" title="发布" checked>
+        <input type="radio" name="article_status" value="0" title="草稿" >
+      </div>
+    </div>
+
+  <div class="layui-form-item">
+    <div class="layui-input-block">
+      <button class="layui-btn" lay-submit lay-filter="submit">立即提交</button>
+      <button type="reset" class="layui-btn layui-btn-primary">重新填写</button>
+    </div>
+  </div>
+</div>
+  </div>
+</div>
+
+  <script src="__ADMIN__/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+  <script src="__ADMIN__/js/lay-config.js?v=2.0.4" charset="utf-8"></script>
+  <script src="__ADMIN__/js/lay-module/xm-select.js?v=2.0.5" charset="utf-8"></script>
+  <script src="https://cdn.jsdelivr.net/npm/wangeditor@latest/dist/wangEditor.min.js"></script>
+  <script>
+  layui.use(['form', 'layer','view','setter'], function () {
+    let form = layui.form;
+    let layer = layui.layer;
+    let $ = layui.jquery;
+    let view = layui.view;
+    let setter = layui.setter;
+    let layedit = layui.layedit;
+    let submit_url = "/plugs/cms/article/api/add";
+    let get_one_url = "/plugs/cms/article/api/get_one";
+    let get_article_category_all = "/plugs/cms/article_category/api/get_all";
+    let get_article_script_all = "/plugs/cms/article_script/api/get_all";
+    let article_id = view.getQueryletiable('article_id');
+
+    //富文本
+    let E = window.wangEditor
+    let editor = new E( document.getElementById('wangEditor') )
+    let article_content = $('#article_content')
+    editor.config.onchange = function (html) {
+      // 第二步，监控变化，同步更新到 textarea
+      article_content.val(html)
+    }
+    editor.config.zIndex = 0
+    editor.create()
+    // 初始化 textarea 的值
+    article_content.val(editor.txt.html())
+
+    //分类
+    view.req({
+      url: get_article_category_all,
+      success:function (res) {
+        //获取返回的数据
+        var value = res.data;
+        var opt = '<option value=""></option>';
+        //循环遍历
+        for (var i in value) {
+          opt += '<option value = "' + value[i].article_category_id + '">' + value[i].article_category_name + '</option>'
+        }
+        $("#article_category_id").html(opt);
+        layui.form.render();
+      }
+    })
+
+    //脚本
+    view.req({
+      url: get_article_script_all,
+      success:function (res) {
+        //获取返回的数据
+        var value = res.data;
+        let opt = '';
+        //循环遍历
+        for (let i in value) {
+          opt += '<input type="checkbox" name="article_script[]" title="' + value[i].article_script_name + '" value="' + value[i].article_script_id + '" id="' + value[i].article_script_id + '">'
+        }
+        $("#article_script").html(opt);
+        layui.form.render();
+      }
+    })
+
+    if(article_id){
+      //获取信息
+      view.req({
+        url: get_one_url,
+        data: {article_id:article_id},
+        type: "get",
+        dataType: "json",
+        success:function (res){
+          if (res.code === 200){
+            // 初始化赋值
+            form.val("formTable", {
+              "article_id" :res.data.lists.article_id,
+              "article_title" :res.data.lists.article_title,
+              "article_content" :res.data.lists.article_content,
+              "article_script_id" :res.data.lists.article_script_id,
+              "article_author_id" :res.data.lists.article_author_id,
+              "article_status" :res.data.lists.article_status,
+              "update_time" :res.data.lists.update_time,
+              "create_time" :res.data.lists.create_time,
+
+            });
+            let category_value = res.data.lists.article_category_id;
+            $('#article_category_id').find("option[value=" + category_value + "]").attr("selected", true);
+
+            editor.txt.html(res.data.lists.article_content)
+
+            //checked
+            let script_value = res.data.lists.article_script_id;
+            //循环遍历
+            for (let i in script_value) {
+              let id = script_value[i];
+              $('#' + id).attr('checked', 'checked')
+            }
+            layui.form.render();
+          }
+        }
+      })
+      submit_url = "/plugs/cms/article/api/edit";
+    }
+    form.on('submit(submit)', function (data) {
+      let load = layer.load(0, {
+        shade: 0.5
+      });
+      view.req({
+        url: submit_url,
+        data: data.field,
+        type: "post",
+        dataType: "json",
+        success: function (res) {
+          layer.close(load);
+          if (res.code === 200) {
+            layer.msg(res.msg,{icon:1,time: 1500},function () {
+              window.location.reload();
+            });
+          } else {
+            layer.msg(res.msg,{icon:2,time: 1500},function () {
+              window.location.reload();
+            });
+          }
+        }
+      });
+      return false;
+    });
+
+  });
+</script>
+</body>
+</html>

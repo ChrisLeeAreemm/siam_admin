@@ -28,19 +28,19 @@ class Plugs extends PlugsBase
             ],
             [
                 'title'  => "article",
-                'href'   => "/plugs/cms/article",
+                'href'   => "/plugs/cms/article/index",
                 'icon'   => "fa fa-tachometer",
                 'target' => '_self',
             ],
             [
                 'title'  => "article_category",
-                'href'   => "/plugs/cms/article_category",
+                'href'   => "/plugs/cms/article_category/index",
                 'icon'   => "fa fa-tachometer",
                 'target' => '_self',
             ],
             [
                 'title'  => "article_script",
-                'href'   => "/plugs/cms/article_script",
+                'href'   => "/plugs/cms/article_script/index",
                 'icon'   => "fa fa-tachometer",
                 'target' => '_self',
             ],
@@ -101,17 +101,49 @@ class Plugs extends PlugsBase
         Route::get('plugs/cms/index', function () {
             return $this->pre_render_file(__DIR__ . "/view/index.html");
         });
-        Route::get('plugs/cms/article', function () {
-            return $this->pre_render_file(__DIR__ . "/view/article.html");
+        Route::get('plugs/cms/article/index', function () {
+            return $this->pre_render_file(__DIR__ . "/view/article/lists.html");
         });
-        Route::get('plugs/cms/article_category', function () {
-            return $this->pre_render_file(__DIR__ . "/view/article_category.html");
+        Route::get('plugs/cms/article/action', function () {
+            return $this->pre_render_file(__DIR__ . "/view/article/action.html");
         });
-        Route::get('plugs/cms/article_script', function () {
-            return $this->pre_render_file(__DIR__ . "/view/article_script.html");
+        Route::get('plugs/cms/article_category/index', function () {
+            return $this->pre_render_file(__DIR__ . "/view/articleCategory/lists.html");
+        });
+        Route::get('plugs/cms/article_category/action', function () {
+            return $this->pre_render_file(__DIR__ . "/view/articleCategory/action.html");
+        });
+        Route::get('plugs/cms/article_script/index', function () {
+            return $this->pre_render_file(__DIR__ . "/view/articleScript/lists.html");
+        });
+        Route::get('plugs/cms/article_script/action', function () {
+            return $this->pre_render_file(__DIR__ . "/view/articleScript/action.html");
         });
         
         
         Route::any('plugs/cms/api/get_list', 'app\plugs\cms\controller\CmsController@get_list');
+        // Article
+        Route::any('plugs/cms/article/api/get_list', 'app\plugs\cms\controller\CmsArticleController@get_list');
+        Route::any('plugs/cms/article/api/add', 'app\plugs\cms\controller\CmsArticleController@add');
+        Route::any('plugs/cms/article/api/edit', 'app\plugs\cms\controller\CmsArticleController@edit');
+        Route::any('plugs/cms/article/api/delete', 'app\plugs\cms\controller\CmsArticleController@delete');
+        Route::any('plugs/cms/article/api/get_one', 'app\plugs\cms\controller\CmsArticleController@get_one');
+        Route::any('plugs/cms/article/api/upload', 'app\plugs\cms\controller\CmsArticleController@upload');
+        // Article_category
+        Route::any('plugs/cms/article_category/api/get_list', 'app\plugs\cms\controller\CmsArticleCategoryController@get_list');
+        Route::any('plugs/cms/article_category/api/add', 'app\plugs\cms\controller\CmsArticleCategoryController@add');
+        Route::any('plugs/cms/article_category/api/edit', 'app\plugs\cms\controller\CmsArticleCategoryController@edit');
+        Route::any('plugs/cms/article_category/api/delete', 'app\plugs\cms\controller\CmsArticleCategoryController@delete');
+        Route::any('plugs/cms/article_category/api/get_one', 'app\plugs\cms\controller\CmsArticleCategoryController@get_one');
+        Route::any('plugs/cms/article_category/api/get_all', 'app\plugs\cms\controller\CmsArticleCategoryController@get_all');
+
+        // Article_Script
+        Route::any('plugs/cms/article_script/api/get_list', 'app\plugs\cms\controller\CmsArticleScriptController@get_list');
+        Route::any('plugs/cms/article_script/api/add', 'app\plugs\cms\controller\CmsArticleScriptController@add');
+        Route::any('plugs/cms/article_script/api/edit', 'app\plugs\cms\controller\CmsArticleScriptController@edit');
+        Route::any('plugs/cms/article_script/api/delete', 'app\plugs\cms\controller\CmsArticleScriptController@delete');
+        Route::any('plugs/cms/article_script/api/get_one', 'app\plugs\cms\controller\CmsArticleScriptController@get_one');
+        Route::any('plugs/cms/article_script/api/get_all', 'app\plugs\cms\controller\CmsArticleScriptController@get_all');
+
     }
 }

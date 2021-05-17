@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>操作</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" href="__ADMIN__/lib/layui-v2.6.3/css/layui.css" media="all">
+  <link rel="stylesheet" href="__ADMIN__/css/public.css" media="all">
+</head>
+<body>
+<div class="layui-card">
+  <div class="layui-card-body">
+<div class="layui-form" lay-filter="formTable" style="padding: 0">
+  <div class="layui-form-item">
+    <div class="layui-input-block">
+      <input type="hidden"  name="article_script_id" class="layui-input">
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">脚本名</label>
+    <div class="layui-input-block">
+      <input type="text" name="article_script_name" lay-verify="required" autocomplete="off"  class="layui-input">
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">脚本内容</label>
+    <div class="layui-input-block">
+            <textarea name="article_script_content" lay-verify="required" autocomplete="off" class="layui-textarea" id="article_script_content"></textarea>
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <div class="layui-input-block">
+      <button class="layui-btn" lay-submit lay-filter="submit">立即提交</button>
+      <button type="reset" class="layui-btn layui-btn-primary">重新填写</button>
+    </div>
+  </div>
+</div>
+  </div>
+</div>
+
+<script src="__ADMIN__/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+<script src="__ADMIN__/js/lay-config.js?v=2.0.4" charset="utf-8"></script>
+<script>
+  layui.use(['form', 'layer','view','setter'], function () {
+    let form = layui.form;
+    let layer = layui.layer;
+    let $ = layui.jquery;
+    let view = layui.view;
+    let setter = layui.setter;
+    let submit_url = "/plugs/cms/article_script/api/add";
+    let get_one_url = "/plugs/cms/article_script/api/get_one";
+    let article_script_id = view.getQueryletiable('article_script_id');
+    if(article_script_id){
+      //获取信息
+      view.req({
+        url: get_one_url,
+        data: {article_script_id:article_script_id},
+        type: "get",
+        dataType: "json",
+        success:function (res){
+          if (res.code === 200){
+            // 初始化赋值
+            form.val("formTable", {
+              "article_script_id" :res.data.lists.article_script_id,
+              "article_script_name" :res.data.lists.article_script_name,
+              "article_script_content" :res.data.lists.article_script_content,
+            });
+            layui.form.render();
+          }
+        }
+      })
+      submit_url = "/plugs/cms/article_script/api/edit";
+    }
+    form.on('submit(submit)', function (data) {
+      let load = layer.load(0, {
+        shade: 0.5
+      });
+      view.req({
+        url: submit_url,
+        data: data.field,
+        type: "post",
+        dataType: "json",
+        success: function (res) {
+          layer.close(load);
+          if (res.code === 200) {
+            layer.msg(res.msg,{icon:1,time: 1500},function () {
+              window.location.reload();
+            });
+          } else {
+            layer.msg(res.msg,{icon:2,time: 1500},function () {
+              window.location.reload();
+            });
+          }
+        }
+      });
+      return false;
+    });
+  });
+</script>
+</body>
+</html>
