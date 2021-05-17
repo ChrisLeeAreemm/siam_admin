@@ -32,7 +32,7 @@ class CmsArticleController extends PlugsBaseController
         }
 
         foreach ($result as $key => $value){
-            $article_script_arr  = explode(',',$value['article_script_id']);
+            $article_script_arr  = explode(',',$value['article_script_list']);
             $script_name = [];
             foreach ($article_script_arr as $v){
                 if (!array_key_exists($v,$script_arr)) continue;
@@ -52,9 +52,9 @@ class CmsArticleController extends PlugsBaseController
     {
         $id = input('article_id');
         $result = Model::find($id);
-        $result['article_script_id'] = explode(',', $result['article_script_id']);
+        $result['article_script_list'] = explode(',', $result['article_script_list']);
         if (!$result){
-            return $this->send(ErrorCode::THIRD_PART_ERROR,[],'获取失败');
+            return $this->send(ErrorCode::DB_DATA_DOES_NOT_EXIST,[],'获取失败');
         }
             return $this->send(ErrorCode::SUCCESS,['lists'=>$result],'成功');
     }
@@ -67,12 +67,12 @@ class CmsArticleController extends PlugsBaseController
 
         $param = input();
         $param['article_author_id'] = $this->who->u_id;
-        $param['article_script_id'] = implode(',', $param['article_script']);
+        $param['article_script_list'] = implode(',', $param['article_script']);
         $param['create_time'] = $param['update_time'] = date('Y-m-d H:i:s');
         $start = Model::create($param);
 
         if (!$start) {
-            return $this->send(ErrorCode::THIRD_PART_ERROR,[],'新增失败');
+            return $this->send(ErrorCode::DB_DATA_ADD_FAILE,[],'新增失败');
          }
             return $this->send(ErrorCode::SUCCESS,[],'成功');
     }
@@ -84,12 +84,12 @@ class CmsArticleController extends PlugsBaseController
     {
         $param = input();
         $param['update_time'] = date('Y-m-d H:i:s');
-        $param['article_script_id'] = implode(',', $param['article_script']);
+        $param['article_script_list'] = implode(',', $param['article_script']);
         $start = Model::find($param['article_id']);
         $res   = $start->save($param);
 
         if (!$res){
-            return $this->send(ErrorCode::THIRD_PART_ERROR,[],'编辑失败');
+            return $this->send(ErrorCode::DB_DATA_UPDATE_FAILE,[],'编辑失败');
         }
             return $this->send(ErrorCode::SUCCESS,[],'成功');
     }

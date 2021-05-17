@@ -147,7 +147,7 @@
               "article_id" :res.data.lists.article_id,
               "article_title" :res.data.lists.article_title,
               "article_content" :res.data.lists.article_content,
-              "article_script_id" :res.data.lists.article_script_id,
+              "article_script_list" :res.data.lists.article_script_list,
               "article_author_id" :res.data.lists.article_author_id,
               "article_status" :res.data.lists.article_status,
               "update_time" :res.data.lists.update_time,
@@ -160,7 +160,7 @@
             editor.txt.html(res.data.lists.article_content)
 
             //checked
-            let script_value = res.data.lists.article_script_id;
+            let script_value = res.data.lists.article_script_list;
             //循环遍历
             for (let i in script_value) {
               let id = script_value[i];

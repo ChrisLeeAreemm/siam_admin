@@ -30,7 +30,7 @@ class CmsArticleScriptController extends PlugsBaseController
         $id = input('article_script_id');
         $result = Model::find($id);
         if (!$result){
-            return $this->send(ErrorCode::THIRD_PART_ERROR,[],'获取失败');
+            return $this->send(ErrorCode::DB_DATA_DOES_NOT_EXIST,[],'获取失败');
         }
             return $this->send(ErrorCode::SUCCESS,['lists'=>$result],'成功');
     }
@@ -63,7 +63,7 @@ class CmsArticleScriptController extends PlugsBaseController
         $param['create_time'] = $param['update_time'] = date('Y-m-d H:i:s');
         $start = Model::create($param);
         if (!$start) {
-            return $this->send(ErrorCode::THIRD_PART_ERROR,[],'新增失败');
+            return $this->send(ErrorCode::DB_DATA_ADD_FAILE,[],'新增失败');
          }
             return $this->send(ErrorCode::SUCCESS,[],'成功');
     }
@@ -79,7 +79,7 @@ class CmsArticleScriptController extends PlugsBaseController
         $res   = $start->save($param);
 
         if (!$res){
-            return $this->send(ErrorCode::THIRD_PART_ERROR,[],'编辑失败');
+            return $this->send(ErrorCode::DB_DATA_UPDATE_FAILE,[],'编辑失败');
         }
             return $this->send(ErrorCode::SUCCESS,[],'成功');
     }
