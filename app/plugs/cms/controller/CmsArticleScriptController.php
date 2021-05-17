@@ -1,11 +1,13 @@
 <?php
 
-namespace app\controller\admin;
+namespace app\plugs\cms\controller;
+
 
 use app\exception\ErrorCode;
-use app\model\-modelName- as Model;
+use app\plugs\PlugsBaseController;
+use app\plugs\cms\model\PlugsCmsArticleScriptModel as Model;
 
-class Admin-controllerName-Controller extends AdminBaseController
+class CmsArticleScriptController extends PlugsBaseController
 {
     /**
      * @return mixed
@@ -17,7 +19,7 @@ class Admin-controllerName-Controller extends AdminBaseController
         $page  = input('page', 1);
         $limit = input('limit', 10);
 
-        $result = Model::page($page, $limit)->order('-pk-','DESC')->select();
+        $result = Model::page($page, $limit)->order('article_script_id','DESC')->select();
         $count  = Model::count();
         return $this->send(ErrorCode::SUCCESS,['lists'=>$result,'count'=>$count],'成功');
 
@@ -25,12 +27,30 @@ class Admin-controllerName-Controller extends AdminBaseController
 
     public function get_one()
     {
-        $id = input('-pk-');
+        $id = input('article_script_id');
         $result = Model::find($id);
         if (!$result){
             return $this->send(ErrorCode::THIRD_PART_ERROR,[],'获取失败');
         }
             return $this->send(ErrorCode::SUCCESS,['lists'=>$result],'成功');
+    }
+
+    /**
+     *
+     * @return \think\response\Json
+     */
+    public function get_all()
+    {
+        try {
+            $scripts = Model::select();
+        } catch (\Exception $e) {
+            return $this->send(ErrorCode::DB_EXCEPTION, [], $e->getMessage());
+        }
+        if (!$scripts){
+            return $this->send(ErrorCode::DB_DATA_DOES_NOT_EXIST, [], 'DB_DATA_DOES_NOT_EXIST');
+        }
+        return $this->send(ErrorCode::SUCCESS,$scripts,'成功');
+
     }
 
     /**
@@ -40,9 +60,8 @@ class Admin-controllerName-Controller extends AdminBaseController
     {
 
         $param = input();
-
+        $param['create_time'] = $param['update_time'] = date('Y-m-d H:i:s');
         $start = Model::create($param);
-
         if (!$start) {
             return $this->send(ErrorCode::THIRD_PART_ERROR,[],'新增失败');
          }
@@ -55,7 +74,8 @@ class Admin-controllerName-Controller extends AdminBaseController
     public function edit()
     {
         $param = input();
-        $start = Model::find($param['-pk-']);
+        $param['update_time'] = date('Y-m-d H:i:s');
+        $start = Model::find($param['article_script_id']);
         $res   = $start->save($param);
 
         if (!$res){
@@ -69,7 +89,7 @@ class Admin-controllerName-Controller extends AdminBaseController
     */
     public function delete()
     {
-        $id = input('-pk-');
+        $id = input('article_script_id');
 
         $result = Model::destroy($id);
         if (!$result){
