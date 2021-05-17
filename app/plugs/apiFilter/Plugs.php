@@ -31,7 +31,7 @@ class Plugs extends PlugsBase
         $config->setHandleModule(["api","plugs","cli","admin"]);
         $config->setMenu([
             [
-                'title'  => "apiFilter",
+                'title'  => "api限流器",
                 'href'   => "/plugs/api_filter/index",
                 'icon'   => "fa fa-tachometer",
                 'target' => '_self',

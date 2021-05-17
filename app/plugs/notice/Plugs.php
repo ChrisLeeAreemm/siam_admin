@@ -27,13 +27,13 @@ class Plugs extends PlugsBase
         $config->setHandleModule(["admin", "plugs"]);// 只有admin模块才会执行初始化
         $config->setMenu([
             [
-                'title'  => "notice",
+                'title'  => "站内信列表",
                 'href'   => "/plugs/notice/index",
                 'icon'   => "fa fa-tachometer",
                 'target' => '_self',
             ],
             [
-                'title'  => "send",
+                'title'  => "发送站内信",
                 'href'   => "/plugs/notice/send",
                 'icon'   => "fa fa-tachometer",
                 'target' => '_self',

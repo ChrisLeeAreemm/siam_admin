@@ -27,19 +27,19 @@ class Plugs extends PlugsBase
                 'target' => '_self',
             ],
             [
-                'title'  => "article",
+                'title'  => "文章列表",
                 'href'   => "/plugs/cms/article/index",
                 'icon'   => "fa fa-tachometer",
                 'target' => '_self',
             ],
             [
-                'title'  => "article_category",
+                'title'  => "文章分类",
                 'href'   => "/plugs/cms/article_category/index",
                 'icon'   => "fa fa-tachometer",
                 'target' => '_self',
             ],
             [
-                'title'  => "article_script",
+                'title'  => "文章脚本",
                 'href'   => "/plugs/cms/article_script/index",
                 'icon'   => "fa fa-tachometer",
                 'target' => '_self',

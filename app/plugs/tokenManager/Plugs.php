@@ -20,7 +20,7 @@ class Plugs extends PlugsBase
         $config->setHandleModule(["admin", "plugs"]);// 只有admin模块才会执行初始化
         $config->setMenu([
             [
-                'title'  => "tokenManager",
+                'title'  => "Token管理器",
                 'href'   => "/plugs/token_manager/index",
                 'icon'   => "fa fa-tachometer",
                 'target' => '_self',

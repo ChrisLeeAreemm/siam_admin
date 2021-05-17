@@ -25,7 +25,7 @@ class Plugs extends PlugsBase
         $config->setHandleModule(["notify", "plugs"]);
         $config->setMenu([
             [
-                'title'  => "httpMonitor",
+                'title'  => "请求监控",
                 'href'   => "/plugs/http_monitor/index",
                 'icon'   => "fa fa-calendar",
                 'target' => '_self',
