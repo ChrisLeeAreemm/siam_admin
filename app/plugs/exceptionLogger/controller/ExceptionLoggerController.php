@@ -63,10 +63,6 @@ class ExceptionLoggerController extends PlugsBaseController
      */
     public function echarts_data()
     {
-        $exceptions = PlugsExceptionLoggerModel::select();
-        if (!$exceptions) {
-            return $this->send(ErrorCode::DB_DATA_DOES_NOT_EXIST, [], '数据不存在');
-        }
         //获取7天
         $day  = [];
         $data = [];
