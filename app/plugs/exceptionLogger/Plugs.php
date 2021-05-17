@@ -22,7 +22,7 @@ class Plugs extends PlugsBase
         $config->setHandleModule(["admin", "plugs"]);// 只有admin模块才会执行初始化
         $config->setMenu([
             [
-                'title'  => "exceptionLogger",
+                'title'  => "异常日志",
                 'href'   => "/plugs/exception_logger/index",
                 'icon'   => "fa fa-frown-o",
                 'target' => '_self',
