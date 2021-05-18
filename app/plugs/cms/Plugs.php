@@ -21,12 +21,6 @@ class Plugs extends PlugsBase
         $config->setHandleModule(["admin", "plugs"]);// 只有admin模块才会执行初始化
         $config->setMenu([
             [
-                'title'  => "cms",
-                'href'   => "/plugs/cms/index",
-                'icon'   => "fa fa-tachometer",
-                'target' => '_self',
-            ],
-            [
                 'title'  => "文章列表",
                 'href'   => "/plugs/cms/article/index",
                 'icon'   => "fa fa-tachometer",
@@ -129,7 +123,7 @@ class Plugs extends PlugsBase
         Route::any('plugs/cms/article/api/edit', 'app\plugs\cms\controller\CmsArticleController@edit');
         Route::any('plugs/cms/article/api/delete', 'app\plugs\cms\controller\CmsArticleController@delete');
         Route::any('plugs/cms/article/api/get_one', 'app\plugs\cms\controller\CmsArticleController@get_one');
-        Route::any('plugs/cms/article/api/upload', 'app\plugs\cms\controller\CmsArticleController@upload');
+
         // Article_category
         Route::any('plugs/cms/article_category/api/get_list', 'app\plugs\cms\controller\CmsArticleCategoryController@get_list');
         Route::any('plugs/cms/article_category/api/add', 'app\plugs\cms\controller\CmsArticleCategoryController@add');
