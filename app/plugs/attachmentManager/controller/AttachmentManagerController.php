@@ -58,7 +58,7 @@ class AttachmentManagerController extends PlugsBaseController
      */
     public function upload()
     {
-        $user = $this->auth();
+        $user = $this->who;
 
         $file   = request()->file('file');
         try {
@@ -82,7 +82,7 @@ class AttachmentManagerController extends PlugsBaseController
     public function get_list()
     {
         // 根据u_id决定返回的列表
-        $user = $this->auth();
+        $user = $this->who;
         $where = [];
         if ($user->u_id!==1){
             $where = [
