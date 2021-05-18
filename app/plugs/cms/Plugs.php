@@ -57,6 +57,7 @@ class Plugs extends PlugsBase
             $table->setTableEngine(Engine::INNODB);                      //设置表引擎
             $table->int('article_id')->setIsUnsigned()->setIsAutoIncrement()->setIsPrimaryKey()->setColumnComment('ID');
             $table->varchar('article_title', 255)->setColumnComment("文章标题");
+            $table->varchar('article_cover_picture', 255)->setColumnComment("封面图片");
             $table->text('article_content')->setColumnComment("文章内容");
             $table->int('article_category_id')->setDefaultValue(0)->setColumnComment("文章分类ID");
             $table->varchar('article_script_list',255)->setDefaultValue(0)->setColumnComment("文章脚本ids");
