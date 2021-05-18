@@ -21,12 +21,6 @@ class Plugs extends PlugsBase
         $config->setHandleModule(["admin", "plugs"]);// 只有admin模块才会执行初始化
         $config->setMenu([
             [
-                'title'  => "cms",
-                'href'   => "/plugs/cms/index",
-                'icon'   => "fa fa-tachometer",
-                'target' => '_self',
-            ],
-            [
                 'title'  => "文章列表",
                 'href'   => "/plugs/cms/article/index",
                 'icon'   => "fa fa-tachometer",
@@ -57,6 +51,7 @@ class Plugs extends PlugsBase
             $table->setTableEngine(Engine::INNODB);                      //设置表引擎
             $table->int('article_id')->setIsUnsigned()->setIsAutoIncrement()->setIsPrimaryKey()->setColumnComment('ID');
             $table->varchar('article_title', 255)->setColumnComment("文章标题");
+            $table->varchar('article_cover_picture', 255)->setColumnComment("封面图片");
             $table->text('article_content')->setColumnComment("文章内容");
             $table->int('article_category_id')->setDefaultValue(0)->setColumnComment("文章分类ID");
             $table->varchar('article_script_list',255)->setDefaultValue(0)->setColumnComment("文章脚本ids");
@@ -128,7 +123,7 @@ class Plugs extends PlugsBase
         Route::any('plugs/cms/article/api/edit', 'app\plugs\cms\controller\CmsArticleController@edit');
         Route::any('plugs/cms/article/api/delete', 'app\plugs\cms\controller\CmsArticleController@delete');
         Route::any('plugs/cms/article/api/get_one', 'app\plugs\cms\controller\CmsArticleController@get_one');
-        Route::any('plugs/cms/article/api/upload', 'app\plugs\cms\controller\CmsArticleController@upload');
+
         // Article_category
         Route::any('plugs/cms/article_category/api/get_list', 'app\plugs\cms\controller\CmsArticleCategoryController@get_list');
         Route::any('plugs/cms/article_category/api/add', 'app\plugs\cms\controller\CmsArticleCategoryController@add');

@@ -37,7 +37,7 @@ class AttachmentService
 
         // 根据上传方式 决定上传的驱动
         $save_path = Factory::init($config['config_driver']['value'])->upload($file, $user);
-
+        $save_path = str_replace('\\', '/', $save_path);
         $upload            = new PlugsAttachmentListModel;
         $upload->u_id      = $user->u_id;
         $upload->file_name = $file->getOriginalName();
