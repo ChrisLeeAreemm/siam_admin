@@ -106,8 +106,9 @@ class ApiAccessContain
      */
     public function reset()
     {
+        $this->filterList = $this->handle->getTagItems($this->listTag);
         foreach ($this->filterList as $value) {
-            $info          = $this->handle->get($value);
+            $info          = $this->getAuto($value);
             $info['count'] = 0;
             $this->handle->tag($this->listTag)->set($value, $info);
         }
