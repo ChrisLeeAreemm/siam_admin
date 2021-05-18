@@ -4,6 +4,11 @@
 
 限流统计级别是1秒，1s内超出配置数量值的请求会被拒绝。
 
+## 启动相关
+
+1. Api限流器使用了 Redis 作为数据缓存服务，在使用限流器之前请确保Redis服务正常工作。
+2. 如何启动，使用命令行 `php think api-fitler`
+
 ## 检测逻辑
 
 全局限流 -> ip限流 -> 自定义限流
@@ -57,6 +62,60 @@ apiFilter组件中可以自由添加限流规则，内置的默认规则如下
 - token
 - 用户组
 等等
-  
 ## 自定义限流规则
-TODO 
+
+#### 如何使用自定义限流规则？
+
+##### 全局限流
+
+全局限流通过默认规则是配置项 的 `TOTAL` 设置，默认值是 30 。
+
+##### IP限流
+
+在配置项中，以IP的规则来设置，当有请求进入时，会自动触发IP限流对请求的IP地址进行检测
+
+##### 自定义Token
+
+在你任何需要的限流的代码块中，使用 
+
+```php
+Event::trigger('TokenFilter','userId:9527')
+```
+
+触发一个限流规则事件，此标记表示：触发 `TokenFilter` 限流事件，并表示触发的规则为 `userId:9527`，当触发的规则是已设置并存在于缓存标记中时，规则才会生效。
+
+
+
+> 同理，userId:9527 也可以换成用户的Token标识，用户角色组等。
+
+
+
+*伪代码示例*
+
+```php
+class AdminUsersController extends AdminBaseController
+{
+
+    /**
+     * @return mixed
+     * @throws \think\Exception
+     */
+    public function get_list()
+    {	
+        $user_id = input('user_id');
+        // 在方法开头触发一个限流规则(确保规则已设置),比如
+        // 1. 需要限制某用户请求列表的频率
+            $rule = 'userId:'.$user_id;
+            Event::trigger('TokenFilter',$rule);
+        
+        // 2. 限制整个角色组
+        	$role_id = 1;
+        	$rule    = 'roleId:'.$role_id;
+        	Event::trigger('TokenFilter',$rule);
+        
+        // 3. 根据用户Token
+		//.....more code
+    }
+}
+```
+
