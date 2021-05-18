@@ -7,7 +7,7 @@
 ## 启动相关
 
 1. Api限流器使用了 Redis 作为数据缓存服务，在使用限流器之前请确保Redis服务正常工作。
-2. 如何启动，使用命令行 `php think api-fitler`
+2. 如何启动，使用命令行 `php think api-filter`
 
 ## 检测逻辑
 
