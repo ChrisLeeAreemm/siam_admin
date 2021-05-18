@@ -28,6 +28,20 @@
   </div>
 
   <div class="layui-form-item">
+    <label class="layui-form-label">封面图</label>
+    <div class="layui-input-block">
+
+    <div class="layui-upload">
+    <button type="button" class="layui-btn" id="upload_cover_btn">选择图片</button>
+    <div class="layui-upload-list">
+      <img class="layui-upload-img" id="upload-img">
+      <input type="hidden" name="article_cover_picture" id="article_cover_picture" lay-verify="" autocomplete="off"  class="layui-input">
+    </div>
+  </div>
+    </div>
+  </div>
+
+  <div class="layui-form-item">
     <label class="layui-form-label">文章分类</label>
     <div class="layui-input-block">
       <select name="article_category_id" lay-verify="required" lay-filter="article_category_id" id="article_category_id">
@@ -42,8 +56,6 @@
       <textarea style="display:none;" name="article_content" class="layui-textarea" id="article_content"></textarea>
     </div>
   </div>
-
-
 
   <div class="layui-form-item">
     <label class="layui-form-label">文章脚本</label>
@@ -69,28 +81,29 @@
 </div>
   </div>
 </div>
-
+</div>
   <script src="__ADMIN__/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
   <script src="__ADMIN__/js/lay-config.js?v=2.0.4" charset="utf-8"></script>
   <script src="__ADMIN__/js/lay-module/xm-select.js?v=2.0.5" charset="utf-8"></script>
   <script src="https://cdn.jsdelivr.net/npm/wangeditor@latest/dist/wangEditor.min.js"></script>
   <script>
-  layui.use(['form', 'layer','view','setter'], function () {
-    let form = layui.form;
-    let layer = layui.layer;
-    let $ = layui.jquery;
-    let view = layui.view;
-    let setter = layui.setter;
-    let layedit = layui.layedit;
-    let submit_url = "/plugs/cms/article/api/add";
-    let get_one_url = "/plugs/cms/article/api/get_one";
-    let get_article_category_all = "/plugs/cms/article_category/api/get_all";
-    let get_article_script_all = "/plugs/cms/article_script/api/get_all";
-    let article_id = view.getQueryletiable('article_id');
+  layui.use(['form', 'layer','view','setter','upload','element','imagemanage'], function () {
+    let form = layui.form,
+            layer = layui.layer,
+            $ = layui.jquery,
+            view = layui.view,
+            setter = layui.setter,
+            imagemanage = layui.imagemanage,
+            submit_url = "/plugs/cms/article/api/add",
+            get_one_url = "/plugs/cms/article/api/get_one",
+            get_article_category_all = "/plugs/cms/article_category/api/get_all",
+            get_article_script_all = "/plugs/cms/article_script/api/get_all",
+            article_id = view.getQueryletiable('article_id');
+
 
     //富文本
     let E = window.wangEditor
-    let editor = new E( document.getElementById('wangEditor') )
+    let editor = new E(document.getElementById('wangEditor'))
     let article_content = $('#article_content')
     editor.config.onchange = function (html) {
       // 第二步，监控变化，同步更新到 textarea
@@ -104,7 +117,7 @@
     //分类
     view.req({
       url: get_article_category_all,
-      success:function (res) {
+      success: function (res) {
         //获取返回的数据
         var value = res.data;
         var opt = '<option value=""></option>';
@@ -166,6 +179,10 @@
               let id = script_value[i];
               $('#' + id).attr('checked', 'checked')
             }
+
+            $('#upload-img').attr('src', res.data.lists.article_cover_picture);
+            $('#article_cover_picture').val(res.data.lists.article_cover_picture);
+
             layui.form.render();
           }
         }
@@ -196,6 +213,22 @@
       });
       return false;
     });
+
+    $("#upload_cover_btn").on('click',function (){
+      imagemanage.config = {
+        get_list_url: "/plugs/attachment_manager/api/get_list",
+        upload_url: "/plugs/attachment_manager/api/upload",
+        delete_url: "/plugs/attachment_manager/api/delete",
+        multiple:false
+      };
+      imagemanage.open(function(values){
+        $('#upload-img').attr('src', values[0].url);
+        $('#article_cover_picture').val(values[0].url);
+        imagemanage.close();
+      });
+    });
+
+
 
   });
 </script>
