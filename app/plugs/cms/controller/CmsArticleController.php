@@ -7,10 +7,6 @@ use app\exception\ErrorCode;
 use app\plugs\cms\model\PlugsCmsArticleScriptModel;
 use app\plugs\PlugsBaseController;
 use app\plugs\cms\model\PlugsCmsArticleModel as Model;
-use think\facade\Filesystem;
-use think\facade\Request;
-use think\File;
-use think\helper\Str;
 
 class CmsArticleController extends PlugsBaseController
 {
@@ -20,7 +16,6 @@ class CmsArticleController extends PlugsBaseController
      */
     public function get_list()
     {
-
         $page  = input('page', 1);
         $limit = input('limit', 10);
 

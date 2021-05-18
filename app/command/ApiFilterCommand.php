@@ -1,16 +1,15 @@
 <?php
 
 
-namespace app\plugs\apiFilter\service;
+namespace app\command;
 
-use app\plugs\apiFilter\model\PlugsApiFilterSettingModel;
+use app\plugs\apiFilter\service\ApiAccessContain;
 use app\plugs\base\service\PlugsCommandStatus;
 use think\console\Command;
 use think\console\Input;
 use think\console\input\Argument;
 use think\console\input\Option;
 use think\console\Output;
-use Workerman\Crontab\Crontab;
 use Workerman\Lib\Timer;
 use Workerman\Worker;
 
@@ -23,7 +22,7 @@ class ApiFilterCommand extends Command
             ->addOption('mode', 'm', Option::VALUE_OPTIONAL, 'Run the workerman server in daemon mode.')
             ->setDescription('执行apifilter');
     }
-
+    
     /**
      * @param \think\console\Input  $input
      * @param \think\console\Output $output
@@ -45,9 +44,11 @@ class ApiFilterCommand extends Command
         } else if ($mode == 'g') {
             $argv[] = '-g';
         }
-
+        
         $worker = new Worker();
         $worker->onWorkerStart = function () {
+            //开启初始化
+            ApiAccessContain::getInstance()->updateSetting();
             //  定时器 1分钟同步一次token到缓存
             Timer::add(60,function (){
                 ApiAccessContain::getInstance()->updateSetting();
@@ -57,10 +58,10 @@ class ApiFilterCommand extends Command
                 ApiAccessContain::getInstance()->reset();
                 PlugsCommandStatus::ping('api-filter');
             });
-
+            
         };
-
+        
         Worker::runAll();
     }
-
+    
 }
