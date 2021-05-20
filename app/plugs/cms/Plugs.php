@@ -38,6 +38,12 @@ class Plugs extends PlugsBase
                 'icon'   => "fa fa-tachometer",
                 'target' => '_self',
             ],
+            [
+                'title'  => "示例",
+                'href'   => "/plugs/cms/default/index",
+                'icon'   => "fa fa-tachometer",
+                'target' => '_self',
+            ],
         ]);
         return $config;
     }
@@ -139,6 +145,10 @@ class Plugs extends PlugsBase
         Route::any('plugs/cms/article_script/api/delete', 'app\plugs\cms\controller\CmsArticleScriptController@delete');
         Route::any('plugs/cms/article_script/api/get_one', 'app\plugs\cms\controller\CmsArticleScriptController@get_one');
         Route::any('plugs/cms/article_script/api/get_all', 'app\plugs\cms\controller\CmsArticleScriptController@get_all');
+
+        //default template
+        Route::any('plugs/cms/default/index', 'app\plugs\cms\controller\CmsDefaultTemplateController@index');
+
 
     }
 }
