@@ -10,6 +10,6 @@ class CmsDefaultTemplateController
 {
     public function index()
     {
-        return View::fetch('/plugs/cms/template/default/index');
+        return View::fetch('/plugs/cms/template/default/personal');
     }
 }
