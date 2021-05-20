@@ -4,7 +4,7 @@ namespace app\plugs\cms\controller;
 
 
 use app\exception\ErrorCode;
-use app\plugs\cms\model\PlugsCmsArticleScriptModel;
+use app\plugs\cms\service\CmsArticleService;
 use app\plugs\PlugsBaseController;
 use app\plugs\cms\model\PlugsCmsArticleModel as Model;
 
@@ -16,38 +16,17 @@ class CmsArticleController extends PlugsBaseController
      */
     public function get_list()
     {
-        $page  = input('page', 1);
-        $limit = input('limit', 10);
-
-        $result = Model::with(['relevanceuser','relevanceArticleCategory'])->page($page, $limit)->order('article_id','DESC')->select();
-        $script = PlugsCmsArticleScriptModel::field(['article_script_id','article_script_name'])->select();
-        $script_arr = [];
-        foreach ($script as $value){
-            $script_arr[$value['article_script_id']] = $value['article_script_name'];
-        }
-
-        foreach ($result as $key => $value){
-            $article_script_arr  = explode(',',$value['article_script_list']);
-            $script_name = [];
-            foreach ($article_script_arr as $v){
-                if (!array_key_exists($v,$script_arr)) continue;
-                $script_name[] = '['.$script_arr[$v].']';
-            }
-            $result[$key]['article_script_name'] = implode(',',$script_name);
-            unset($script_name);
-            unset($article_script_arr);
-        }
-
-        $count  = Model::count();
-        return $this->send(ErrorCode::SUCCESS,['lists'=>$result,'count'=>$count],'成功');
-
+        $page   = input('page', 1);
+        $limit  = input('limit', 10);
+        $result = CmsArticleService::get_article_list($page, $limit);
+        $count  = Model::page($page, $limit)->count();
+        return $this->send(ErrorCode::SUCCESS, ['lists' => $result, 'count' => $count], '成功');
     }
 
     public function get_one()
     {
         $id = input('article_id');
-        $result = Model::find($id);
-        $result['article_script_list'] = explode(',', $result['article_script_list']);
+        $result = CmsArticleService::get_article_info($id);
         if (!$result){
             return $this->send(ErrorCode::DB_DATA_DOES_NOT_EXIST,[],'获取失败');
         }
@@ -79,7 +58,7 @@ class CmsArticleController extends PlugsBaseController
     {
         $param = input();
         $param['update_time'] = date('Y-m-d H:i:s');
-        $param['article_script_list'] = implode(',', $param['article_script']);
+        $param['article_script_list'] = isset($param['article_script'])?implode(',', $param['article_script']):'';
         $start = Model::find($param['article_id']);
         $res   = $start->save($param);
 
