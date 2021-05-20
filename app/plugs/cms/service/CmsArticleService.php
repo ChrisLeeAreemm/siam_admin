@@ -73,6 +73,35 @@ class CmsArticleService
     }
 
     /**
+     * 获取指定文章的脚本内容
+     * @param $article_id
+     * @return mixed|string
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     * @throws ServiceException
+     */
+    static public function get_article_script($article_id)
+    {
+        $article_script_list = PlugsCmsArticleModel::where('article_id',$article_id)->value('article_script_list');
+        if (empty($article_script_list)){
+            return $article_script_list;
+        }
+        $article_script = PlugsCmsArticleScriptModel::whereIn('article_script_id', $article_script_list)->select();
+        if (!$article_script){
+            throw new ServiceException('DB_EXCEPTION',ErrorCode::DB_EXCEPTION);
+        }
+        //合并脚本，规则按文档约定
+        $script_content = '';
+        foreach ($article_script as $value){
+            $script_content .= PHP_EOL;
+            $script_content .= $value['article_script_content'];
+        }
+
+        return $script_content;
+    }
+
+    /**
      * 文章分类
      * @return array|\think\Collection
      * @throws DataNotFoundException
