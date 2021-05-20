@@ -58,7 +58,7 @@ class CmsArticleController extends PlugsBaseController
     {
         $param = input();
         $param['update_time'] = date('Y-m-d H:i:s');
-        $param['article_script_list'] = implode(',', $param['article_script']);
+        $param['article_script_list'] = isset($param['article_script'])?implode(',', $param['article_script']):'';
         $start = Model::find($param['article_id']);
         $res   = $start->save($param);
 
