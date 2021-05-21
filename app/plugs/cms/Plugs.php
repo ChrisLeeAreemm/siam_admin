@@ -18,7 +18,7 @@ class Plugs extends PlugsBase
     {
         $config = new PlugsConfig();
         $config->setName("cms");
-        $config->setHandleModule(["admin", "plugs"]);// 只有admin模块才会执行初始化
+        $config->setHandleModule(["admin", "plugs", "cms"]);// 允许初始化的规则
         $config->setMenu([
             [
                 'title'  => "文章列表",
@@ -35,12 +35,6 @@ class Plugs extends PlugsBase
             [
                 'title'  => "文章脚本",
                 'href'   => "/plugs/cms/article_script/index",
-                'icon'   => "fa fa-tachometer",
-                'target' => '_self',
-            ],
-            [
-                'title'  => "示例",
-                'href'   => "/plugs/cms/default/index",
                 'icon'   => "fa fa-tachometer",
                 'target' => '_self',
             ],
@@ -123,32 +117,42 @@ class Plugs extends PlugsBase
         
         
         Route::any('plugs/cms/api/get_list', 'app\plugs\cms\controller\CmsController@get_list');
+
         // Article
-        Route::any('plugs/cms/article/api/get_list', 'app\plugs\cms\controller\CmsArticleController@get_list');
-        Route::any('plugs/cms/article/api/add', 'app\plugs\cms\controller\CmsArticleController@add');
-        Route::any('plugs/cms/article/api/edit', 'app\plugs\cms\controller\CmsArticleController@edit');
-        Route::any('plugs/cms/article/api/delete', 'app\plugs\cms\controller\CmsArticleController@delete');
-        Route::any('plugs/cms/article/api/get_one', 'app\plugs\cms\controller\CmsArticleController@get_one');
+        Route::group('plugs/cms/article/api/', function () {
+            Route::any('get_list', '@get_list');
+            Route::any('add', '@add');
+            Route::any('edit', '@edit');
+            Route::any('delete', '@delete');
+            Route::any('get_one', '@get_one');
+        })->prefix('\app\plugs\cms\controller\CmsArticleController');
 
         // Article_category
-        Route::any('plugs/cms/article_category/api/get_list', 'app\plugs\cms\controller\CmsArticleCategoryController@get_list');
-        Route::any('plugs/cms/article_category/api/add', 'app\plugs\cms\controller\CmsArticleCategoryController@add');
-        Route::any('plugs/cms/article_category/api/edit', 'app\plugs\cms\controller\CmsArticleCategoryController@edit');
-        Route::any('plugs/cms/article_category/api/delete', 'app\plugs\cms\controller\CmsArticleCategoryController@delete');
-        Route::any('plugs/cms/article_category/api/get_one', 'app\plugs\cms\controller\CmsArticleCategoryController@get_one');
-        Route::any('plugs/cms/article_category/api/get_all', 'app\plugs\cms\controller\CmsArticleCategoryController@get_all');
+        Route::group('plugs/cms/article_category/api/', function () {
+            Route::any('get_list', '@get_list');
+            Route::any('add', '@add');
+            Route::any('edit', '@edit');
+            Route::any('delete', '@delete');
+            Route::any('get_one', '@get_one');
+            Route::any('get_all', '@get_all');
+        })->prefix('\app\plugs\cms\controller\CmsArticleCategoryController');
 
         // Article_Script
-        Route::any('plugs/cms/article_script/api/get_list', 'app\plugs\cms\controller\CmsArticleScriptController@get_list');
-        Route::any('plugs/cms/article_script/api/add', 'app\plugs\cms\controller\CmsArticleScriptController@add');
-        Route::any('plugs/cms/article_script/api/edit', 'app\plugs\cms\controller\CmsArticleScriptController@edit');
-        Route::any('plugs/cms/article_script/api/delete', 'app\plugs\cms\controller\CmsArticleScriptController@delete');
-        Route::any('plugs/cms/article_script/api/get_one', 'app\plugs\cms\controller\CmsArticleScriptController@get_one');
-        Route::any('plugs/cms/article_script/api/get_all', 'app\plugs\cms\controller\CmsArticleScriptController@get_all');
+        Route::group('plugs/cms/article_script/api/',function () {
+            Route::any('get_list', '@get_list');
+            Route::any('add', '@add');
+            Route::any('edit', '@edit');
+            Route::any('delete', '@delete');
+            Route::any('get_one', '@get_one');
+            Route::any('get_all', '@get_all');
+        })->prefix('\app\plugs\cms\controller\CmsArticleScriptController');
 
-        //default template
-        Route::any('plugs/cms/default/index', 'app\plugs\cms\controller\CmsDefaultTemplateController@index');
 
 
+        //cms demo default template
+        Route::group(function () {
+            Route::get('cms/index', '@index');
+            Route::get('cms/article', '@article');
+        })->prefix('\app\plugs\cms\controller\CmsDefaultTemplateController');
     }
 }

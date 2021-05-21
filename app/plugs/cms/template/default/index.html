@@ -1,0 +1,94 @@
+<!-- header -->
+{include file="app/plugs/cms/template/default/header.html"/}
+<!-- preloader -->
+{include file="app/plugs/cms/template/default/preloader.html"/}
+
+
+<!-- site wrapper -->
+<div class="site-wrapper">
+
+	<div class="main-overlay"></div>
+
+	<!-- header -->
+	<header class="header-personal">
+        <div class="container-xl header-top">
+			<div class="row align-items-center">
+
+				<div class="col-4 d-none d-md-block d-lg-block">
+					<!-- social icons -->
+				</div>
+
+				<div class="col-md-4 col-sm-12 col-xs-12 text-center">
+				<!-- site logo -->
+					<a href="personal.html" class="d-block text-logo">SianAdminCms<span class="dot">.</span></a>
+					<span class="slogan d-block">SiamAdminCms & Demo Blogger</span>
+				</div>
+
+				<div class="col-md-4 col-sm-12 col-xs-12">
+					<!-- header buttons -->
+				</div>
+
+			</div>
+        </div>
+
+		<nav class="navbar navbar-expand-lg">
+			<div class="container-xl">
+
+				<div class="collapse navbar-collapse justify-content-center centered-nav">
+					<!-- menus -->
+                    {include file="app/plugs/cms/template/default/article_category_menus.html"/}
+
+				</div>
+
+			</div>
+		</nav>
+	</header>
+
+	<!-- section main content -->
+	<section class="main-content">
+		<div class="container-xl">
+			<div class="row gy-4" >
+				<div class="col-lg-8">
+                    <div class="row gy-4">
+                        {volist name="article_list" id="vo"}
+                        <div class="col-sm-6">
+                            <!-- post -->
+                            <div class="post post-grid rounded bordered">
+                                <div class="thumb top-rounded">
+                                    <a href="article.html?article_id={$vo.article_id}">
+                                        <div class="inner" style="height: 250px">
+                                            <img src="{$vo.article_cover_picture}" alt="post-title"/>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="details">
+                                    <ul class="meta list-inline mb-0">
+                                        <li class="list-inline-item">{$vo.u_name}</li>
+										<li class="list-inline-item">{$vo.create_time}</li>
+
+									</ul>
+                                    <h5 class="post-title mb-3 mt-3"><a href="article.html?article_id={$vo.article_id}">{$vo.article_title}</a></h5>
+                                    <p class="excerpt mb-0">{$vo.article_content|raw|strip_tags=$vo.article_content|mb_substr=0,60}</p>
+                                </div>
+                            </div>
+                        </div>
+						{/volist}
+					</div>
+				</div>
+				<div class="col-lg-4">
+					{include file="app/plugs/cms/template/default/sidebar.html"/}
+				</div>
+
+			</div>
+
+		</div>
+	</section>
+
+
+</div><!-- end site wrapper -->
+<!-- canvas menu -->
+{include file="app/plugs/cms/template/default/vertical_menu.html"/}
+<!-- Footer -->
+{include file="app/plugs/cms/template/default/footer.html"/}
+</body>
+</html>

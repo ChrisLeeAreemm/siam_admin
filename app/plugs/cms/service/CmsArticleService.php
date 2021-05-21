@@ -22,9 +22,13 @@ class CmsArticleService
      * @throws DbException
      * @throws ModelNotFoundException
      */
-    static public function get_article_list($page,$limit)
+    static public function get_article_list($category_id='',$page=1,$limit=10)
     {
-        $result = PlugsCmsArticleModel::with(['relevanceuser','relevanceArticleCategory'])->page($page, $limit)->order('article_id','DESC')->select();
+        $where = [];
+        if ($category_id){
+            $where['article_category_id'] = $category_id;
+        }
+        $result = PlugsCmsArticleModel::with(['relevanceuser','relevanceArticleCategory'])->where($where)->page($page, $limit)->order('article_id','DESC')->select();
         if (!$result){
             throw new ServiceException('DB_EXCEPTION',ErrorCode::DB_EXCEPTION);
         }
@@ -56,7 +60,7 @@ class CmsArticleService
     /**
      * 文章详情
      * @param $article_id
-     * @return PlugsCmsArticleModel
+     * @return array|\think\Model|null
      * @throws DataNotFoundException
      * @throws DbException
      * @throws ModelNotFoundException
@@ -64,7 +68,7 @@ class CmsArticleService
      */
     static public function get_article_info($article_id)
     {
-        $result = PlugsCmsArticleModel::find($article_id);
+        $result = PlugsCmsArticleModel::with(['relevanceuser','relevanceArticleCategory'])->find($article_id);
         if (!$result){
             throw new ServiceException('DB_EXCEPTION',ErrorCode::DB_EXCEPTION);
         }

@@ -1,0 +1,21 @@
+<div class="canvas-menu d-flex align-items-end flex-column">
+  <!-- close button -->
+  <button type="button" class="btn-close" aria-label="Close"></button>
+
+  <!-- logo -->
+  <div class="logo">
+    <img src="{__CMS__}/default/images/logo.svg" alt="Katen" />
+  </div>
+
+  <!-- menu -->
+  <nav>
+    <ul class="vertical-menu">
+      <li class="active"><a href="index.html">Home</a></li>
+      {volist name="category_list" id="vo"}
+      <li>
+        <a href="index.html?category_id={$vo.article_category_id}">{$vo.article_category_name}</a>
+      </li>
+      {/volist}
+    </ul>
+  </nav>
+</div>
