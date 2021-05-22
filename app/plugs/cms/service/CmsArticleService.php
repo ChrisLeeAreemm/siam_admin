@@ -15,19 +15,17 @@ class CmsArticleService
 {
     /**
      * 文章列表
-     * @param $page
-     * @param $limit
+     * @param array $where
+     * @param int $page
+     * @param int $limit
      * @return array
      * @throws DataNotFoundException
      * @throws DbException
      * @throws ModelNotFoundException
+     * @throws ServiceException
      */
-    static public function get_article_list($category_id='',$page=1,$limit=10)
+    static public function get_article_list($where=[],$page=1,$limit=10)
     {
-        $where = [];
-        if ($category_id){
-            $where['article_category_id'] = $category_id;
-        }
         $result = PlugsCmsArticleModel::with(['relevanceuser','relevanceArticleCategory'])->where($where)->page($page, $limit)->order('article_id','DESC')->select();
         if (!$result){
             throw new ServiceException('DB_EXCEPTION',ErrorCode::DB_EXCEPTION);

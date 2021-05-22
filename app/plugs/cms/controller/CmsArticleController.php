@@ -18,7 +18,7 @@ class CmsArticleController extends PlugsBaseController
     {
         $page   = input('page', 1);
         $limit  = input('limit', 10);
-        $result = CmsArticleService::get_article_list($page, $limit);
+        $result = CmsArticleService::get_article_list([],$page, $limit);
         $count  = Model::page($page, $limit)->count();
         return $this->send(ErrorCode::SUCCESS, ['lists' => $result, 'count' => $count], '成功');
     }

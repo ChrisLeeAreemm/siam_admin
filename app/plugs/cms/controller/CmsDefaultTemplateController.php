@@ -11,9 +11,8 @@ class CmsDefaultTemplateController
 {
     public function index()
     {
-        $category_id = input('category_id','');
         //文章列表
-        $article_list = CmsArticleService::get_article_list($category_id);
+        $article_list = CmsArticleService::get_article_list($this->build_where());
         //文章分类
         $category_list = CmsArticleService::get_article_category_list();
         View::assign('category_list',$category_list);
@@ -33,5 +32,18 @@ class CmsDefaultTemplateController
         View::assign('article_list', $article_list);
         View::assign('article_info', $article_info);
         return View::fetch('/plugs/cms/template/default/article');
+    }
+    
+    protected function build_where($where = [])
+    {
+        $category_id = input('category_id', '');
+        $search      = input('search', '');
+        if (!empty($search)){
+            $where[] = ['article_title','like',"%$search%"];
+        }
+        if (!empty($category_id)){
+            $where[] = ['article_category_id','=',$category_id];
+        }
+        return $where;
     }
 }
