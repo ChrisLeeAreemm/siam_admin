@@ -1,0 +1,21 @@
+<ul class="navbar-nav">
+  <li class="nav-item dropdown {if !$Request.get.category_id} active{/if}">
+    <a class="nav-link" href="index.html">Home</a>
+  </li>
+  {volist name="category_list" id="vo"}
+  <li class="nav-item {if $vo.article_category_id == $Request.get.category_id} active{/if}">
+    <a class="nav-link" href="index.html?category_id={$vo.article_category_id}">{$vo.article_category_name}</a>
+  </li>
+  {/volist}
+
+  <li class="nav-item">
+    <button class="search icon-button">
+      <i class="icon-magnifier"></i>
+    </button>
+  </li>
+  <li class="nav-item">
+    <button class="burger-menu icon-button ms-2 float-end float-md-none">
+      <span class="burger-icon"></span>
+    </button>
+  </li>
+</ul>

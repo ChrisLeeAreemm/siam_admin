@@ -30,7 +30,8 @@
         "ext-mysqli": "*",
         "easyswoole/ddl": "1.0.10",
         "topthink/think-worker": "3.0.6",
-        "workerman/crontab": "1.0.1"
+        "workerman/crontab": "1.0.1",
+        "topthink/think-view": "^1.0"
     },
     "require-dev": {
         "symfony/var-dumper": "^4.2",

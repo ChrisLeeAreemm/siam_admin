@@ -1,0 +1,98 @@
+{include file="app/plugs/cms/template/default/header.html"/}
+
+</head>
+
+<body>
+
+<!-- preloader -->
+{include file="app/plugs/cms/template/default/preloader.html"/}
+
+<!-- site wrapper -->
+<div class="site-wrapper">
+
+	<div class="main-overlay"></div>
+
+	<!-- header -->
+	<header class="header-default">
+		<nav class="navbar navbar-expand-lg">
+			<div class="container-xl">
+				<!-- menus -->
+				<div class="collapse navbar-collapse">
+					{include file="app/plugs/cms/template/default/article_category_menus.html"/}
+				</div>
+			</div>
+		</nav>
+	</header>
+
+	<!-- section main content -->
+	<section class="main-content mt-3">
+		<div class="container-xl">
+
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                    <li class="breadcrumb-item"><a href="index.html?create_id={$article_info.article_category_id}">{$article_info.article_category_name}</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{$article_info.article_title}</li>
+                </ol>
+            </nav>
+
+			<div class="row gy-4">
+
+				<div class="col-lg-8">
+					<!-- post single -->
+                    <div class="post post-single">
+						<!-- post header -->
+						<div class="post-header">
+							<h1 class="title mt-0 mb-3">{$article_info.article_title}</h1>
+							<ul class="meta list-inline mb-0">
+								<li class="list-inline-item"><a href="#">{$article_info.u_name}</a></li>
+								<li class="list-inline-item">{$article_info.create_time}</li>
+							</ul>
+						</div>
+						<!-- featured image -->
+						<div class="featured-image">
+							<img src="{$article_info.article_cover_picture}" alt="post-title" />
+						</div>
+						<!-- post content -->
+						<div class="post-content clearfix">
+							{$article_info.article_content|raw}
+						</div>
+						<!-- post bottom section -->
+<!--						<div class="post-bottom">-->
+<!--							<div class="row d-flex align-items-center">-->
+<!--								<div class="col-md-6 col-12 text-center text-md-start">-->
+<!--									&lt;!&ndash; tags &ndash;&gt;-->
+<!--									<a href="#" class="tag">#Trending</a>-->
+<!--									<a href="#" class="tag">#Video</a>-->
+<!--									<a href="#" class="tag">#Featured</a>-->
+<!--								</div>-->
+<!--							</div>-->
+<!--						</div>-->
+
+                    </div>
+
+
+                </div>
+
+				<div class="col-lg-4">
+					<!-- sidebar -->
+					{include file="app/plugs/cms/template/default/sidebar.html"/}
+				</div>
+
+			</div>
+
+		</div>
+	</section>
+
+
+
+</div><!-- end site wrapper -->
+
+<!-- search popup area -->
+<!-- canvas menu -->
+{include file="app/plugs/cms/template/default/vertical_menu.html"/}
+<!-- JAVA SCRIPTS -->
+{include file="app/plugs/cms/template/default/footer.html"/}
+<script type="text/javascript" src="{:url('cms/article_script',['article_id'=>$article_info['article_id']])}"></script>
+</body>
+</html>

@@ -79,7 +79,6 @@ layui.define(['laytpl', 'layer', 'jquery', 'setter'], function (exports) {
 
             options.data = options.data || {};
             options.headers = options.headers || {};
-
             if (request.tokenName) {
                 var sendData = typeof options.data === 'string'
                     ? JSON.parse(options.data)
@@ -97,7 +96,7 @@ layui.define(['laytpl', 'layer', 'jquery', 'setter'], function (exports) {
             }
             options.url = options.url.replace(/index.php/, '');
             options.url = options.url.replace(/\/\//g, '/');
-            options.url = setter.Api + options.url;
+            options.url = setter.Api + options.url + '?_ajax='+1; //请求伪装 _ajax=1
 
             delete options.success;
             delete options.error;
