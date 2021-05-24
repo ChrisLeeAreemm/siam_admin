@@ -35,7 +35,20 @@ class CmsDefaultTemplateController
         View::assign('article_info', $article_info);
         return View::fetch('/plugs/cms/template/default/article');
     }
-    
+
+    /**
+     * 获取脚本内容
+     * @throws \app\exception\ServiceException
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function article_script()
+    {
+        $article_id = input('article_id');
+        echo CmsArticleService::get_article_script($article_id);exit();
+    }
+
     protected function build_where($where = [])
     {
         $category_id = input('category_id', '');

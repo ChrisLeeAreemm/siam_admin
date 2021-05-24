@@ -153,6 +153,7 @@ class Plugs extends PlugsBase
         Route::group(function () {
             Route::get('cms/index', '@index');
             Route::get('cms/article', '@article');
+            Route::get('cms/article_script', '@article_script');
         })->prefix('\app\plugs\cms\controller\CmsDefaultTemplateController');
     }
 }
