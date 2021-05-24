@@ -24,7 +24,7 @@ class CmsArticleService
      * @throws ModelNotFoundException
      * @throws ServiceException
      */
-    static public function get_article_list($where=[],$page=1,$limit=10)
+    static public function get_article_list($page=1,$limit=10,$where=[])
     {
         $result = PlugsCmsArticleModel::with(['relevanceuser','relevanceArticleCategory'])->where($where)->page($page, $limit)->order('article_id','DESC')->select();
         if (!$result){

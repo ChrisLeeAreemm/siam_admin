@@ -11,8 +11,10 @@ class CmsDefaultTemplateController
 {
     public function index()
     {
+        $page   = input('page', 1);
+        $limit  = input('limit', 10);
         //文章列表
-        $article_list = CmsArticleService::get_article_list($this->build_where());
+        $article_list = CmsArticleService::get_article_list($page,$limit,$this->build_where());
         //文章分类
         $category_list = CmsArticleService::get_article_category_list();
         View::assign('category_list',$category_list);
