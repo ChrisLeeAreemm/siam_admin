@@ -5,6 +5,7 @@ namespace app\plugs\cms\controller;
 
 
 use app\plugs\cms\service\CmsArticleService;
+use think\facade\App;
 use think\facade\View;
 
 class CmsDefaultTemplateController
@@ -46,7 +47,8 @@ class CmsDefaultTemplateController
     public function article_script()
     {
         $article_id = input('article_id');
-        echo CmsArticleService::get_article_script($article_id);exit();
+        App::debug(false);
+        return CmsArticleService::get_article_script($article_id);
     }
 
     protected function build_where($where = [])
