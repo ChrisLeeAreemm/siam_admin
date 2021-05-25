@@ -4,6 +4,7 @@
 namespace app\plugs\cms\controller;
 
 
+use app\plugs\cms\model\PlugsCmsArticleModel;
 use app\plugs\cms\service\CmsArticleService;
 use think\facade\App;
 use think\facade\View;
@@ -41,6 +42,7 @@ class CmsDefaultTemplateController
      */
     public function article()
     {
+        validate(['article_id'=>'require'],['文章ID不能为空'])->check(input());
         $article_id = input('article_id');
         $article_info = CmsArticleService::get_article_info($article_id);
         //文章列表
@@ -62,6 +64,7 @@ class CmsDefaultTemplateController
      */
     public function article_script()
     {
+        validate(['article_id'=>'require'],['文章ID不能为空'])->check(input());
         $article_id = input('article_id');
         App::debug(false);
         return CmsArticleService::get_article_script($article_id);
@@ -83,7 +86,7 @@ class CmsDefaultTemplateController
             $where[] = ['article_category_id','=',$category_id];
         }
         //默认只显示发布状态的文章
-        $where[] = ['article_status','=',1];
+        $where[] = ['article_status','=',PlugsCmsArticleModel::ARTICLE_STATUS_PUBLIC];
         return $where;
     }
 }
