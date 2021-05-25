@@ -44,7 +44,7 @@ class CmsArticleService
             $script_name = [];
             foreach ($article_script_arr as $v){
                 if (!array_key_exists($v,$script_arr)) continue;
-                $script_name[] = '['.$script_arr[$v].']';
+                $script_name[] = $script_arr[$v];
             }
             $result[$key]['article_script_name'] = implode(',',$script_name);
             unset($script_name);

@@ -30,6 +30,8 @@ class PlugsCmsArticleModel extends BaseModel
     protected $name = 'plugs_cms_article';
     protected $pk   = 'article_id';
 
+    const ARTICLE_STATUS_PUBLIC = 1;
+    const ARTICLE_STATUS_DRAFTS = 0;
     /**
      * 文章分类关联
      * @relevance 关联方法标识
