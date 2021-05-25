@@ -54,7 +54,7 @@ if(@$_GET['c']=='success'){
        $link->close();
         // TODO 写入.env
         $app_name = $data['APP_NAME'];
-        $api      = $data['API'];
+        $api      = $data['API'] ?? 'http://127.0.0.1:8080/index.php/';
 
         $env = <<<env
 APP_DEBUG = true
@@ -83,6 +83,11 @@ env;
         $index_tpl = file_get_contents("./admin/index.html");
         $index_tpl = str_replace("__项目名__", $app_name, $index_tpl);
         file_put_contents("./admin/index.html", $index_tpl);
+
+        // 替换login模板 title
+        $login_tpl = file_get_contents("./admin/login.html");
+        $login_tpl = str_replace("__APP_NAME__", $app_name, $login_tpl);
+        file_put_contents("./admin/login.html", $login_tpl);
 
         $setter_tpl = file_get_contents("./admin/js/lay-module/setter.js");
         $setter_tpl = str_replace("__项目名__", $app_name, $setter_tpl);
