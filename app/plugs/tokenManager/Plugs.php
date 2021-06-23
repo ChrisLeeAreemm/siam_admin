@@ -31,7 +31,11 @@ class Plugs extends PlugsBase
 
     public function install()
     {
-
+        //检查文件夹
+        $file_path = runtime_path("database");
+        if (!is_dir($file_path)){
+            mkdir($file_path);
+        }
         $sqlite  = SQLiteFacade::connect();
         $sql =<<<EOF
       CREATE TABLE token_manager
