@@ -66,8 +66,7 @@ class CmsDefaultTemplateController
     {
         validate(['article_id'=>'require'],['文章ID不能为空'])->check(input());
         $article_id = input('article_id');
-        App::debug(false);
-        return CmsArticleService::get_article_script($article_id);
+        echo CmsArticleService::get_article_script($article_id);die;
     }
 
     /**
