@@ -18,3 +18,4 @@
 * * [请求监控插件](plugs/http_monitor/index.md)
 * * [站内信插件](plugs/notice/index.md)
 * * [状态码插件](plugs/error_code/index.md)
+* * [CMS插件](plugs/cms/index.md)
