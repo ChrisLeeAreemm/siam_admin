@@ -26,25 +26,25 @@ class Plugs extends PlugsBase
             ],
             [
                 'title'  => '安装',
-                'href'   => '/plugs/base/install.html',
+                'href'   => '/index.php/plugs/base/install.html',
                 'icon'   => "fa fa-wrench",
                 'target' => '_self',
             ],
             [
                 'title'  => '停用',
-                'href'   => '/plugs/base/status.html',
+                'href'   => '/index.php/plugs/base/status.html',
                 'icon'   => "fa fa-unlock-alt",
                 'target' => '_self',
             ],
             [
                 'title'  => '启用',
-                'href'   => '/plugs/base/status.html',
+                'href'   => '/index.php/plugs/base/status.html',
                 'icon'   => "fa fa-unlock",
                 'target' => '_self',
             ],
             [
                 'title'  => '编辑',
-                'href'   => '/plugs/base/edit.html',
+                'href'   => '/index.php/plugs/base/edit.html',
                 'icon'   => "fa fa-edit",
                 'target' => '_self',
             ]
