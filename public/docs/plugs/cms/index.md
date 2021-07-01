@@ -88,13 +88,13 @@ class CmsDefaultTemplateController
 }
 ```
 在控制器的use中，要注意 ```app\plugs\cms\service\CmsArticleService``` 这个文件
-所有的数据获取以及数据接口，都写在了```CmsArticleService```中
+,我们把文章相关的所有的数据获取以及数据接口，都写在了```CmsArticleService```中
 
 之所以不写在控制器中，是因为考虑到了需要兼容 前后端分离模式的管理后台的数据接口，和模板渲染模式的前端模板控制器的接口。
 
 所以我们在CmsArticleService中返回一致的兼容数据格式，减少代码量和工作量
 
-**规范在后续开发和使用的过程中，新开发的数据接口也要遵循此规范，以便于数据操作的集中管理。**
+**规范在后续开发和使用的过程中，新开发的数据接口也要遵循此规范CmsXXXXService，以便于数据操作的集中管理。**
 
 
 ### 文章脚本

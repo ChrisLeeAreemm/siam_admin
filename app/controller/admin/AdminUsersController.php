@@ -14,6 +14,7 @@ use app\plugs\notice\model\PlugsNoticeReadModel;
 use Siam\JWT;
 use think\facade\Event;
 use think\helper\Str;
+use think\response\Json;
 
 class AdminUsersController extends AdminBaseController
 {
@@ -57,7 +58,7 @@ class AdminUsersController extends AdminBaseController
 
     /**
      * 提供xmSelect的数据格式
-     * @return \think\response\Json
+     * @return Json
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
@@ -77,7 +78,7 @@ class AdminUsersController extends AdminBaseController
 
     /**
      * 获取用户登录配置
-     * @return \think\response\Json
+     * @return Json
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
@@ -150,7 +151,7 @@ class AdminUsersController extends AdminBaseController
 
     }
 
-    public function get_one()
+    public function get_one(): Json
     {
         $id     = input('u_id');
         $result = Model::find($id);
@@ -163,9 +164,9 @@ class AdminUsersController extends AdminBaseController
     }
 
     /**
-     * @return \think\response\Json
+     * @return Json
      */
-    public function add()
+    public function add(): Json
     {
         $param     = input('data');
         //判断是否存在
@@ -207,7 +208,7 @@ class AdminUsersController extends AdminBaseController
     }
 
     /**
-     * @return \think\response\Json
+     * @return Json
      */
     public function edit()
     {
@@ -253,7 +254,7 @@ class AdminUsersController extends AdminBaseController
     }
 
     /**
-     * @return \think\response\Json
+     * @return Json
      */
     public function delete()
     {
@@ -296,6 +297,36 @@ class AdminUsersController extends AdminBaseController
         return $this->send(ErrorCode::SUCCESS, [
             'token' => $jwtToken
         ], 'LOGIN_SUCCESS');
+    }
+
+    /**
+     * 修改密码
+     * @return Json
+     * @throws \app\exception\AuthException
+     */
+    public function edit_pwd()
+    {
+        $this->validate([
+            'u_password'     => 'require',
+            'old_u_password' => 'require',
+        ], input('data'));
+
+        $params = input('data');
+
+        if (md5($params['old_u_password']) !== $this->who->u_password) {
+            return $this->send(ErrorCode::AUTH_USER_CANNOT, [], '原密码错误');
+        }
+
+        if (md5($params['u_password']) === $this->who->u_password) {
+            return $this->send(ErrorCode::AUTH_USER_CANNOT, [], '新密码不能和原密码一样');
+        }
+
+        $update = Model::update(['u_password' => md5($params['u_password'])], ['u_id' => $this->who->u_id]);
+        if (!$update) {
+            return $this->send(ErrorCode::DB_DATA_UPDATE_FAILE, [], '密码修改失败');
+        }
+
+        return $this->send(ErrorCode::SUCCESS, [], '修改成功,请重新登录');
     }
 
     public function logout()
