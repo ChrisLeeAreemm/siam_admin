@@ -163,14 +163,6 @@ class AdminUsersController extends AdminBaseController
         return $this->send(ErrorCode::SUCCESS, ['lists' => $result]);
     }
 
-    public function get_self(): Json
-    {
-        if (!$this->who){
-            return $this->send(ErrorCode::DB_DATA_DOES_NOT_EXIST, [], '获取失败');
-        }
-        return $this->send(ErrorCode::SUCCESS, ['lists' => $this->who]);
-    }
-
     /**
      * @return Json
      */
@@ -307,10 +299,14 @@ class AdminUsersController extends AdminBaseController
         ], 'LOGIN_SUCCESS');
     }
 
+    /**
+     * 修改密码
+     * @return Json
+     * @throws \app\exception\AuthException
+     */
     public function edit_pwd()
     {
         $this->validate([
-            'u_id'           => 'require',
             'u_password'     => 'require',
             'old_u_password' => 'require',
         ], input('data'));
