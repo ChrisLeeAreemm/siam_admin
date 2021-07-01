@@ -102,6 +102,7 @@ class MenuHelper
             }
             //拼接数组
             $tem          = $this->auth_list[$value['id']];
+            $res = [];
             $res['title'] = $tem['auth_name'];
             $res['icon']  = $tem['auth_icon'];
             $res['href']  = $tem['auth_rules'];
