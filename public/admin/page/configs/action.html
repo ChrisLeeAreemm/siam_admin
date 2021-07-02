@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>操作</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" href="../../lib/layui-v2.6.3/css/layui.css" media="all">
+  <link rel="stylesheet" href="../../css/public.css" media="all">
+</head>
+<body>
+<div class="layui-card">
+  <div class="layui-card-body">
+<div class="layui-form" lay-filter="formTable" style="padding: 0">
+              <div class="layui-form-item">
+                <label class="layui-form-label">config_id</label>
+                <div class="layui-input-block">
+                    <input type="text" name="config_id" lay-verify="" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">config_name</label>
+                <div class="layui-input-block">
+                    <input type="text" name="config_name" lay-verify="" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">config_value</label>
+                <div class="layui-input-block">
+                    <input type="text" name="config_value" lay-verify="" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">u_id</label>
+                <div class="layui-input-block">
+                    <input type="text" name="u_id" lay-verify="" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">create_time</label>
+                <div class="layui-input-block">
+                    <input type="text" name="create_time" lay-verify="" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">update_time</label>
+                <div class="layui-input-block">
+                    <input type="text" name="update_time" lay-verify="" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+
+
+
+
+  <div class="layui-form-item">
+    <div class="layui-input-block">
+      <button class="layui-btn" lay-submit lay-filter="submit">立即提交</button>
+      <button type="reset" class="layui-btn layui-btn-primary">重新填写</button>
+    </div>
+  </div>
+</div>
+  </div>
+</div>
+
+<script src="../../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+<script src="../../js/lay-config.js?v=2.0.4" charset="utf-8"></script>
+<script>
+  layui.use(['form', 'layer','view','setter'], function () {
+    let form = layui.form;
+    let layer = layui.layer;
+    let $ = layui.jquery;
+    let view = layui.view;
+    let setter = layui.setter;
+    let submit_url = "/admin/configs/add";
+    let get_one_url = "/admin/configs/get_one";
+    let config_id = view.getQueryletiable('config_id');
+    if(config_id){
+      //获取信息
+      view.req({
+        url: '/index.php/'+get_one_url,
+        data: {config_id:config_id},
+        type: "get",
+        dataType: "json",
+        success:function (res){
+          if (res.code === 200){
+            // 初始化赋值
+            form.val("formTable", {
+                              "config_id" :res.data.lists.config_id,
+                "config_name" :res.data.lists.config_name,
+                "config_value" :res.data.lists.config_value,
+                "u_id" :res.data.lists.u_id,
+                "create_time" :res.data.lists.create_time,
+                "update_time" :res.data.lists.update_time,
+
+            });
+            layui.form.render();
+          }
+        }
+      })
+      submit_url = "/admin/configs/edit";
+    }
+    form.on('submit(submit)', function (data) {
+      let load = layer.load(0, {
+        shade: 0.5
+      });
+      view.req({
+        url: '/index.php/'+submit_url,
+        data: data.field,
+        type: "post",
+        dataType: "json",
+        success: function (res) {
+          layer.close(load);
+          if (res.code === 200) {
+              layer.msg(res.msg,{icon:1,time: 1500},function () {
+                window.location.reload();
+              });
+            } else {
+            layer.msg(res.msg,{icon:2,time: 1500},function () {
+              window.location.reload();
+            });
+          }
+        }
+      });
+      return false;
+    });
+
+  });
+</script>
+</body>
+</html>
