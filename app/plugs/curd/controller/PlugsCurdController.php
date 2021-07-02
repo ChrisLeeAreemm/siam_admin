@@ -4,8 +4,11 @@ namespace app\plugs\curd\controller;
 
 use app\exception\ErrorCode;
 use app\plugs\PlugsBaseController;
+use EasySwoole\Utility\File;
 use think\db\BaseQuery;
 use think\Exception;
+use think\exception\FileException;
+use think\exception\HttpResponseException;
 use think\facade\Db;
 use think\helper\Str;
 use think\response\Json;
@@ -153,9 +156,16 @@ class PlugsCurdController extends PlugsBaseController
             $ListsHtml = $this->putListsFile();
             $ActionHtml = $this->putActionFile();
         }catch (\Exception $exception){
+            if ($exception instanceof HttpResponseException) throw $exception;
+
             return json(['code' => '300', 'data' =>'', 'msg' => $exception->getMessage()]);
         }
-        return $this->send(ErrorCode::SUCCESS, ['lists'=>$ListsHtml,'action'=>$ActionHtml], '生成成功');
+        return $this->send(ErrorCode::SUCCESS, [
+            'lists'=>$ListsHtml,
+            'action'=>$ActionHtml,
+            'lists_file_path' => "page/".$this->tableName."/lists.html",
+            'action_file_path' => "page/".$this->tableName."/action.html",
+        ], '生成成功');
         
     }
 
@@ -355,13 +365,24 @@ EOF;
             $title         = !empty($value['comment']) ? $value['comment'] : $field;
             $fieldString[] = " {field: '{$field}', title: '{$title}'}";
         }
-        
-        $fieldString = implode($fieldString, ',');
+
+        $fieldString = implode( ',',$fieldString);
         
         $template = $this->listsFileTemplet();
         $template = str_replace("-table-", $this->tableName, $template);
         $template = str_replace("-pk-", $this->pk, $template);
         $template = str_replace("-fieldString-", $fieldString, $template);
+
+        if(input('auto_create_file', 0) == 1){
+            // 自动写入admin前端文件
+            $path = public_path()."admin/page/".$this->tableName."/lists.html";
+            if (file_exists($path)){
+                throw new FileException("路径下文件已存在");
+            }
+            File::touchFile($path);
+            file_put_contents($path, $template);
+        }
+
         return $template;
     }
     private function putActionFile()
@@ -404,6 +425,17 @@ EOF;
         $template = str_replace("--edit_url--", "/admin/$this->tableName/edit", $template);
         $template = str_replace("--get_one_url--", "/admin/$this->tableName/get_one", $template);
         $template = str_replace("--get_one_val--", $get_one_val, $template);
+
+        if(input('auto_create_file', 0) == 1){
+            // 自动写入admin前端文件
+            $path = public_path()."admin/page/".$this->tableName."/action.html";
+            if (file_exists($path)){
+                throw new FileException("路径下文件已存在");
+            }
+            File::touchFile($path);
+            file_put_contents($path, $template);
+        }
+
         return $template;
     }
     

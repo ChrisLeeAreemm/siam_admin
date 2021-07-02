@@ -8,7 +8,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="__ADMIN__/lib/layui-v2.6.3/css/layui.css" media="all">
     <link rel="stylesheet" href="__ADMIN__/css/public.css" media="all">
-
+    <style>
+        #list-bd, #action-bd{
+            display: none;
+        }
+    </style>
 </head>
 <body>
 <div class="layuimini-container">
@@ -27,14 +31,14 @@
                 </div>
             </div>
 
-            <div class="layui-form-item layui-form-text">
+            <div class="layui-form-item layui-form-text" id="list-bd">
                 <label class="layui-form-label">Lists页面</label>
                 <div class="layui-input-block">
                     <textarea placeholder="" class="layui-textarea" id="lists"></textarea>
                 </div>
             </div>
 
-            <div class="layui-form-item layui-form-text">
+            <div class="layui-form-item layui-form-text" id="action-bd">
                 <label class="layui-form-label">Action页面</label>
                 <div class="layui-input-block">
                     <textarea placeholder="" class="layui-textarea" id="action"></textarea>
@@ -43,10 +47,15 @@
 
             <div class="layui-form-item">
                 <div class="layui-input-block">
-                    <button class="layui-btn" lay-submit lay-filter="create_curd">生成模型控制器</button>
-                    <button class="layui-btn" lay-submit lay-filter="get_model">获取Model初始文件</button>
-                    <button class="layui-btn" lay-submit lay-filter="update_notes">更新Model字段属性</button>
-                    <button class="layui-btn" lay-submit lay-filter="create_html">生成前端页面</button>
+                    核心 <br><br>
+                    <button class="layui-btn layui-btn-sm" lay-submit lay-filter="create_curd">生成模型控制器</button>
+                    <button class="layui-btn layui-btn-sm" lay-submit lay-filter="create_html">生成前端页面</button>
+                    <br><br>
+                    辅助
+                    <br><br>
+                    <button class="layui-btn layui-btn-sm" lay-submit lay-filter="get_model">获取Model初始文件(用于其他项目)</button>
+                    <button class="layui-btn layui-btn-sm" lay-submit lay-filter="update_notes">更新Model字段属性</button>
+
                 </div>
             </div>
         </div>
@@ -117,18 +126,39 @@
             });
         });
 
-        //监听提交
-        form.on('submit(create_html)', function (data) {
+
+        function create_html_req(data){
             view.req({
                 url: "plugs/curd/create_html",
-                data: data.field,
+                data: data,
                 type: "get",
                 success: function (res) {
                     if (res.code === 200){
+                        // 如果是自动创建的，则不用显示，继续提示是否要插入路由
+                        if (data.auto_create_file === 1){
+
+                            layer.alert("生成成功，去添加权限路由吧~ 路径：<br/>"
+                                + res.data.lists_file_path + "<br/>"
+                                + res.data.action_file_path);
+                            return false;
+                        }
+                        $('#list-bd').show();
+                        $('#action-bd').show();
                         $('#lists').text(res.data.lists);
                         $('#action').text(res.data.action);
                     }
                 }
+            });
+        }
+        //监听提交
+        form.on('submit(create_html)', function (data) {
+            layer.confirm("是否需要直接生成文件", function(index){
+                data.field.auto_create_file = 1;
+                layer.close(index);
+                create_html_req(data.field);
+            }, function(index){
+                layer.close(index);
+                create_html_req(data.field);
             });
         });
 

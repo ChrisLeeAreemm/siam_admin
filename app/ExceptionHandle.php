@@ -34,6 +34,12 @@ class ExceptionHandle extends Handle
         AuthException::class,
     ];
 
+    protected $autoJson = [
+        ValidateException::class,
+        AuthException::class,
+        BaseException::class,
+    ];
+
     /**
      * 记录异常信息（包括日志或者其它方式记录）
      *
@@ -96,7 +102,7 @@ class ExceptionHandle extends Handle
         }
 
 
-        if (in_array(get_class($e), $this->ignoreReport)) {
+        if (in_array(get_class($e), $this->autoJson)) {
             if (method_exists($e, 'get_return')){
                 $return_data = $e->get_return();
             }else{
