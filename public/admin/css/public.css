@@ -1055,7 +1055,12 @@ textarea::-webkit-input-placeholder {
 .layui-layer-admin-page .layui-layer-setwin .layui-layer-close2:after {
     content: '\1006';
 }
-
+.layui-layer-admin{
+    max-width:90%;
+}
+.layui-form-danger{
+    border-color:red;
+}
 .layui-layer-msg {
     border: none !important;
 }
