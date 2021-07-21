@@ -21,6 +21,8 @@ class RouterDispatch extends Controller
         $router_path = $this->request->pathinfo();
         $router_path = explode('/', $router_path);
         list($module, $controller_name, $action_name) = $router_path;
+
+        $action_name = str_replace(".".config('route.url_html_suffix'), "",$action_name);
         $controller_full_name = Str::studly($module).Str::studly($controller_name)."Controller";
 
         $this->dispatch = [
