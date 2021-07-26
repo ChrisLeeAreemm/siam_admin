@@ -124,7 +124,11 @@
                         type: 2,
                         title: "编辑",
                         content: url,
-                        area:['70%','90%']
+                        area:['70%','90%'],
+                        cancel: function(index, layero){
+                            let page_btn = $(".layui-laypage-btn");
+                            !!page_btn ? page_btn.click() : window.location.reload();
+                        }
                     });
                     break;
                 default:

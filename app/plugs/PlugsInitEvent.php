@@ -68,8 +68,8 @@ class PlugsInitEvent
         $need_init_plugs_list = [];
         foreach ($arr as $dirName) {
             //插件根目录
-            $path = __DIR__ . '\\' . $dirName;
-            if (Str::contains($path, '.') == true|| !is_dir($path)){
+            $path = __DIR__ . DIRECTORY_SEPARATOR . $dirName;
+            if (Str::contains($dirName, '.') == true|| !is_dir($path)){
                 continue;
             }
 

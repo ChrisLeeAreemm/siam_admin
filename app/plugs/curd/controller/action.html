@@ -20,7 +20,6 @@
   <div class="layui-form-item">
     <div class="layui-input-block">
       <button class="layui-btn" lay-submit lay-filter="submit">立即提交</button>
-      <button type="reset" class="layui-btn layui-btn-primary">重新填写</button>
     </div>
   </div>
 </div>
@@ -62,6 +61,9 @@
       let load = layer.load(0, {
         shade: 0.5
       });
+      if (!!--pk--){
+        data.field.--pk-- = --pk--;
+      }
       view.req({
         url: '/index.php/'+submit_url,
         data: data.field,

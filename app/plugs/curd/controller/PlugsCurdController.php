@@ -4,11 +4,8 @@ namespace app\plugs\curd\controller;
 
 use app\exception\ErrorCode;
 use app\plugs\PlugsBaseController;
-use EasySwoole\Utility\File;
 use think\db\BaseQuery;
 use think\Exception;
-use think\exception\FileException;
-use think\exception\HttpResponseException;
 use think\facade\Db;
 use think\helper\Str;
 use think\response\Json;
@@ -24,7 +21,7 @@ class PlugsCurdController extends PlugsBaseController
     private $tableNotes;
     private $prefix;
     private $relevance;
-    
+
     public function __construct()
     {
         $this->prefix         = config('database.connections.mysql.prefix');
@@ -33,7 +30,7 @@ class PlugsCurdController extends PlugsBaseController
         $this->modelPath      = app_path() . 'model\\';
         $this->controllerPath = app_path() . 'controller\admin\\';
     }
-    
+
     /**
      *  创建模型和控制器
      * @return Json
@@ -63,7 +60,7 @@ class PlugsCurdController extends PlugsBaseController
             'model_content' => $model_content
         ], '生成成功');
     }
-    
+
     /**
      * 更新所有数据模型字段
      */
@@ -77,7 +74,7 @@ class PlugsCurdController extends PlugsBaseController
         }
         foreach ($tables as $value) {
             $database = config('database.connections.mysql.database');
-    
+
             //设置表名
             $this->table = $value["Tables_in_$database"];
             //去掉前缀
@@ -87,7 +84,7 @@ class PlugsCurdController extends PlugsBaseController
             if (!is_file($file)){
                 continue;
             }
-            
+
             //解析类
             $class = 'app\model\\'.Str::title($tableName). 'Model';
             $Model = new $class();
@@ -124,22 +121,22 @@ class PlugsCurdController extends PlugsBaseController
                     preg_match($preg,$code_arr[$i],$res);
                     $res = str_replace('(','',$res);
                     $res = str_replace(':','',$res);
-                   if (!empty($res)){
-                       //关联类名
-                       $relevance[$methodName] = $res[0];
-                       $up_file[] = Str::title($tableName). 'Model';
-                   }
+                    if (!empty($res)){
+                        //关联类名
+                        $relevance[$methodName] = $res[0];
+                        $up_file[] = Str::title($tableName). 'Model';
+                    }
                 }
             }
             $this->relevance = $relevance;
-            
+
             //获取文件
             $content = file_get_contents($file);
             //获取最新表详情
             $this->parseField();
             //更新文件
             $content = preg_replace('/#start.*#end/sm', $this->tableNotes, $content);
-            
+
             $res = file_put_contents($file, $content);
         }
         if (!$up_file){
@@ -147,26 +144,19 @@ class PlugsCurdController extends PlugsBaseController
 
         }
         return $this->send(ErrorCode::SUCCESS, [], '更新成功');
-        
+
     }
-    
+
     public function create_html()
     {
         try {
             $ListsHtml = $this->putListsFile();
             $ActionHtml = $this->putActionFile();
         }catch (\Exception $exception){
-            if ($exception instanceof HttpResponseException) throw $exception;
-
             return json(['code' => '300', 'data' =>'', 'msg' => $exception->getMessage()]);
         }
-        return $this->send(ErrorCode::SUCCESS, [
-            'lists'=>$ListsHtml,
-            'action'=>$ActionHtml,
-            'lists_file_path' => "page/".$this->tableName."/lists.html",
-            'action_file_path' => "page/".$this->tableName."/action.html",
-        ], '生成成功');
-        
+        return $this->send(ErrorCode::SUCCESS, ['lists'=>$ListsHtml,'action'=>$ActionHtml], '生成成功');
+
     }
 
     public function update_thinkphp_note()
@@ -252,7 +242,7 @@ class PlugsCurdController extends PlugsBaseController
         dump($namespace_map);
         die;
     }
-    
+
     /**
      * 解析字段，注释
      * @return $this
@@ -270,13 +260,13 @@ class PlugsCurdController extends PlugsBaseController
                 break;
             }
         }
-        
+
         $string = <<<t
 #start
 /**
  * {$fullTable}
 t;
-        
+
         foreach ($this->tableInfo as $key => $value) {
             $comment = $value['comment'] ?? '';
             $string  .= <<<s
@@ -288,26 +278,42 @@ s;
                 $string .= <<<EOF
 \n * @property $value $key\t
 EOF;
-        
+
             }
         }
 
-        
+
         $string           .= "\n */";
         $string           .= "\n #end";
         $this->tableNotes = $string;
         return $this;
     }
-    
+
     private function putModelFile()
     {
         $modelName = Str::studly($this->tableName);
-        
+
         $template = $this->modelFileTemplate();
         $template = str_replace("-modelName-", $modelName, $template);
         $template = str_replace("-notesString-", $this->tableNotes ?? '', $template);
         $template = str_replace("-tableName-", $this->tableName ?? '', $template);
         $template = str_replace("-pk-", $this->pk ?? '', $template);
+        // 是否有create_time和update_time
+        $auto_write_timestamp = '';
+        foreach ($this->tableInfo as $value) {
+            if ($value['name']=='create_time' || $value['name'] == 'update_time'){
+                $type = $value['type'];
+                $auto_write_timestamp = "\n    protected \$autoWriteTimestamp ='$type';";
+                break;
+            }
+        }
+        if (!$auto_write_timestamp){
+            $all_field = array_column($this->tableInfo, 'name');
+            if (!in_array( 'update_time', $all_field)){
+                $auto_write_timestamp .= "\n    protected \$updateTime = false;";
+            }
+        }
+        $template = str_replace("--autoWriteTimeStamp--", $auto_write_timestamp, $template);
 
         if (input('return_html') == '1'){
             return $template;
@@ -323,11 +329,11 @@ EOF;
         }
         return true;
     }
-    
+
     private function putControllerFile(): bool
     {
         $modelName = Str::studly($this->tableName);
-        
+
         $template  = $this->controllerFileTemplate();
         $template  = str_replace("-modelName-", $modelName . 'Model', $template);
         $template  = str_replace("-controllerName-", $modelName, $template);
@@ -344,14 +350,14 @@ EOF;
         }
         return true;
     }
-    
+
     private function putListsFile()
     {
         $fieldString = [];
         $fullTable   = $this->table;
         // 获取数据表字段详细信息】
         $this->tableInfo = Db::table($fullTable)->getFields($fullTable);
-   
+
         // 找出主键
         foreach ($this->tableInfo as $key => $value) {
             if ($value['primary'] === true) {
@@ -366,28 +372,17 @@ EOF;
             $fieldString[] = " {field: '{$field}', title: '{$title}'}";
         }
 
-        $fieldString = implode( ',',$fieldString);
-        
+        $fieldString = implode($fieldString, ',');
+
         $template = $this->listsFileTemplet();
         $template = str_replace("-table-", $this->tableName, $template);
         $template = str_replace("-pk-", $this->pk, $template);
         $template = str_replace("-fieldString-", $fieldString, $template);
-
-        if(input('auto_create_file', 0) == 1){
-            // 自动写入admin前端文件
-            $path = public_path()."admin/page/".$this->tableName."/lists.html";
-            if (file_exists($path)){
-                throw new FileException("路径下文件已存在");
-            }
-            File::touchFile($path);
-            file_put_contents($path, $template);
-        }
-
         return $template;
     }
     private function putActionFile()
     {
-        
+
         $fullTable   = $this->table;
         // 获取数据表字段详细信息
         $this->tableInfo = Db::table($fullTable)->getFields($fullTable);
@@ -416,8 +411,8 @@ EOF;
 EOF;
 
         }
-        
-    
+
+
         $template = $this->actionFileTemplet();
         $template = str_replace("--demo--", $str, $template);
         $template = str_replace("--pk--", $this->pk, $template);
@@ -425,40 +420,29 @@ EOF;
         $template = str_replace("--edit_url--", "/admin/$this->tableName/edit", $template);
         $template = str_replace("--get_one_url--", "/admin/$this->tableName/get_one", $template);
         $template = str_replace("--get_one_val--", $get_one_val, $template);
-
-        if(input('auto_create_file', 0) == 1){
-            // 自动写入admin前端文件
-            $path = public_path()."admin/page/".$this->tableName."/action.html";
-            if (file_exists($path)){
-                throw new FileException("路径下文件已存在");
-            }
-            File::touchFile($path);
-            file_put_contents($path, $template);
-        }
-
         return $template;
     }
-    
+
     private function modelFileTemplate()
     {
-        $path = dirname(__FILE__) . "\model_file";
+        $path = dirname(__FILE__) . DIRECTORY_SEPARATOR . "model_file";
         return file_get_contents($path);
     }
-    
+
     private function controllerFileTemplate()
     {
-        $path = dirname(__FILE__) . "\controller_file";
+        $path = dirname(__FILE__) . DIRECTORY_SEPARATOR . "controller_file";
         return file_get_contents($path);
     }
-    
+
     private function listsFileTemplet()
     {
-        $path = dirname(__FILE__) . "\lists.html";
+        $path = dirname(__FILE__) . DIRECTORY_SEPARATOR . "lists.html";
         return file_get_contents($path);
     }
     private function actionFileTemplet()
     {
-        $path = dirname(__FILE__) . "\action.html";
+        $path = dirname(__FILE__) . DIRECTORY_SEPARATOR . "action.html";
         return file_get_contents($path);
     }
 

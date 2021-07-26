@@ -86,7 +86,7 @@ class AdminSystemController extends AdminBaseController
      */
     public function get_plugs()
     {
-        $dir = app_path() . 'plugs\\';
+        $dir = app_path() . 'plugs/';
         if (!is_dir($dir)) {
             return false;
         }
