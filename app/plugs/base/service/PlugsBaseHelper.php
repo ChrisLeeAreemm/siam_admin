@@ -19,6 +19,10 @@ class PlugsBaseHelper
      */
     public static function isInstall($plugs_name): bool
     {
+        // 不开启插件模块
+        $siam_plugs = env("app.siam_plugs");
+        if (!$siam_plugs) return false;
+
         $has = PlugsStatusModel::where([
             'plugs_name' => $plugs_name
         ])->find();

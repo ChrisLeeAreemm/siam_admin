@@ -65,7 +65,7 @@ class ExceptionHandle extends Handle
     {
         // 添加自定义异常处理机制
         // 是否安装异常记录插件，是则插入
-        if (PlugsBaseHelper::isInstall("exceptionLogger") && !in_array(get_class($e), $this->ignoreReport)) {
+        if (class_exists(PlugsBaseHelper::class) && PlugsBaseHelper::isInstall("exceptionLogger") && !in_array(get_class($e), $this->ignoreReport)) {
             $plugs_status = PlugsBaseHelper::getPlugsStatus("exceptionLogger");
             if ($plugs_status['plugs_status'] == PlugsStatusModel::PLUGS_STATUS_ON) {
                 //序列化保存
