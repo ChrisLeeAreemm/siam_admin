@@ -148,6 +148,7 @@ class MenuHelper
                 $res['children'] = $this->AuthTreeRules($value['child']);
             }
             $return[] = $res;
+            unset($res);
         }
         return $return;
     }
