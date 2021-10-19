@@ -13,11 +13,17 @@
 namespace think;
 
 require __DIR__ . '/../vendor/autoload.php';
-// 你先看看是否安装了哦 Siam
-$lock_file = __DIR__. "/install.lock";
-if (!is_file($lock_file)){
-    Header("Location:./install.php");
-    die;
+// 你先看看是否安装了哦 Siam 但可以免安装运行curd
+
+if (isset($_GET['green_run'])){
+    \setcookie("green_run", $_GET['green_run']);
+}
+if (!$_COOKIE["green_run"]){
+    $lock_file = __DIR__. "/install.lock";
+    if (!is_file($lock_file)){
+        Header("Location:/install.php");
+        die;
+    }
 }
 
 // 执行HTTP应用并响应
