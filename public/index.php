@@ -18,7 +18,7 @@ require __DIR__ . '/../vendor/autoload.php';
 if (isset($_GET['green_run'])){
     \setcookie("green_run", $_GET['green_run']);
 }
-if (!$_COOKIE["green_run"]){
+if (!isset($_COOKIE["green_run"])){
     $lock_file = __DIR__. "/install.lock";
     if (!is_file($lock_file)){
         Header("Location:/install.php");
