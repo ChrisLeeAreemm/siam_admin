@@ -4,13 +4,22 @@
 namespace app\plugs\layuiRender\src\layout;
 
 
-class Row
+use app\plugs\layuiRender\src\BaseDom;
+
+class Row extends BaseDom
 {
-    const head = '<div class="layui-row">';
-    const foot = '</div>';
     private $cols = [];
 
-    public function col(array $class_array, $display)
+    public function head(): string
+    {
+        return "<div class='layui-row {$this->getClass()}' {$this->getData()}>\n";
+    }
+    public function foot():string
+    {
+        return "\n</div>";
+    }
+
+    public function col(array $class_array, $display): Row
     {
         array_push($this->cols, [
             'class'   => $class_array,
@@ -21,19 +30,18 @@ class Row
 
     public function render(): string
     {
-        $return = static::head;
-
+        $return = $this->head();
         foreach ($this->cols as $col){
             $class = '';
             foreach ($col['class'] as $class_set){
                 $class .= 'layui-col-'.$class_set;
             }
-            $return .= "<div class='{$class}'>";
+            $return .= "<div class='{$class}'>\n";
             $return .= $col['display'];
-            $return .= '</div>';
+            $return .= "\n</div>";
         }
 
-        $return.=static::foot;
+        $return .= $this->foot();
         return $return;
     }
 

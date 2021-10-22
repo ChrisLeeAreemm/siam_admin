@@ -4,17 +4,17 @@
 namespace app\plugs\layuiRender\src\layout;
 
 
-use Siam\Component\Singleton;
+use app\plugs\layuiRender\src\BaseDom;
 
-class Layout
+class Layout extends BaseDom
 {
     private $rows = [];
-    public static function make()
+    public static function make(): Layout
     {
         return new static;
     }
 
-    public function addRow($build_row)
+    public function addRow($build_row): Layout
     {
         $row = new Row;
         array_push($this->rows, $row);
@@ -29,5 +29,15 @@ class Layout
             $return .= $row;
         }
         return $return;
+    }
+
+    function head(): string
+    {
+        return '';
+    }
+
+    function foot(): string
+    {
+        return '';
     }
 }

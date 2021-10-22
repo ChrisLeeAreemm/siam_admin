@@ -4,18 +4,34 @@
 namespace app\plugs\layuiRender\src;
 
 
+
 class Grid
 {
+    private $table_attachment_html;
     private $builder;
     private $columns = [];
-    public function __construct($callable)
+
+    private function __construct($callable)
     {
         $this->builder = $callable;
     }
 
-    public function column($name, $label)
+    public static function make($callable): Grid
     {
+        $grid = new static($callable);
+        call_user_func($grid->builder, $grid);
+        return $grid;
+    }
 
+    public function column($name, $label = ''): Column
+    {
+        $column = new Column();
+        $column->setName($name);
+        $column->setLabel($label);
+        $column->setGrid($this);
+
+        array_push($this->columns, $column);
+        return $column;
     }
 
     public function hideAddButton()
@@ -23,27 +39,39 @@ class Grid
 
     }
 
-    public function test(){
-        // 生成lists列表
-        $test = new Grid(function(Grid $grid){
-           $grid->column('test', 'ok');
-        });
+    public function __toTableString(): string
+    {
+        $return = [];
+        /** @var \app\plugs\layuiRender\src\Column $column */
+        foreach ($this->columns as $column ){
+            $return[] = $column->__toTableString();
+        }
+        return implode("\n,", $return);
     }
 
-    public function __toTableString(){
-        return <<<html
-{field: 'id', title: 'ID', width:80, sort: true, fixed: 'left'}
-,{field: 'username', title: '用户名', width:80}
-,{field: 'sex', title: '性别', width:80, sort: true}
-,{field: 'city', title: '城市', width:80} 
-,{field: 'sign', title: '签名', width: 177}
-,{field: 'experience', title: '积分', width: 80, sort: true}
-,{field: 'score', title: '评分', width: 80, sort: true}
-,{field: 'classify', title: '职业', width: 80}
-,{field: 'wealth', title: '财富', width: 135, sort: true}
-html;
 
+
+    // table组件使用的附加html代码
+    // 工具html代码
+    /**
+     * @return mixed
+     */
+    public function getTableAttachmentHtml()
+    {
+        return $this->table_attachment_html;
     }
+
+    /**
+     * @param mixed $table_attachment_html
+     */
+    public function setTableAttachmentHtml($table_attachment_html): void
+    {
+        $this->table_attachment_html = $table_attachment_html;
+    }
+
+
+
+
     // 转为新增/编辑时的表单代码
     public function __toFormString(){
 

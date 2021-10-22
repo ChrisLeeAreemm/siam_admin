@@ -40,11 +40,10 @@ class Plugs extends PlugsBase
     public function init()
     {
         // 测试用
-        // echo ((new Test)->run());
-        // die;
+
         // 在这里注入路由[api] 等事件
         Route::get('plugs/layui_render/index', function () {
-            return $this->pre_render_file(__DIR__ . "/view/index.html");
+            return (new Test)->run();
         });
         Route::any('plugs/layui_render/api/get_list', 'app\plugs\layuiRender\controller\LayuiRenderController@get_list');
     }
