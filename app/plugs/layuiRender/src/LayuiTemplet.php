@@ -7,6 +7,11 @@ namespace app\plugs\layuiRender\src;
 class LayuiTemplet
 {
     private $bodys = [];
+    private $title = 'Siam Layui Render Plugs';
+    private $meta = [];
+    private $style = '';
+    private $js = '';
+
     public static function make()
     {
         return new static;

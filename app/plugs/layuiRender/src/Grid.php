@@ -44,4 +44,8 @@ class Grid
 html;
 
     }
+    // 转为新增/编辑时的表单代码
+    public function __toFormString(){
+
+    }
 }
