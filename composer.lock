@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6d1adaa1b7b856606d8ea72fe6f2a04f",
+    "content-hash": "462c7f78eead1a21a62649fe1d0325f4",
     "packages": [
         {
             "name": "dragonmantank/cron-expression",
@@ -938,16 +938,16 @@
         },
         {
             "name": "topthink/think-orm",
-            "version": "v2.0.39",
+            "version": "v2.0.44",
             "source": {
                 "type": "git",
                 "url": "https://github.com/top-think/think-orm.git",
-                "reference": "39a9d0a0e52d9b8bad9d98484d8484cdf5b683a7"
+                "reference": "5d3d5c1ebf8bfccf34bacd90edb42989b16ea409"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/top-think/think-orm/zipball/39a9d0a0e52d9b8bad9d98484d8484cdf5b683a7",
-                "reference": "39a9d0a0e52d9b8bad9d98484d8484cdf5b683a7",
+                "url": "https://api.github.com/repos/top-think/think-orm/zipball/5d3d5c1ebf8bfccf34bacd90edb42989b16ea409",
+                "reference": "5d3d5c1ebf8bfccf34bacd90edb42989b16ea409",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -993,9 +993,9 @@
             ],
             "support": {
                 "issues": "https://github.com/top-think/think-orm/issues",
-                "source": "https://github.com/top-think/think-orm/tree/v2.0.39"
+                "source": "https://github.com/top-think/think-orm/tree/v2.0.44"
             },
-            "time": "2021-02-26T10:20:00+00:00"
+            "time": "2021-07-21T02:22:31+00:00"
         },
         {
             "name": "topthink/think-template",
