@@ -9,6 +9,8 @@
           content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <link rel="stylesheet" href="../../lib/layui-v2.6.3/css/layui.css" media="all">
     <link rel="stylesheet" href="../../css/public.css" media="all">
+    <link rel="stylesheet" href="../../css/dtree/dtree.css" media="all">
+    <link rel="stylesheet" href="../../css/dtree/font/dtreefont.css" media="all">
 </head>
 <body>
 
@@ -69,7 +71,7 @@
             <div class="layui-form-item">
                 <div class="layui-card">
                     <div class="layui-card-header">权限</div>
-                    <div class="layui-card-body">
+                    <div class="layui-card-body" style="height: 700px;overflow: auto;" >
                         <div id="tree_role"></div>
                     </div>
                 </div>
@@ -85,12 +87,12 @@
 <script src="../../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
 <script src="../../js/lay-config.js?v=2.0.4" charset="utf-8"></script>
 <script>
-    layui.use(['form', 'layer', 'view', 'setter', 'tree'], function () {
+    layui.use(['form', 'layer', 'view', 'setter', 'dtree'], function () {
         let form = layui.form;
         let layer = layui.layer;
         let $ = layui.jquery;
         let view = layui.view;
-        let tree = layui.tree;
+        let dtree = layui.dtree;
         let submit_url = "/admin/users/add";
         let get_one_url = "/admin/users/get_one";
         let u_id = view.getQueryletiable('u_id');
@@ -101,11 +103,12 @@
             dataType: "json",
             success: function (res) {
                 if (res.code === 200) {
-                    tree.render({
-                        elem: '#tree_role'  //绑定元素
-                        , showCheckbox: true
-                        , data: res.data.tree
-                        , id: 'rolesTree'
+                    dtree.render({
+                        elem: "#tree_role",
+                        checkbar: true,
+                        checkbarType: "self", // 默认就是all，其他的值为： no-all  p-casc   self  only
+                        data: res.data.tree,
+                        skin: "laySimple",  // laySimple主题风格
                     });
 
                 }
@@ -143,7 +146,10 @@
                             "u_account": res.data.lists.u_account,
                             "u_status": res.data.lists.u_status,
                         });
-                        tree.setChecked('rolesTree', res.data.lists.u_auth); //批量勾选
+
+                        let u_auth = res.data.lists.u_auth.join(',');
+                        dtree.chooseDataInit("tree_role",u_auth); // 初始化选中
+
                         //checked
                         let value = res.data.lists.role_id;
                         //循环遍历
@@ -161,7 +167,7 @@
             let load = layer.load(0, {
                 shade: 0.5
             });
-            data.field.role_auth = window.JSON.stringify(tree.getChecked('rolesTree'))
+            data.field.role_auth = dtree.getCheckbarJsonArrParam("tree_role").nodeId;
             view.req({
                 url: submit_url,
                 data: {

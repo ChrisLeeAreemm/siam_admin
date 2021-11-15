@@ -77,15 +77,14 @@ class AdminRolesController extends AdminBaseController
 
         $param                = input();
         $param['update_time'] = time();
-        $roles_arr = json_decode($this->request->param('role_auth'), true);
-        $role_ids = (new Model)->recursion_roles_id($roles_arr);
+        $roles_arr = $this->request->param('role_auth');
         try {
             $start = Model::find($param['role_id']);
         } catch (\Exception $e) {
             return $this->send(ErrorCode::DB_EXCEPTION, [], $e->getMessage());
         }
 
-        $param['role_auth'] = implode(',', $role_ids);
+        $param['role_auth'] = implode(',', $roles_arr);
         $res                = $start->save($param);
 
         if (!$res) {

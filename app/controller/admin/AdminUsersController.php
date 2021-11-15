@@ -224,8 +224,8 @@ class AdminUsersController extends AdminBaseController
         if ($account_exist && $account_exist['u_id'] != $param['u_id']) {
             return $this->send(ErrorCode::DB_DATA_ALREADY_EXIST, [], '该账号已存在');
         }
-        
-        $role_auth            = json_decode($param['role_auth'], true);
+
+        $role_auth            = $param['role_auth'];
         $role_id              = [];
         foreach ($param as $key => $val) {
             if (!Str::startsWith($key, 'u_role')) {
@@ -233,14 +233,13 @@ class AdminUsersController extends AdminBaseController
             }
             $role_id[] = $val;
         }
-        $auth = (new RolesModel())->recursion_roles_id($role_auth);
 
         $data  = [
             'u_name'      => $param['u_name'],
             'u_password'  => md5($param['u_password']),
             'u_account'   => $param['u_account'],
             'role_id'     => implode(',', $role_id),
-            'u_auth'      => implode(',', $auth),
+            'u_auth'      => implode(',', $role_auth),
             'update_time' => date('Y-m-d H:i:s'),
         ];
         if ($users->u_password !== $param['u_password'] && !empty($param['u_password'])){

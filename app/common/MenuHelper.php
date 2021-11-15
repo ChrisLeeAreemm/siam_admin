@@ -128,7 +128,7 @@ class MenuHelper
      * @param $order
      * @return array
      */
-    private function AuthTreeRules($order = '')
+    private function AuthTreeRules($order = '',$pid = '0')
     {
         if (!$order) {
             $order = $this->order;
@@ -144,8 +144,10 @@ class MenuHelper
             $tem          = $this->auth_list[$value['id']];
             $res['id']    = $tem['auth_id'];
             $res['title'] = $tem['auth_name'];
+            $res['parentId'] = (string)$pid;
+            $res['checkArr'] = json_encode(['type'=>0,'checked'=>0]);
             if (isset($value['child'])) {
-                $res['children'] = $this->AuthTreeRules($value['child']);
+                $res['children'] = $this->AuthTreeRules($value['child'],$res['id']);
             }
             $return[] = $res;
             unset($res);

@@ -24,21 +24,4 @@ class RolesModel extends BaseModel
 {
     protected $name = 'roles';
     protected $pk   = 'role_id';
-    
-    /**
-     * 递归获取权限ID
-     * @param $roles_arr
-     * @return array
-     */
-    public function recursion_roles_id($roles_arr): array
-    {
-        static $arr = [];
-        foreach ($roles_arr as $value) {
-            $arr[] = $value['id'];
-            if (isset($value['children'])){
-                $this->recursion_roles_id($value['children']);
-            }
-        }
-        return $arr;
-    }
 }
