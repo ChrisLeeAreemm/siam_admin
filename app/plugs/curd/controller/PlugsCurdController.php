@@ -372,7 +372,7 @@ EOF;
             $fieldString[] = " {field: '{$field}', title: '{$title}'}";
         }
 
-        $fieldString = implode($fieldString, ',');
+        $fieldString = implode(',',$fieldString);
 
         $template = $this->listsFileTemplet();
         $template = str_replace("-table-", $this->tableName, $template);
