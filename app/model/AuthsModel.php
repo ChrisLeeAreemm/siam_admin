@@ -59,20 +59,24 @@ class AuthsModel extends BaseModel
         } else {
             $auth_type = $auth_type_default;
         }
-        $u_auth_ids = explode(',', UsersModel::find(['u_id' => $u_id])->u_auth);
+        $user = UsersModel::find(['u_id' => $u_id]);
+        $u_auth_ids = explode(',', $user->u_auth);
+
+        $roles = RolesModel::where('role_id', 'in', explode(',', $user->role_id))->column('role_auth');
+        $role_auth_ids = [];
+        foreach ($roles as $role){
+            $role_auth_ids = array_merge(explode(',',$role), $role_auth_ids);
+        }
 
         $map[] = ['auth_type', 'in', $auth_type];
         if ($u_id !== 1) {
             $map = [
-                ['auth_id', 'in', $u_auth_ids],
+                ['auth_id', 'in', array_merge($role_auth_ids, $u_auth_ids)],
                 ['auth_type', 'in', $auth_type],
             ];
         }
 
-        $list = $this->getAuth($map);
-
-
-        return $list;
+        return $this->getAuth($map);
     }
 
     protected function getAuth($map)
