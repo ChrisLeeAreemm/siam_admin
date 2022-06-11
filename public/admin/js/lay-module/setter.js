@@ -4,8 +4,8 @@
 
 layui.define(['layer'], function (exports) {
     exports('setter', {
-        // Api : "__API__"
-        Api : "http://127.0.0.1:8000/index.php/"
+        Api : "__API__"
+        // Api : "http://127.0.0.1:8000/index.php/"
         ,name: '__项目名__'
         , tableName: 'Siam_Admin' //本地存储表名
         //自定义请求字段
