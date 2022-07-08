@@ -133,4 +133,18 @@ use think\Collection as CollectionMapper;
 class BaseModel extends Model
 {
     protected $autoWriteTimestamp = false;
+    
+    
+    private static $requestCache;
+    public static function getRequestCache($data)
+    {
+        $key = md5(self::class.json_encode($data,256));
+        if (!empty(self::$requestCache[$key])) {
+            return self::$requestCache[$key];
+        }
+
+        self::$requestCache[$key] = self::get($data);
+
+        return self::$requestCache[$key];
+    }
 }
