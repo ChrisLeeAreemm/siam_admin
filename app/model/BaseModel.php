@@ -136,14 +136,14 @@ class BaseModel extends Model
     
     
     private static $requestCache;
-    public static function getRequestCache($data)
+    public static function findRequestCache($data)
     {
         $key = md5(self::class.json_encode($data,256));
         if (!empty(self::$requestCache[$key])) {
             return self::$requestCache[$key];
         }
 
-        self::$requestCache[$key] = self::get($data);
+        self::$requestCache[$key] = self::find($data);
 
         return self::$requestCache[$key];
     }
