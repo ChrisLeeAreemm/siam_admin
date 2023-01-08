@@ -4,8 +4,11 @@ namespace app\plugs\curd\controller;
 
 use app\exception\ErrorCode;
 use app\plugs\PlugsBaseController;
+use EasySwoole\Utility\File;
 use think\db\BaseQuery;
 use think\Exception;
+use think\exception\FileException;
+use think\exception\HttpResponseException;
 use think\facade\Db;
 use think\helper\Str;
 use think\response\Json;
@@ -153,9 +156,16 @@ class PlugsCurdController extends PlugsBaseController
             $ListsHtml = $this->putListsFile();
             $ActionHtml = $this->putActionFile();
         }catch (\Exception $exception){
+            if ($exception instanceof HttpResponseException) throw $exception;
+
             return json(['code' => '300', 'data' =>'', 'msg' => $exception->getMessage()]);
         }
-        return $this->send(ErrorCode::SUCCESS, ['lists'=>$ListsHtml,'action'=>$ActionHtml], '生成成功');
+        return $this->send(ErrorCode::SUCCESS, [
+            'lists'=>$ListsHtml,
+            'action'=>$ActionHtml,
+            'lists_file_path' => "page/".$this->tableName."/lists.html",
+            'action_file_path' => "page/".$this->tableName."/action.html",
+        ], '生成成功');
 
     }
 
@@ -298,22 +308,6 @@ EOF;
         $template = str_replace("-notesString-", $this->tableNotes ?? '', $template);
         $template = str_replace("-tableName-", $this->tableName ?? '', $template);
         $template = str_replace("-pk-", $this->pk ?? '', $template);
-        // 是否有create_time和update_time
-        $auto_write_timestamp = '';
-        foreach ($this->tableInfo as $value) {
-            if ($value['name']=='create_time' || $value['name'] == 'update_time'){
-                $type = $value['type'];
-                $auto_write_timestamp = "\n    protected \$autoWriteTimestamp ='$type';";
-                break;
-            }
-        }
-        if (!$auto_write_timestamp){
-            $all_field = array_column($this->tableInfo, 'name');
-            if (!in_array( 'update_time', $all_field)){
-                $auto_write_timestamp .= "\n    protected \$updateTime = false;";
-            }
-        }
-        $template = str_replace("--autoWriteTimeStamp--", $auto_write_timestamp, $template);
 
         if (input('return_html') == '1'){
             return $template;
@@ -372,12 +366,23 @@ EOF;
             $fieldString[] = " {field: '{$field}', title: '{$title}'}";
         }
 
-        $fieldString = implode($fieldString, ',');
+        $fieldString = implode(',', $fieldString);
 
         $template = $this->listsFileTemplet();
         $template = str_replace("-table-", $this->tableName, $template);
         $template = str_replace("-pk-", $this->pk, $template);
         $template = str_replace("-fieldString-", $fieldString, $template);
+
+        if(input('auto_create_file', 0) == 1){
+            // 自动写入admin前端文件
+            $path = public_path()."admin/page/".$this->tableName."/lists.html";
+            if (file_exists($path)){
+                throw new FileException("路径下文件已存在");
+            }
+            File::touchFile($path);
+            file_put_contents($path, $template);
+        }
+
         return $template;
     }
     private function putActionFile()
@@ -420,6 +425,17 @@ EOF;
         $template = str_replace("--edit_url--", "/admin/$this->tableName/edit", $template);
         $template = str_replace("--get_one_url--", "/admin/$this->tableName/get_one", $template);
         $template = str_replace("--get_one_val--", $get_one_val, $template);
+
+        if(input('auto_create_file', 0) == 1){
+            // 自动写入admin前端文件
+            $path = public_path()."admin".DIRECTORY_SEPARATOR."page".DIRECTORY_SEPARATOR.$this->tableName.DIRECTORY_SEPARATOR."action.html";
+            if (file_exists($path)){
+                throw new FileException("路径下文件已存在");
+            }
+            File::touchFile($path);
+            file_put_contents($path, $template);
+        }
+
         return $template;
     }
 
