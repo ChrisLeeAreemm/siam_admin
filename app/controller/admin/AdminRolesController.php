@@ -53,13 +53,9 @@ class AdminRolesController extends AdminBaseController
     {
         $param                = input();
         $param['create_time'] = time();
-        $roles_arr            = json_decode($this->request->param('role_auth'), true);
-        $arr                  = [];
-        foreach ($roles_arr as $value) {
-            $arr[] = $value['id'];
-        }
-        $param['role_auth'] = implode(',', $arr);
-        $start              = Model::create($param);
+        $roles_arr            = $this->request->param('role_auth');
+        $param['role_auth']   = implode(',', $roles_arr);
+        $start                = Model::create($param);
 
         if (!$start) {
             return $this->send(ErrorCode::DB_DATA_ADD_FAILE, [], '新增失败');

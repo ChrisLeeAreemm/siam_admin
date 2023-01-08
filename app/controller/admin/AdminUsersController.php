@@ -174,10 +174,8 @@ class AdminUsersController extends AdminBaseController
         if ($account_exist){
             return $this->send(ErrorCode::DB_DATA_ALREADY_EXIST, [], '该账号已存在');
         }
-        
-        $role_auth = json_decode($param['role_auth'], true);
+        $role_auth = $param['role_auth'];
         $role_id   = [];
-        $auth      = [];
 
         foreach ($param as $key => $val) {
             if (!Str::startsWith($key, 'u_role')) {
@@ -185,9 +183,7 @@ class AdminUsersController extends AdminBaseController
             }
             $role_id[] = $val;
         }
-        foreach ($role_auth as $value) {
-            $auth[] = $value['id'];
-        }
+
 
         $data      = [
             'u_name'      => $param['u_name'],
@@ -195,7 +191,7 @@ class AdminUsersController extends AdminBaseController
             'p_u_id'      => $this->who['u_id'],
             'u_password'  => md5($param['u_password']),
             'role_id'     => implode(',', $role_id),
-            'u_auth'      => implode(',', $auth),
+            'u_auth'      => implode(',', $role_auth),
             'create_time' => date('Y-m-d H:i:s'),
         ];
         $userModel = new Model();
@@ -236,13 +232,12 @@ class AdminUsersController extends AdminBaseController
 
         $data  = [
             'u_name'      => $param['u_name'],
-            'u_password'  => md5($param['u_password']),
             'u_account'   => $param['u_account'],
             'role_id'     => implode(',', $role_id),
             'u_auth'      => implode(',', $role_auth),
             'update_time' => date('Y-m-d H:i:s'),
         ];
-        if ($users->u_password !== $param['u_password'] && !empty($param['u_password'])){
+        if (!empty($param['u_password']) && md5($users->u_password) !== md5($param['u_password'])){
             $data['u_password'] = md5($param['u_password']);
         }
         $res   = $users->save($data);
