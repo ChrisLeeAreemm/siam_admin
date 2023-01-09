@@ -88,6 +88,7 @@
         let form = layui.form;
         let view = layui.view;
         let $ = layui.jquery;
+        let setter = layui.setter;
 
         $(document).keyup(function(event){
             if(event.keyCode === 13){
@@ -112,6 +113,10 @@
                 dataType:"json",
                 success(res){
                     view.login(res.data.token);
+                    layui.data(setter.tableName, {
+                        key: 'u_name'
+                        , value: res.data.u_name
+                    });
                     window.location.href="./index.html";
                 }
             })
