@@ -289,7 +289,8 @@ class AdminUsersController extends AdminBaseController
         Event::trigger(EventTag::REGISTER_TOKEN,['u_id'=>$user['u_id'],'token'=>$jwtToken]);
 
         return $this->send(ErrorCode::SUCCESS, [
-            'token' => $jwtToken
+            'token' => $jwtToken,
+            'u_name' => $user->u_name
         ], 'LOGIN_SUCCESS');
     }
 
